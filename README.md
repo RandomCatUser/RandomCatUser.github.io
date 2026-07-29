@@ -3,7 +3,7 @@
 This is my personal portfolio site built with **HTML**, **Tailwind CSS**, and **JavaScript**. It’s currently under development.
 
 ## Live URL
-[Connect](https://dihanramanayaka.github.io/hello/)
+[Connect](https://randomcatuser.github.io/)
 
 ## Tech
 - HTML
