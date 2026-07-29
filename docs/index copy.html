@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
     <head>
+        <link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="358x381"/>
+
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Dihan's Portfolio</title>
@@ -12,7 +14,7 @@
         />
 
         <!-- Open Graph / Facebook -->
-        <meta property="og:title" content="Title of the project" />
+        <meta property="og:title" content="Hello World!" />
         <meta property="og:description" content="" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://github.com/PaulleDemon" />
@@ -34,18 +36,193 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         />
+
+        <!-- GSAP & ScrollTrigger loaded in head with defer to fix hero animation errors -->
+        <script
+            defer
+            src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"
+            integrity="sha512-B1lby8cGcAUU3GR+Fd809/ZxgHbfwJMp0jLTVfHiArTuUt++VqSlJpaJvhNtRf3NERaxDNmmxkdx2o+aHd4bvw=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <script
+            defer
+            src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/ScrollTrigger.min.js"
+            integrity="sha512-AY2+JxnBETJ0wcXnLPCcZJIJx0eimyhz3OJ55k2Jx4RtYC+XdIi2VtJQ+tP3BaTst4otlGG1TtPJ9fKrAUnRdQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <script defer src="./index.js"></script>
+
+        <style>
+            html,
+            body {
+                cursor: url("./assets/cursor/cursor.svg") 16 16, auto;
+            }
+
+            a,
+            button,
+            [role="button"],
+            .header-links,
+            .tw-flex.tw-place-items-center.tw-gap-2.tw-rounded-full.tw-border-[1px],
+            .tw-flex.tw-h-[40px].tw-place-items-center.tw-gap-2.tw-rounded-full {
+                cursor: url("./assets/cursor/pointinghand.svg") 0 0, pointer;
+            }
+
+            /* Loader Overlay Styles */
+            #loader-overlay {
+                position: fixed;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #ffffff;
+                z-index: 999999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: opacity 0.6s ease, visibility 0.6s ease;
+            }
+
+            #loader-overlay.hidden {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            /* From Uiverse.io by mahdisad19 */ 
+            .loader {
+                --path: #d99058;
+                --dot: #29c966;
+                --duration: 3s;
+                width: 44px;
+                height: 44px;
+                position: relative;
+                display: inline-block;
+                margin: 0 16px;
+            }
+
+            .loader:before {
+                content: "";
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                position: absolute;
+                display: block;
+                background: var(--dot);
+                top: 37px;
+                left: 19px;
+                transform: translate(-18px, -18px);
+                animation: dotRect var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+            }
+
+            .loader svg {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+            .loader svg rect,
+            .loader svg polygon,
+            .loader svg circle {
+                fill: none;
+                stroke: var(--path);
+                stroke-width: 10px;
+                stroke-linejoin: round;
+                stroke-linecap: round;
+            }
+
+            .loader svg polygon {
+                stroke-dasharray: 145 76 145 76;
+                stroke-dashoffset: 0;
+                animation: pathTriangle var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+            }
+
+            .loader svg rect {
+                stroke-dasharray: 192 64 192 64;
+                stroke-dashoffset: 0;
+                animation: pathRect 3s cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+            }
+
+            .loader svg circle {
+                stroke-dasharray: 150 50 150 50;
+                stroke-dashoffset: 75;
+                animation: pathCircle var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+            }
+
+            .loader.triangle {
+                width: 48px;
+            }
+
+            .loader.triangle:before {
+                left: 21px;
+                transform: translate(-10px, -18px);
+                animation: dotTriangle var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+            }
+
+            @keyframes pathTriangle {
+                33% { stroke-dashoffset: 74; }
+                66% { stroke-dashoffset: 147; }
+                100% { stroke-dashoffset: 221; }
+            }
+
+            @keyframes dotTriangle {
+                33% { transform: translate(0, 0); }
+                66% { transform: translate(10px, -18px); }
+                100% { transform: translate(-10px, -18px); }
+            }
+
+            @keyframes pathRect {
+                25% { stroke-dashoffset: 64; }
+                50% { stroke-dashoffset: 128; }
+                75% { stroke-dashoffset: 192; }
+                100% { stroke-dashoffset: 256; }
+            }
+
+            @keyframes dotRect {
+                25% { transform: translate(0, 0); }
+                50% { transform: translate(18px, -18px); }
+                75% { transform: translate(0, -36px); }
+                100% { transform: translate(-18px, -18px); }
+            }
+
+            @keyframes pathCircle {
+                25% { stroke-dashoffset: 125; }
+                50% { stroke-dashoffset: 175; }
+                75% { stroke-dashoffset: 225; }
+                100% { stroke-dashoffset: 275; }
+            }
+        </style>
     </head>
-    <body
-        class="tw-flex tw-min-h-[100vh] tw-flex-col tw-bg-[#fff] tw-font-mono"
-    >
+    <body class="tw-flex tw-min-h-[100vh] tw-flex-col tw-bg-[#fff] tw-font-mono">
+        
+        <!-- Loading Screen Overlay -->
+        <div id="loader-overlay">
+            <div class="loader">
+                <svg viewBox="0 0 80 80">
+                    <circle r="32" cy="40" cx="40" id="test"></circle>
+                </svg>
+            </div>
+
+            <div class="loader triangle">
+                <svg viewBox="0 0 86 80">
+                    <polygon points="43 8 79 72 7 72"></polygon>
+                </svg>
+            </div>
+
+            <div class="loader">
+                <svg viewBox="0 0 80 80">
+                    <rect height="64" width="64" y="8" x="8"></rect>
+                </svg>
+            </div>
+        </div>
+
         <header
             class="tw-absolute tw-top-0 tw-z-20 tw-flex tw-h-[60px] tw-w-full tw-bg-opacity-0 tw-px-[5%] max-lg:tw-mr-auto max-lg:tw-px-4 lg:tw-justify-around"
         >
             <a
                 class="tw-h-[50px] tw-p-[40px] tw-text-2xl tw-font-medium"
-                href=""
+                href="#"
             >
-                
+                -
             </a>
             <div
                 class="collapsible-header animated-collapse max-lg:tw-shadow-md"
@@ -54,16 +231,17 @@
                 <div
                     class="tw-flex tw-h-full tw-w-max tw-gap-5 tw-text-base tw-text-black max-lg:tw-mt-[30px] max-lg:tw-flex-col max-lg:tw-place-items-end max-lg:tw-gap-5 lg:tw-mx-auto lg:tw-place-items-center"
                 >
-                    <a class="header-links" href=""> About Me </a>
-                    <a class="header-links" href="#pricing"> Work </a>
-                    <a class="header-links" href=""> Blog </a>
-                    <a class="header-links" href=""> Contact me </a>
+                    <a class="header-links" href="about.html"> About Me </a>
+                    <a class="header-links" href="./docs/friends.html"> Friends </a>
+                    <a class="header-links" href="https://randomcatuser.github.io/RandomThoughts-/"> Blog </a>
+                    <a class="header-links" href="./docs/os.html"> Cool </a>
+                    <a class="header-links" href="contact.html"> Contact me </a>
                 </div>
                 <div
                     class="tw-mx-4 tw-flex tw-place-items-center tw-gap-[20px] tw-text-base max-md:tw-w-full max-md:tw-flex-col max-md:tw-place-content-center"
                 >
                     <a
-                        href=""
+                        href="#"
                         aria-label="signup"
                         class="tw-flex tw-h-[40px] tw-place-items-center tw-gap-2 tw-rounded-full tw-bg-black tw-p-1 tw-pl-4 tw-text-white"
                     >
@@ -100,9 +278,10 @@
                             Dihan Ramanayaka
                         </span>
                         <br />
+                        <!-- Fixed broken </br> tag -->
                         <span class="reveal-hero-text">
-                            Student designer </br> and developer</span
-                        >
+                            Student designer <br> and developer
+                        </span>
                     </div>
                     <div
                         class="reveal-hero-text tw-mt-2 tw-max-w-[450px] tw-p-2 tw-text-justify max-lg:tw-max-w-full"
@@ -137,9 +316,9 @@
                         class="tw-relative tw-flex tw-max-h-[580px] tw-min-h-[450px] tw-min-w-[350px] tw-max-w-[650px] tw-overflow-hidden max-lg:tw-h-fit max-lg:tw-max-h-[320px] max-lg:tw-min-h-[180px] max-lg:tw-w-[320px] max-lg:tw-min-w-[320px]"
                     >
                         <img
-                            src="/"
+                            src="https://github.com/RandomCatUser/RandomCatUser/blob/main/workflows/MyProfile.webp?raw=true"
                             alt="app"
-                            class="reveal-hero-img tw-z-[1] tw-h-full tw-w-full tw-object-contain"
+                            class="reveal-hero-img tw-z-[1] tw-h-full tw-w-full tw-object-cover"
                         />
                     </div>
                 </div>
@@ -172,12 +351,39 @@
                             />
                         </div>
                     </div>
+                   
                     <div class="tw-flex tw-flex-col tw-gap-2">
-                        <h3 class="tw-text-xl tw-font-medium">DeepSearch</h3>
+                        <h3 class="tw-text-xl tw-font-medium">SweetVibe</h3>
                         <p class="tw-text-gray-600">
-                            AI Powered Search Engine That Uses pollinations api
+                            Music Player which runs on terminal 
                         </p>
-                        <a href="https://github.com/RandomCatUser/DeepSearch" class="tw-mt-4">
+                        <a href="https://github.com/RandomCatUser/SweetVibe/" class="tw-mt-4">
+                            <span>Learn more</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div
+                    class="reveal-up tw-flex tw-h-fit tw-w-[450px] tw-break-inside-avoid tw-flex-col tw-gap-2 tw-rounded-lg tw-bg-[#f3f3f3b4] tw-p-4 tw-shadow-lg max-lg:tw-w-full max-lg:tw-max-w-[400px]"
+                >
+                    <div class="tw-flex tw-place-items-center tw-gap-3">
+                        <div
+                            class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg"
+                        >
+                            <img
+                                src="./assets/images/home/portfolio-6.gif"
+                                class="tw-h-full tw-w-full tw-object-cover"
+                                alt="design"
+                            />
+                        </div>
+                    </div>
+                    <div class="tw-flex tw-flex-col tw-gap-2">
+                        <h3 class="tw-text-xl tw-font-medium">.oppsie</h3>
+                        <p class="tw-text-gray-600">
+                            Image Format & Converter App
+                        </p>
+                        <a href="https://github.com/RandomCatUser/.oppsie" class="tw-mt-4">
                             <span>Learn more</span>
                             <i class="bi bi-arrow-right"></i>
                         </a>
@@ -202,7 +408,6 @@
                         <h3 class="tw-text-xl tw-font-medium">Cats Drive</h3>
                         <p class="tw-text-gray-600">
                             Python Based local sever to store your data
-                            similler to Google Cloud
                         </p>
                         <a href="https://github.com/RandomCatUser/CatsDrive" class="tw-mt-4">
                             <span>Learn more</span>
@@ -226,12 +431,11 @@
                         </div>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-2">
-                        <h3 class="tw-text-xl tw-font-medium">Deeply Code</h3>
+                        <h3 class="tw-text-xl tw-font-medium">Fake News Detection</h3>
                         <p class="tw-text-gray-600">
-                            A simple Ai in terminal application build
-                            using python
+                            Uses Machine Learning to detect fake news
                         </p>
-                        <a href="https://github.com/RandomCatUser/Deeply-Code" class="tw-mt-4">
+                        <a href="https://github.com/RandomCatUser/Fake-News-Detection" class="tw-mt-4">
                             <span>Learn more</span>
                             <i class="bi bi-arrow-right"></i>
                         </a>
@@ -253,12 +457,11 @@
                         </div>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-2">
-                        <h3 class="tw-text-xl tw-font-medium">IMOGE</h3>
+                        <h3 class="tw-text-xl tw-font-medium">Heart Disease Prediction System</h3>
                         <p class="tw-text-gray-600">
-                            A secure image format build using Python
-                            and little bit of HTML
+                            Predict heart disease rate by machine learning
                         </p>
-                        <a href="https://github.com/RandomCatUser/IMOGE" class="tw-mt-4">
+                        <a href="https://github.com/RandomCatUser/Heart-Disease-Prediction" class="tw-mt-4">
                             <span>Learn more</span>
                             <i class="bi bi-arrow-right"></i>
                         </a>
@@ -280,18 +483,18 @@
                         </div>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-2">
-                        <h3 class="tw-text-xl tw-font-medium">Ollama-Basic-UI</h3>
+                        <h3 class="tw-text-xl tw-font-medium">Stock Direction Predictor</h3>
                         <p class="tw-text-gray-600">
-                            A web ui design for ollama to be lighter and efficent.
+                            Predicts stock direction by machine learning
                         </p>
-                        <a href="https://github.com/RandomCatUser/Ollama-Basic-UI" class="tw-mt-4">
+                        <a href="https://github.com/RandomCatUser/Stock-Direction-Predictor" class="tw-mt-4">
                             <span>Learn more</span>
                             <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
                 </div>
 
-                
+
                 </div>
             </div>
         </section>
@@ -317,30 +520,34 @@
                 >
                     <div
                         class="tw-flex tw-h-fit tw-w-full tw-flex-col tw-gap-4 tw-border-2 tw-border-black tw-bg-white tw-p-4"
+                        onclick="window.location.href='./catsearch.html'"
+                        role="button"
+                        style="cursor: pointer;"
                     >
                         <div
                             class="tw-flex tw-w-full tw-place-items-center tw-gap-4 tw-p-2"
                         >
                             <div
                                 class="tw-flex tw-h-[60px] tw-w-[60px] tw-overflow-hidden tw-rounded-full"
+                                
                             >
-                                <img
-                                    src="./assets/images/people/random 1.jpg"
+                               <img
+                                    src="https://i.pinimg.com/736x/19/69/7e/19697e36c0b08680a24a668930f49d3b.jpg"
                                     alt="image1"
                                     class="tw-h-full tw-w-full tw-object-cover"
                                 />
                             </div>
 
                             <div>
-                                <p class="tw-text-xl tw-font-semibold">Kashmith Nisakya</p>
+                                <p class="tw-text-xl tw-font-semibold">Su ZhyZai</p>
                                 <p class="tw-text-lg tw-text-gray-600">
-                                    AI & ML Engineer, Jesaci Labs
+                                    Devoloper, Graphic Designer, and Video Editor
                                 </p>
                             </div>
                         </div>
                         <div class="tw-text-justify tw-text-gray-800">
                             Dihan is a talented and motivated learner with 
-                            a great passion for programming. His creativity 
+                            a great passion  for programming. His creativity 
                             and attention to detail make every project 
                             impressive.
                         </div>
@@ -393,7 +600,7 @@
                             </div>
 
                             <div>
-                                <p class="tw-text-xl tw-font-semibold">Tinuli Samaranayaka</p>
+                                <p class="tw-text-xl tw-font-semibold">Tinuli Samaranayak</p>
                                 <p class="tw-text-lg tw-text-gray-600">
                                     Qunatity Surveying Student, MRT
                                 </p>
@@ -403,6 +610,37 @@
                             Dihan is a talented and hardworking student. His 
                             passion for technology and positive attitude 
                             always inspire those around him.
+                        </div>
+                    </div>
+
+                    <div
+                        class="tw-flex tw-h-fit tw-w-full tw-flex-col tw-gap-4 tw-border-2 tw-border-black tw-bg-white tw-p-4"
+                        onclick="window.location.href='https://amiminnie.github.io/'"
+                        role="button"
+                        style="cursor: pointer;"
+                    >
+                        <div
+                            class="tw-flex tw-w-full tw-place-items-center tw-gap-4 tw-p-2"
+                        >
+                            <div
+                                class="tw-flex tw-h-[60px] tw-w-[60px] tw-overflow-hidden tw-rounded-full"
+                            >
+                                <img
+                                    src="https://miwcmqwhudshgetmrmhf.supabase.co/storage/v1/object/public/gallery/profile.webp"
+                                    alt="Minnie"
+                                    class="tw-h-full tw-w-full tw-object-cover"
+                                />
+                            </div>
+
+                            <div>
+                                <p class="tw-text-xl tw-font-semibold">Minusha Dulwan</p>
+                                <p class="tw-text-lg tw-text-gray-600">
+                                    Devoloper, Designer, and Artist
+                                </p>
+                            </div>
+                        </div>
+                        <div class="tw-text-justify tw-text-gray-800">
+                            Dihan has a creative mind and has many skills in the technical field. I adore his passion towards what I can only describe as- feline energy :3
                         </div>
                     </div>
                 </div>
@@ -429,8 +667,6 @@
                     <div
                         class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
                     >
-                        <!-- <img src="./assets/images/home/sample.jpg" 
-                                alt="feature1"> -->
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-boombox-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">
@@ -444,8 +680,6 @@
                     <div
                         class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
                     >
-                        <!-- <img src="./assets/images/home/sample.jpg" 
-                                alt="feature1"> -->
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-0-circle-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">
@@ -459,8 +693,6 @@
                     <div
                         class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
                     >
-                        <!-- <img src="./assets/images/home/sample.jpg" 
-                                alt="feature1"> -->
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-0-square-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">
@@ -474,8 +706,6 @@
                     <div
                         class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
                     >
-                        <!-- <img src="./assets/images/home/sample.jpg" 
-                                alt="feature1"> -->
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-database-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">
@@ -489,8 +719,6 @@
                     <div
                         class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
                     >
-                        <!-- <img src="./assets/images/home/sample.jpg" 
-                                alt="feature1"> -->
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-cake-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">Figma</h3>
@@ -502,8 +730,6 @@
                     <div
                         class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
                     >
-                        <!-- <img src="./assets/images/home/sample.jpg" 
-                                alt="feature1"> -->
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-shield-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">OpenSource</h3>
@@ -542,7 +768,7 @@
                 class="reveal-up tw-mt-10 tw-flex tw-flex-wrap tw-place-content-center tw-gap-10 max-lg:tw-flex-col"
             >
                 <a
-                    href="404.html"
+                    href="https://randomcatuser.github.io/RandomThoughts-/posts/WhySrilankanEducationSystemSucks.html"
                     class="tw-flex tw-h-[400px] tw-w-[350px] tw-flex-col tw-gap-2 tw-overflow-clip tw-rounded-lg tw-bg-[#edecec79] tw-p-4 tw-shadow-xl max-lg:tw-w-[300px]"
                 >
                     <div
@@ -556,7 +782,7 @@
                         />
                     </div>
                     <h3 class="tw-text-2xl tw-font-semibold max-md:tw-text-xl">
-                        My Journey as a student
+                        Why Education System In SriLanka Feels Broken
                     </h3>
                     <p class="tw-mt-2 tw-text-gray-600">
                         I am so sad about students and education system
@@ -631,13 +857,11 @@
                 <a href="https://github.com/DihanRamanayaka" aria-label="Github">
                     <i class="bi bi-github"></i>
                 </a>
-                
-                
+            </div>
             <div class="tw-flex tw-gap-6 tw-text-2xl">
                 <a href="https://github.com/RandomCatUser" aria-label="Github">
                     <i class="bi bi-git"></i>
                 </a>
-
             </div>
         </footer>
 
@@ -1446,20 +1670,18 @@
 
           })();
         </script>
+
+        <!-- Script to handle hiding the loader once everything (including hero images) is loaded -->
+        <script>
+            window.addEventListener('load', function() {
+                const loaderOverlay = document.getElementById('loader-overlay');
+                if (loaderOverlay) {
+                    // Small timeout just to ensure smooth transition rendering
+                    setTimeout(() => {
+                        loaderOverlay.classList.add('hidden');
+                    }, 300);
+                }
+            });
+        </script>
     </body>
-
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"
-        integrity="sha512-B1lby8cGcAUU3GR+Fd809/ZxgHbfwJMp0jLTVfHiArTuUt++VqSlJpaJvhNtRf3NERaxDNmmxkdx2o+aHd4bvw=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"
-    ></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/ScrollTrigger.min.js"
-        integrity="sha512-AY2+JxnBETJ0wcXnLPCcZJIJx0eimyhz3OJ55k2Jx4RtYC+XdIi2VtJQ+tP3BaTst4otlGG1TtPJ9fKrAUnRdQ=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"
-    ></script>
-
-    <script src="./index.js"></script>
 </html>
