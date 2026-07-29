@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+        
+        body { 
+            margin: 0; 
+            background: #050505; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            color: #fff; 
+            font-family: 'Orbitron', sans-serif; 
+            overflow: hidden; 
+            touch-action: none; /* Prevent scrolling on mobile */
+        }
+
+        #game-container {
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        canvas { 
+            border: 2px solid #333; 
+            display: block; 
+            cursor: none; 
+            transition: transform 0.1s; 
+            touch-action: none;
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+        }
+
+        .scanlines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.2) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .vignette {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.4) 100%);
+            pointer-events: none;
+            z-index: 11;
+        }
+
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0); } 25% { transform: translate(-5px, 5px); } 75% { transform: translate(5px, -5px); } }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+    <canvas id="canvas" width="800" height="450"></canvas>
+</div>
+
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    
+    const ball = { x: 400, y: 225, r: 8, dx: 7, dy: 7 };
+    const pWidth = 12, pHeight = 90;
+    const player = { y: 180, score: 0 };
+    const cpu = { y: 180, score: 0 };
+    let particles = [];
+    let gameState = "START"; 
+
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x; this.y = y; this.color = color;
+            this.vx = (Math.random() - 0.5) * 10; this.vy = (Math.random() - 0.5) * 10;
+            this.life = 20;
+        }
+        update() { this.x += this.vx; this.y += this.vy; this.life--; }
+        draw() { ctx.fillStyle = this.color; ctx.fillRect(this.x, this.y, 3, 3); }
+    }
+
+    function spawnParticles(x, y, color) {
+        for(let i=0; i<12; i++) particles.push(new Particle(x, y, color));
+    }
+
+    function update() {
+        if (gameState !== "PLAYING") return;
+
+        ball.x += ball.dx; ball.y += ball.dy;
+        
+        // Wall bounce
+        if (ball.y - ball.r < 0 || ball.y + ball.r > 450) { 
+            ball.dy *= -1; 
+            spawnParticles(ball.x, ball.y, "#fff"); 
+        }
+
+        // Paddle collision
+        let p = (ball.x < 400) ? player : cpu;
+        let pX = (ball.x < 400) ? 10 : 778;
+
+        if (ball.x - ball.r < pX + pWidth && ball.x + ball.r > pX && ball.y > p.y && ball.y < p.y + pHeight) {
+            ball.dx *= -1.08; 
+            spawnParticles(ball.x, ball.y, ball.x < 400 ? "#00d4ff" : "#ff007f");
+        }
+
+        // Scoring
+        if (ball.x < 0) { cpu.score++; reset(1); }
+        else if (ball.x > 800) { player.score++; reset(-1); }
+
+        // Smart AI: Tracks ball with speed limit
+        let targetY = ball.y - pHeight/2;
+        let diff = targetY - cpu.y;
+        let maxCpuSpeed = 8.8;
+        cpu.y += Math.max(Math.min(diff * 0.25, maxCpuSpeed), -maxCpuSpeed);
+
+        particles = particles.filter(p => p.life > 0);
+        particles.forEach(p => p.update());
+    }
+
+    function reset(dir) {
+        ball.x = 400; ball.y = 225; ball.dx = dir * 7;
+        canvas.classList.add("shake");
+        setTimeout(() => canvas.classList.remove("shake"), 200);
+    }
+
+    function draw() {
+        ctx.fillStyle = "rgba(5,5,5,0.3)";
+        ctx.fillRect(0, 0, 800, 450);
+        
+        // Labels
+        ctx.font = "20px Orbitron";
+        ctx.fillStyle = "#fff";
+        ctx.fillText("PLAYER 1", 150, 30);
+        ctx.fillText("BOT JESPR", 550, 30);
+
+        // Paddles
+        ctx.fillStyle = "#00d4ff"; ctx.fillRect(10, player.y, pWidth, pHeight);
+        ctx.fillStyle = "#ff007f"; ctx.fillRect(778, cpu.y, pWidth, pHeight);
+        
+        // Ball
+        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2); ctx.fill();
+        particles.forEach(p => p.draw());
+        
+        // Score
+        ctx.font = "40px Orbitron";
+        ctx.fillText(player.score, 200, 70); ctx.fillText(cpu.score, 600, 70);
+
+        if (gameState === "START") {
+            ctx.fillStyle = "rgba(0,0,0,0.85)";
+            ctx.fillRect(0,0,800,450);
+            ctx.fillStyle = "#fff";
+            ctx.textAlign = "center";
+            ctx.font = "80px Orbitron";
+            ctx.fillText("PONG", 400, 200);
+            ctx.font = "20px Orbitron";
+            ctx.fillText("CLICK / TAP TO START", 400, 260);
+            ctx.textAlign = "start";
+        }
+    }
+
+    const movePaddle = (y) => {
+        if(gameState === "PLAYING") {
+            const rect = canvas.getBoundingClientRect();
+            // Scale touch coordinates to canvas internal size
+            const scaleY = canvas.height / rect.height;
+            player.y = (y - rect.top) * scaleY - pHeight/2;
+            player.y = Math.max(0, Math.min(canvas.height - pHeight, player.y));
+        }
+    };
+
+    canvas.addEventListener("mousemove", (e) => movePaddle(e.clientY));
+    canvas.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        movePaddle(e.touches[0].clientY);
+    }, { passive: false });
+
+    const startGame = () => {
+        if(gameState === "START") gameState = "PLAYING";
+    };
+
+    canvas.addEventListener("click", startGame);
+    canvas.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        startGame();
+    }, { passive: false });
+
+    function loop() { update(); draw(); requestAnimationFrame(loop); }
+    loop();
+</script>
+</body>
+</html>

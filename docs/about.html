@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dihan Ramanayaka | Field Report</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #ffffff;
+    --bg: #f3f4f6;
+    --ink: #111827;
+    --ink-soft: #4b5563;
+    --muted: #9ca3af;
+    --rule: #e5e7eb;
+    --accent: #c2410c; /* Warm terracotta */
+    --accent-bg: #fff7ed;
+    --teal: #0f766e;
+  }
+  * { -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--ink);
+  }
+  .serif { font-family: 'Fraunces', serif; font-optical-sizing: auto; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Document Stack Effect */
+  .doc-stack {
+    position: relative;
+  }
+  .doc-stack::before, .doc-stack::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    z-index: -1;
+  }
+  .doc-stack::before {
+    transform: rotate(-1.2deg) translate(-6px, -4px);
+    box-shadow: 0 10px 25px -10px rgba(0,0,0,0.1);
+  }
+  .doc-stack::after {
+    transform: rotate(1deg) translate(8px, 4px);
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+  }
+  .page {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    box-shadow: 0 20px 40px -20px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+
+  /* Dotted leader for TOC */
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .toc-item:hover { color: var(--accent); }
+  .toc-item .dots {
+    flex: 1;
+    border-bottom: 1px dotted #9ca3af;
+    margin: 0 8px;
+    transform: translateY(-4px);
+  }
+
+  /* Hover Effects */
+  .panel {
+    background: #fff;
+    border: 1px solid var(--rule);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .panel:hover {
+    border-color: var(--accent);
+    box-shadow: 0 15px 30px -10px rgba(194, 65, 12, 0.15);
+    transform: translateY(-4px);
+  }
+  .panel::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 0 16px 16px 0;
+    border-color: transparent var(--accent) transparent transparent;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .panel:hover::after { opacity: 1; }
+
+  /* Drop cap */
+  .dropcap::first-letter {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 4.5rem;
+    line-height: 0.85;
+    float: left;
+    padding: 0.25rem 0.5rem 0 0;
+    color: var(--accent);
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+  }
+  .tag.solid { background: var(--ink); color: #fff; }
+  .tag.accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Particles */
+  .particle { position: fixed; pointer-events: none; font-size: 20px; z-index: 100; animation: burst 1s ease-out forwards; }
+  @keyframes burst { 
+      0% { transform: scale(0.5) translate(0, 0); opacity: 1; } 
+      100% { transform: scale(1.2) translate(var(--dx), var(--dy)); opacity: 0; } 
+  }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 768px) {
+    .dropcap::first-letter { font-size: 3.5rem; }
+  }
+</style>
+</head>
+<body class="py-8 md:py-12 px-4">
+
+<div class="max-w-5xl mx-auto doc-stack">
+
+  <!-- COVER PAGE -->
+  <header id="cover" class="page">
+    <div class="grid grid-cols-1 md:grid-cols-12">
+      
+      <!-- Left Side: Title & Illustration -->
+      <div class="md:col-span-8 p-8 md:p-12 lg:p-16 border-b md:border-b-0 md:border-r border-gray-200 relative flex flex-col">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="tag solid">Digital Garden Report</span>
+          <span class="tag">Personal Edition</span>
+        </div>
+        
+        <h1 class="serif font-black text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-gray-900">
+          What the Internet Can Learn From a <span class="italic text-[var(--accent)]">Cat-Loving</span> Programmer
+        </h1>
+        
+        <p class="serif text-lg md:text-xl text-gray-600 mt-6 max-w-xl leading-relaxed">
+          Building software that feels alive hinges on a curiosity-first approach, fueled by green plants, quiet keyboards, and the occasional purr.
+        </p>
+
+        <!-- Illustration Area -->
+        <div class="mt-auto pt-12 hidden md:block">
+          <!-- SVG Illustration: Desk Scene -->
+          <svg viewBox="0 0 400 250" class="w-full max-w-md ml-auto" xmlns="http://www.w3.org/2000/svg">
+            <!-- Desk -->
+            <rect x="20" y="200" width="360" height="10" fill="#d1d5db" rx="2"/>
+            <!-- Monitor -->
+            <rect x="40" y="100" width="120" height="80" fill="#111827" rx="4"/>
+            <rect x="48" y="108" width="104" height="64" fill="#1f2937" rx="2"/>
+            <!-- Code lines -->
+            <rect x="56" y="116" width="30" height="4" fill="#c2410c" rx="1"/>
+            <rect x="90" y="116" width="50" height="4" fill="#0f766e" rx="1"/>
+            <rect x="56" y="126" width="40" height="4" fill="#f3f4f6" rx="1"/>
+            <rect x="100" y="126" width="20" height="4" fill="#c2410c" rx="1"/>
+            <rect x="56" y="136" width="60" height="4" fill="#0f766e" rx="1"/>
+            <rect x="56" y="146" width="45" height="4" fill="#f3f4f6" rx="1"/>
+            <rect x="90" y="180" width="20" height="20" fill="#374151" rx="2"/>
+            <rect x="80" y="195" width="40" height="6" fill="#4b5563" rx="2"/>
+            
+            <!-- Plant (Monstera) -->
+            <rect x="240" y="160" width="40" height="40" fill="#c2410c" rx="4"/>
+            <path d="M260 160 C 260 120, 230 110, 220 130 C 240 130, 250 140, 250 160" fill="#0f766e"/>
+            <path d="M260 160 C 260 130, 290 120, 300 140 C 280 140, 270 150, 270 160" fill="#0f766e"/>
+            <path d="M260 160 C 260 100, 260 90, 250 80 C 270 90, 275 120, 275 160" fill="#0f766e"/>
+            
+            <!-- Cat -->
+            <ellipse cx="320" cy="185" rx="35" ry="15" fill="#9ca3af"/>
+            <circle cx="350" cy="175" r="12" fill="#9ca3af"/>
+            <polygon points="342,165 345,155 350,162" fill="#9ca3af"/>
+            <polygon points="355,162 360,155 362,165" fill="#9ca3af"/>
+            <circle cx="347" cy="174" r="1.5" fill="#111827"/>
+            <circle cx="353" cy="174" r="1.5" fill="#111827"/>
+            <path d="M350 177 L348 179 L352 179 Z" fill="#c2410c"/>
+            
+            <!-- Coffee Mug -->
+            <rect x="180" y="175" width="20" height="25" fill="#fff" stroke="#9ca3af" stroke-width="2" rx="2"/>
+            <path d="M200 180 Q 210 180, 210 190 Q 210 195, 200 195" fill="none" stroke="#9ca3af" stroke-width="2"/>
+            <path d="M185 170 Q 190 165, 195 170" fill="none" stroke="#9ca3af" stroke-width="1.5"/>
+            
+            <!-- Decorative Elements -->
+            <circle cx="100" cy="50" r="4" fill="#c2410c" opacity="0.5"/>
+            <circle cx="300" cy="60" r="6" fill="#0f766e" opacity="0.5"/>
+            <path d="M30 30 L 50 30 M 40 20 L 40 40" stroke="#9ca3af" stroke-width="2"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Right Side: Contributors & TOC -->
+      <aside class="md:col-span-4 p-8 md:p-10 bg-gray-50 flex flex-col">
+        <div class="mb-8">
+          <p class="mono text-xs tracking-widest uppercase text-gray-500 mb-3">Subject</p>
+          <p class="serif text-2xl font-bold text-gray-900 leading-tight">Dihan Ramanayaka</p>
+          <p class="text-sm text-gray-600 mt-1">Programmer · Plant Keeper · Cat Butler</p>
+        </div>
+
+        <div class="mb-8 pb-8 border-b border-gray-200">
+          <p class="mono text-xs tracking-widest uppercase text-gray-500 mb-4">Contributors</p>
+          <ul class="text-sm space-y-2 text-gray-700">
+            <li class="flex justify-between"><span>Keyboard, M.</span><span class="text-gray-400 mono text-xs">Lead</span></li>
+            <li class="flex justify-between"><span>The Cat</span><span class="text-gray-400 mono text-xs">Morale</span></li>
+            <li class="flex justify-between"><span>Monstera L.</span><span class="text-gray-400 mono text-xs">Oxygen</span></li>
+            <li class="flex justify-between"><span>Coffee, V.</span><span class="text-gray-400 mono text-xs">Fuel</span></li>
+          </ul>
+        </div>
+
+        <div class="flex-grow">
+          <p class="mono text-xs tracking-widest uppercase text-gray-500 mb-4">Table of Contents</p>
+          <div class="space-y-1">
+            <a href="#summary" class="toc-item">
+              <span class="mono text-xs text-[var(--accent)] mr-2">01</span>
+              <span class="serif text-sm font-medium">Executive Summary</span>
+              <span class="dots"></span>
+              <span class="mono text-xs text-gray-400">02</span>
+            </a>
+            <a href="#essence" class="toc-item">
+              <span class="mono text-xs text-[var(--accent)] mr-2">02</span>
+              <span class="serif text-sm font-medium">The Three Pillars</span>
+              <span class="dots"></span>
+              <span class="mono text-xs text-gray-400">03</span>
+            </a>
+            <a href="#toolkit" class="toc-item">
+              <span class="mono text-xs text-[var(--accent)] mr-2">03</span>
+              <span class="serif text-sm font-medium">The Toolkit</span>
+              <span class="dots"></span>
+              <span class="mono text-xs text-gray-400">04</span>
+            </a>
+            <a href="#beyond" class="toc-item">
+              <span class="mono text-xs text-[var(--accent)] mr-2">04</span>
+              <span class="serif text-sm font-medium">Beyond the Code</span>
+              <span class="dots"></span>
+              <span class="mono text-xs text-gray-400">05</span>
+            </a>
+          </div>
+        </div>
+        
+        <div class="mt-auto pt-8">
+          <a href="https://github.com/RandomCatUser" target="_blank" class="flex items-center justify-center gap-2 w-full bg-gray-900 text-white py-3 rounded-md hover:bg-[var(--accent)] transition-colors duration-300 mono text-xs uppercase tracking-widest">
+            <i data-lucide="github" class="w-4 h-4"></i> View GitHub
+          </a>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <main class="mt-8 space-y-8">
+    
+    <!-- EXECUTIVE SUMMARY -->
+    <section id="summary" class="page p-8 md:p-12 lg:p-16 reveal">
+      <div class="flex items-baseline gap-4 mb-8">
+        <span class="serif font-black text-3xl text-[var(--accent)] italic">§ 01</span>
+        <div>
+          <p class="mono text-xs tracking-widest uppercase text-gray-500">Section One</p>
+          <h2 class="serif text-2xl md:text-3xl font-bold text-gray-900">Executive Summary</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+        <div class="md:col-span-7">
+          <p class="serif text-lg md:text-xl leading-relaxed text-gray-700 dropcap">
+            This report examines a single, deceptively simple subject: a programmer who codes by day, talks to plants by evening, and answers to a cat by night. Across the following sections we trace the through-line — how curiosity, patience, and a love of small living things translate directly into better software.
+          </p>
+          <p class="mt-6 text-base leading-relaxed text-gray-600">
+            The findings suggest that the best engineering cultures borrow from gardening: tend, observe, prune, repeat. The cat, meanwhile, contributes nothing measurable and everything essential.
+          </p>
+        </div>
+
+        <aside class="md:col-span-5 bg-orange-50 p-6 rounded-lg border border-orange-100">
+          <p class="mono text-xs tracking-widest uppercase text-orange-700 mb-4">Key Findings</p>
+          <ul class="space-y-4">
+            <li class="flex gap-3">
+              <span class="mono text-xs mt-1 bg-gray-900 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">01</span>
+              <span class="text-sm leading-relaxed text-gray-800">Curiosity beats credentials when the problem is greenfield.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="mono text-xs mt-1 bg-gray-900 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">02</span>
+              <span class="text-sm leading-relaxed text-gray-800">A plant on the desk reduces merge-conflict anxiety by an unmeasured but real amount.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="mono text-xs mt-1 bg-gray-900 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">03</span>
+              <span class="text-sm leading-relaxed text-gray-800">Cats do not review pull requests, yet somehow improve them.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="mono text-xs mt-1 bg-gray-900 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">04</span>
+              <span class="text-sm leading-relaxed text-gray-800">Side-quests (photography, speedrunning, pixel art) are not distractions — they are R&D.</span>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ESSENCE -->
+    <section id="essence" class="page p-8 md:p-12 lg:p-16 reveal">
+      <div class="flex items-baseline gap-4 mb-10">
+        <span class="serif font-black text-3xl text-[var(--accent)] italic">§ 02</span>
+        <div>
+          <p class="mono text-xs tracking-widest uppercase text-gray-500">Section Two</p>
+          <h2 class="serif text-2xl md:text-3xl font-bold text-gray-900">The Three Pillars of Essence</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <article class="panel p-6 rounded-lg flex flex-col" data-emoji="💻">
+          <div class="flex items-center justify-between mb-6">
+            <span class="tag accent">Pillar 01</span>
+            <i data-lucide="code" class="w-5 h-5 text-gray-400"></i>
+          </div>
+          <div class="text-4xl mb-4">🚀</div>
+          <h3 class="serif text-xl font-bold mb-2 text-gray-900">Programming</h3>
+          <p class="text-sm text-gray-600 leading-relaxed mb-6 flex-1">Crafting logic and building things from scratch — the kind of scratch that ships. Cold-starts welcome, detours encouraged.</p>
+          <a href="https://github.com/RandomCatUser" target="_blank" class="text-sm font-bold text-gray-900 hover:text-[var(--accent)] transition-colors flex items-center gap-1">
+            Visit GitHub <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </article>
+
+        <article class="panel p-6 rounded-lg flex flex-col" data-emoji="🍁">
+          <div class="flex items-center justify-between mb-6">
+            <span class="tag accent">Pillar 02</span>
+            <i data-lucide="sprout" class="w-5 h-5 text-gray-400"></i>
+          </div>
+          <div class="text-4xl mb-4">🪴</div>
+          <h3 class="serif text-xl font-bold mb-2 text-gray-900">Project Green Plants</h3>
+          <p class="text-sm text-gray-600 leading-relaxed mb-6 flex-1">In love with green plants. Jungles, too. Long-term thinker, patient waterer, occasional over-waterer.</p>
+          <span class="mono text-xs uppercase tracking-widest text-gray-400 mt-auto">Status · Always Growing</span>
+        </article>
+
+        <article class="panel p-6 rounded-lg flex flex-col" data-emoji="🐈">
+          <div class="flex items-center justify-between mb-6">
+            <span class="tag accent">Pillar 03</span>
+            <i data-lucide="heart" class="w-5 h-5 text-gray-400"></i>
+          </div>
+          <div class="text-4xl mb-4">🐈</div>
+          <h3 class="serif text-xl font-bold mb-2 text-gray-900">Cat Kitty</h3>
+          <p class="text-sm text-gray-600 leading-relaxed mb-6 flex-1">Master of purrs. Obsessed with cats in general and one in particular. Will stop mid-sentence to point at one.</p>
+          <span class="mono text-xs uppercase tracking-widest text-gray-400 mt-auto">Status · Purring</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- TOOLKIT & BEYOND THE CODE (Combined Page) -->
+    <section class="page p-8 md:p-12 lg:p-16 reveal">
+      
+      <!-- Toolkit -->
+      <div id="toolkit" class="mb-12">
+        <div class="flex items-baseline gap-4 mb-8">
+          <span class="serif font-black text-3xl text-[var(--accent)] italic">§ 03</span>
+          <div>
+            <p class="mono text-xs tracking-widest uppercase text-gray-500">Section Three</p>
+            <h2 class="serif text-2xl md:text-3xl font-bold text-gray-900">The Toolkit</h2>
+          </div>
+        </div>
+
+        <p class="serif text-lg text-gray-600 max-w-2xl mb-8 leading-relaxed">Four instruments, picked up at different times, now carried together. None of them are mandatory; all of them are personal.</p>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="panel p-5 rounded-lg flex flex-col items-start gap-3">
+            <i data-lucide="cpu" class="w-6 h-6 text-[var(--accent)]"></i>
+            <div>
+              <p class="mono text-xs uppercase tracking-widest text-gray-400">Instrument 01</p>
+              <p class="serif text-lg font-bold text-gray-900">JavaScript</p>
+            </div>
+          </div>
+          <div class="panel p-5 rounded-lg flex flex-col items-start gap-3">
+            <i data-lucide="layout" class="w-6 h-6 text-[var(--accent)]"></i>
+            <div>
+              <p class="mono text-xs uppercase tracking-widest text-gray-400">Instrument 02</p>
+              <p class="serif text-lg font-bold text-gray-900">React</p>
+            </div>
+          </div>
+          <div class="panel p-5 rounded-lg flex flex-col items-start gap-3">
+            <i data-lucide="wind" class="w-6 h-6 text-[var(--accent)]"></i>
+            <div>
+              <p class="mono text-xs uppercase tracking-widest text-gray-400">Instrument 03</p>
+              <p class="serif text-lg font-bold text-gray-900">Tailwind</p>
+            </div>
+          </div>
+          <div class="panel p-5 rounded-lg flex flex-col items-start gap-3">
+            <i data-lucide="terminal" class="w-6 h-6 text-[var(--accent)]"></i>
+            <div>
+              <p class="mono text-xs uppercase tracking-widest text-gray-400">Instrument 04</p>
+              <p class="serif text-lg font-bold text-gray-900">Python</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <hr class="border-gray-200 my-12">
+
+      <!-- Beyond the Code -->
+      <div id="beyond">
+        <div class="flex items-baseline gap-4 mb-8">
+          <span class="serif font-black text-3xl text-[var(--accent)] italic">§ 04</span>
+          <div>
+            <p class="mono text-xs tracking-widest uppercase text-gray-500">Section Four</p>
+            <h2 class="serif text-2xl md:text-3xl font-bold text-gray-900">Beyond the Code</h2>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <article class="panel p-5 rounded-lg flex flex-col gap-3" data-emoji="📸">
+            <i data-lucide="camera" class="w-7 h-7 text-[var(--accent)]"></i>
+            <h3 class="serif text-lg font-bold text-gray-900">Photography</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">Freezing time, one shutter click at a time.</p>
+          </article>
+
+          <article class="panel p-5 rounded-lg flex flex-col gap-3" data-emoji="⏱️">
+            <i data-lucide="trophy" class="w-7 h-7 text-[var(--accent)]"></i>
+            <h3 class="serif text-lg font-bold text-gray-900">MCSR Ranked</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">Speedrunning challenges in Minecraft.</p>
+          </article>
+
+          <article class="panel p-5 rounded-lg flex flex-col gap-3" data-emoji="🎮">
+            <i data-lucide="gamepad-2" class="w-7 h-7 text-[var(--accent)]"></i>
+            <h3 class="serif text-lg font-bold text-gray-900">Gaming</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">Always ready for a new level or quest.</p>
+          </article>
+
+          <article class="panel p-5 rounded-lg flex flex-col gap-3" data-emoji="🎨">
+            <i data-lucide="palette" class="w-7 h-7 text-[var(--accent)]"></i>
+            <h3 class="serif text-lg font-bold text-gray-900">Pixel Art</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">Small squares, big creative dreams.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER / COLOPHON -->
+    <footer class="page p-8 md:p-12 reveal">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <p class="mono text-xs tracking-widest uppercase text-gray-500 mb-2">Colophon</p>
+          <p class="serif text-xl font-bold text-gray-900">Set in Fraunces & Inter.</p>
+          <p class="text-sm text-gray-600 mt-2">Compiled from late-night commits, watered plants, and one cat's editorial supervision.</p>
+        </div>
+        <a href="#cover" class="flex items-center gap-2 mono text-xs uppercase tracking-widest text-gray-900 hover:text-[var(--accent)] transition-colors">
+          Back to Cover <i data-lucide="arrow-up" class="w-4 h-4"></i>
+        </a>
+      </div>
+      <div class="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center">
+        <span class="mono text-xs tracking-widest uppercase text-gray-400">© Dihan Ramanayaka</span>
+        <span class="mono text-xs tracking-widest uppercase text-gray-400">End of Document</span>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Emoji particle burst
+  document.querySelectorAll('[data-emoji]').forEach(card => {
+    card.addEventListener('mouseenter', (e) => {
+      const emoji = card.getAttribute('data-emoji');
+      if (!emoji) return;
+      
+      for (let i = 0; i < 3; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.innerText = emoji;
+        p.style.left = e.clientX + 'px';
+        p.style.top = e.clientY + 'px';
+        
+        const dx = (Math.random() - 0.5) * 200;
+        const dy = (Math.random() - 0.5) * 200 - 50;
+        p.style.setProperty('--dx', dx + 'px');
+        p.style.setProperty('--dy', dy + 'px');
+        
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 1000);
+      }
+    });
+  });
+</script>
+</body>
+</html>

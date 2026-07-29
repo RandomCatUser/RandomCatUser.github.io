@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Universe 나의 우주</title>
+    <link rel="icon" type="image/png" href="../assets/images/earth.png" sizes="320x320"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #f8fafc; overflow-x: hidden; }
+        .friend-card {
+            background: #ffffff; border: 1px solid #e2e8f0; padding: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer; border-radius: 1.5rem; position: relative; overflow: hidden;
+            flex-shrink: 0;
+        }
+        .friend-card:hover { z-index: 20; transform: scale(1.08) rotate(0deg) !important; box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15); }
+        .details { opacity: 0; transition: opacity 0.4s ease; pointer-events: none; backdrop-filter: blur(4px); }
+        .friend-card:hover .details { opacity: 1; pointer-events: auto; }
+        .friend-card:hover .avatar-img { filter: blur(3px); transform: scale(1.05); }
+        
+        @media (min-width: 768px) {
+            .rot-1 { transform: rotate(-4deg); } .rot-2 { transform: rotate(3deg); }
+            .rot-3 { transform: rotate(-2deg); } .rot-4 { transform: rotate(5deg); }
+            .rot-5 { transform: rotate(-5deg); } .rot-6 { transform: rotate(2deg); }
+        }
+        
+        .particle { position: fixed; pointer-events: none; font-size: 24px; z-index: 100; animation: burst 1s ease-out forwards; }
+        @keyframes burst { 
+            0% { transform: scale(0.5) translate(0, 0); opacity: 1; } 
+            100% { transform: scale(1.2) translate(var(--dx), var(--dy)); opacity: 0; } 
+        }
+        .best-friend-badge {
+            position: absolute; top: 8px; right: 8px; background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4); z-index: 10;
+        }
+        
+        /* Custom Cursors */
+        body { 
+         font-family: 'Quicksand', sans-serif; 
+         background-color: #f8fafc; 
+         overflow-x: hidden;
+         cursor: url('assets/cursor/cursor.svg'), auto;
+       }
+        .friend-card {
+          cursor: url('assets/cursor/pointinghand.svg'), pointer;
+        }
+
+        /* Upgraded Lightbox Styles */
+        #lightbox-backdrop {
+            position: fixed; inset: 0; 
+            background: rgba(30, 41, 59, 0.4); 
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            display: flex; align-items: center; justify-content: center; 
+            z-index: 110; opacity: 0; pointer-events: none; 
+            transition: opacity 0.3s ease;
+            padding: 1rem;
+        }
+        #lightbox-backdrop.active { opacity: 1; pointer-events: auto; }
+        
+        #lightbox-content {
+            background: rgba(255, 255, 255, 0.85); 
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.9) translateY(20px); 
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 440px; width: 100%; 
+            border-radius: 24px;
+            overflow: hidden; position: relative;
+            display: flex; flex-direction: column;
+            max-height: 90vh;
+        }
+        #lightbox-backdrop.active #lightbox-content { transform: scale(1) translateY(0); }
+        
+        /* Custom Scrollbar inside lightbox */
+        #lightbox-scroll-area::-webkit-scrollbar { width: 6px; }
+        #lightbox-scroll-area::-webkit-scrollbar-track { background: transparent; }
+        #lightbox-scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* Banner & Avatar Layout */
+        .banner-img { height: 130px; width: 100%; object-fit: cover; display: block; }
+        .lightbox-avatar {
+            position: relative;
+            z-index: 20;
+            width: 92px; height: 92px; border-radius: 50%;
+            object-fit: cover; border: 4px solid rgba(255,255,255,0.9);
+            margin-top: -46px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: #fff; transition: transform 0.3s ease;
+        }
+        .lightbox-avatar:hover { transform: scale(1.05); }
+
+        /* Glassmorphic Best Friend Badge on Banner */
+        .banner-badge {
+            position: absolute; top: 12px; left: 12px; z-index: 10;
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white; font-size: 10px; font-weight: 700; 
+            padding: 5px 10px; border-radius: 20px; 
+            text-transform: uppercase; letter-spacing: 0.05em;
+            display: flex; align-items: center; gap: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* New Sleek Link Cards */
+        .link-card {
+            display: flex; align-items: center; justify-content: center;
+            width: 46px; height: 46px; padding: 0; background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .link-card:hover {
+            background: #f97316; border-color: #fb923c; transform: translateY(-1px) scale(1.01);
+            box-shadow: 0 8px 18px -6px rgba(249, 115, 22, 0.35);
+        }
+        .link-card:hover .link-icon-box { background: rgba(255,255,255,0.2); color: #fff; }
+        .link-card:hover .link-arrow { color: #fff; transform: translate(2px, -2px) rotate(0deg); }
+        
+        .link-icon-box {
+            width: 30px; height: 30px; border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center;
+            background: #ffedd5; color: #f97316; transition: all 0.3s ease;
+        }
+        .link-arrow { display: none; }
+        .connect-stack { display: flex; flex-direction: row; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-10 flex flex-col items-center justify-start">
+
+    <div class="max-w-5xl w-full flex flex-col items-center py-6 md:py-10">
+        <div class="w-full flex justify-center py-8 px-4 text-center">
+            <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-gray-800">
+                These are my <br class="md:hidden" />
+                <span class="bg-orange-100 px-6 py-2 rounded-2xl text-orange-900 border-2 border-orange-200 inline-block mt-2 md:mt-0 transition-transform hover:scale-105 duration-300">universe</span>
+            </h1>
+        </div>
+
+        <div id="friends-wrapper" class="w-full flex flex-wrap justify-center items-center gap-6 md:gap-10 py-6"></div>
+    </div>
+
+    <!-- Upgraded Lightbox Structure -->
+    <div id="lightbox-backdrop">
+        <div id="lightbox-content">
+            <!-- Close Button -->
+            <button id="lightbox-close" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/30 text-white hover:bg-black/50 backdrop-blur-md flex items-center justify-center transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            
+            <!-- Scrollable Area -->
+            <div id="lightbox-scroll-area" class="overflow-y-auto" style="max-height: 90vh;">
+                <!-- Banner Area (Populated by JS) -->
+                <div id="lightbox-banner-area"></div>
+                
+                <!-- Content Area -->
+                <div class="p-6 pt-0 flex flex-col items-center text-center relative">
+                    <div id="lightbox-body" class="w-full"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Friend Data
+        // Add new friends here using the same object format. The page renders cards automatically from this data.
+        const friendsData = {
+            "Su ZhyZai": {
+                emoji: "❤️",
+                img: "https://i.pinimg.com/736x/19/69/7e/19697e36c0b08680a24a668930f49d3b.jpg",
+                banner: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                bestFriend: true,
+                quote: "Always curious about my best friend",
+                about: "A wonderful friend who is always curious and loves exploring new things. Has a deep affection for cats and enjoys sharing interesting discoveries.",
+                links: [{text: "Search for a cat", url: "catsearch.html", icon: "cat"}]
+            },
+            "Minnie": {
+                emoji: "🏳️‍🌈",
+                img: "https://miwcmqwhudshgetmrmhf.supabase.co/storage/v1/object/public/gallery/profile.webp?size=1024",
+                banner: "https://miwcmqwhudshgetmrmhf.supabase.co/storage/v1/object/public/gallery/banner.webp?auto=format&fit=crop&w=800&q=80",
+                bestFriend: true,
+                quote: "Listen to your heart; let the world go quiet for a bit",
+                about: "An incredibly creative and thoughtful person. Minnie believes in following your passion and finding peace in the chaos of the world.",
+                links: [
+                    {text: "My Portfolio", url: "https://amiminnie.github.io/", icon: "globe"},
+                    {text: "Look at amminie", url: "amminie.html", icon: "sparkles"}
+                ]
+            },
+            "Chaniru": {
+                emoji: "⚽",
+                img: "https://cdn.discordapp.com/avatars/1483668063004921936/aa54ca811bebbdc8440ebd71c511bf74.webp?size=1024",
+                banner: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                bestFriend: true,
+                quote: "Soccer is the best game trust me",
+                about: "A passionate gamer and sports enthusiast. Chaniru brings energy to every game and is always up for a competitive match of PONG.",
+                links: [{text: "Play PONG", url: "pong.html", icon: "game"}]
+            },
+            "Minku": {
+                emoji: "😂",
+                img: "https://cdn.discordapp.com/avatars/1342023233901432893/5355090bf621f24ccd0868d0a3be9ea2.webp?size=1024",
+                banner: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                bestFriend: false,
+                quote: "Call me a lazy programmer",
+                about: "Minku is the definition of 'work smarter, not harder'. A clever programmer who finds the most efficient solutions to any problem.",
+                links: []
+            },
+            "Frank": {
+                emoji: "😩",
+                img: "https://cdn.discordapp.com/avatars/1400716262665093206/ebb8814e0aee4ca02fde472662fe06a7.webp?size=1024",
+                banner: "https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                bestFriend: false,
+                quote: "I need to study some CS",
+                about: "Frank is dedicated to learning and improving his computer science skills. Always grinding to become a better developer.",
+                links: []
+            }
+        };
+
+        const friendsContainer = document.getElementById('friends-wrapper');
+
+        const renderFriends = () => {
+            friendsContainer.innerHTML = '';
+            Object.entries(friendsData).forEach(([name, data], index) => {
+                const rotationClass = `rot-${(index % 6) + 1}`;
+                const cardHtml = `
+                    <div class="friend-card ${rotationClass} w-40 md:w-56 flex flex-col items-center p-3 md:p-4" data-emoji="${data.emoji || ''}" data-name="${name}">
+                        ${data.bestFriend ? '<div class="best-friend-badge">Best Friend</div>' : ''}
+                        <img src="${data.img}" alt="${name}" class="avatar-img w-full h-32 md:h-48 object-cover mb-3 rounded-2xl transition-all duration-300">
+                        <span class="font-bold text-gray-800 text-lg">${name}</span>
+                        <div class="details absolute inset-0 bg-white/80 p-4 flex flex-col items-center justify-center text-center">
+                            <p class="text-sm font-semibold text-orange-600">${data.quote ? `"${data.quote}"` : ''}</p>
+                            <span class="mt-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Click to view more</span>
+                        </div>
+                    </div>
+                `;
+                friendsContainer.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        };
+
+        renderFriends();
+
+        // SVG Icons for Links
+        const getIconSvg = (iconName) => {
+            switch(iconName) {
+                case 'cat':
+                    return '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.5C21 16.6 17.6 20 13.5 20H10c-4.4 0-8-3.6-8-8 0-2.2 1.8-4 4-4h.5C7.2 6.8 8 5 10 5c1.5 0 2.7.8 3.5 2C15.5 6.3 17.8 7 19 8.5c1.2 1.5 2 2.5 2 4z" /></svg>';
+                case 'globe':
+                    return '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z M3.6 9h16.8 M3.6 15h16.8 M11.5 3a17 17 0 000 18 M12.5 3a17 17 0 010 18" /></svg>';
+                case 'sparkles':
+                    return '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>';
+                case 'game':
+                    return '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" /></svg>';
+                default:
+                    return '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>';
+            }
+        };
+
+        // Particle Burst Animation
+        document.querySelectorAll('.friend-card').forEach(card => {
+            card.addEventListener('mouseenter', (e) => {
+                const emoji = card.getAttribute('data-emoji');
+                if (!emoji) return;
+                const rect = card.getBoundingClientRect();
+                const points = [
+                    {x: rect.left, y: rect.top},
+                    {x: rect.right, y: rect.top},
+                    {x: rect.left, y: rect.bottom},
+                    {x: rect.right, y: rect.bottom}
+                ];
+                points.forEach(pos => {
+                    const p = document.createElement('div');
+                    p.className = 'particle';
+                    p.innerText = emoji;
+                    p.style.left = pos.x + 'px';
+                    p.style.top = pos.y + 'px';
+                    const dx = (Math.random() - 0.5) * 150;
+                    const dy = (Math.random() - 0.5) * 150 - 50;
+                    p.style.setProperty('--dx', dx + 'px');
+                    p.style.setProperty('--dy', dy + 'px');
+                    document.body.appendChild(p);
+                    setTimeout(() => p.remove(), 1000);
+                });
+            });
+        });
+
+        // Lightbox Logic
+        const backdrop = document.getElementById('lightbox-backdrop');
+        const content = document.getElementById('lightbox-content');
+        const scrollArea = document.getElementById('lightbox-scroll-area');
+        const bannerArea = document.getElementById('lightbox-banner-area');
+        const body = document.getElementById('lightbox-body');
+        const closeBtn = document.getElementById('lightbox-close');
+
+        document.querySelectorAll('.friend-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const name = card.getAttribute('data-name');
+                const emoji = card.getAttribute('data-emoji');
+                const data = friendsData[name];
+                if(!data) return;
+
+                // 1. Build Banner Area with Best Friend Badge
+                let badgeHtml = data.bestFriend ? `
+                    <div class="banner-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-2.5 w-2.5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        Best Friend
+                    </div>
+                ` : '';
+
+                bannerArea.innerHTML = `
+                    <div class="relative w-full">
+                        <img src="${data.banner}" class="banner-img" alt="Banner">
+                        <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40"></div>
+                        ${badgeHtml}
+                    </div>
+                    <div class="w-full flex justify-center">
+                        <img src="${data.img}" class="lightbox-avatar" alt="${name}">
+                    </div>
+                `;
+
+                // 2. Build Links Area (New Sleek Cards)
+                let linksHtml = '';
+                if(data.links && data.links.length > 0) {
+                    linksHtml = '<div class="connect-stack w-full mt-2">';
+                    data.links.forEach(link => {
+                        linksHtml += `
+                            <a href="${link.url}" target="_blank" class="link-card" title="${link.text}">
+                                <div class="link-icon-box">
+                                    ${getIconSvg(link.icon)}
+                                </div>
+                            </a>
+                        `;
+                    });
+                    linksHtml += '</div>';
+                } else {
+                    linksHtml = `<div class="w-full mt-2 p-4 bg-white/30 rounded-2xl border border-white/50 text-center">
+                        <p class="text-gray-400 italic text-sm flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                            No personal links available
+                        </p>
+                    </div>`;
+                }
+
+                // 3. Build Main Body Content
+                let emojiHtml = emoji ? `<div class="text-xl mb-1">${emoji}</div>` : '';
+
+                body.innerHTML = `
+                    <div class="mt-2 text-center">
+                        ${emojiHtml}
+                        <h2 class="text-2xl font-bold text-gray-800 tracking-tight">${name}</h2>
+                        <p class="text-sm font-semibold text-orange-600 italic mt-1 px-4">"${data.quote}"</p>
+                    </div>
+                    
+                    <div class="mt-5 w-full text-left bg-black/5 rounded-2xl p-4 border border-white/20 backdrop-blur-sm">
+                        <h3 class="font-bold text-gray-500 mb-2 text-[10px] uppercase tracking-widest flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            About
+                        </h3>
+                        <p class="text-sm text-gray-700 leading-relaxed">${data.about}</p>
+                    </div>
+                    
+                    <div class="mt-6 w-full text-left">
+                        <h3 class="font-bold text-gray-500 mb-3 text-[10px] uppercase tracking-widest text-center flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                            Connect
+                        </h3>
+                        ${linksHtml}
+                    </div>
+                `;
+
+                // Reset scroll position to top
+                scrollArea.scrollTop = 0;
+                
+                // Show lightbox
+                backdrop.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            });
+        });
+
+        function closeLightbox() {
+            backdrop.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        closeBtn.addEventListener('click', closeLightbox);
+        backdrop.addEventListener('click', (e) => {
+            if(e.target === backdrop) closeLightbox();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
