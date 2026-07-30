@@ -70,8 +70,7 @@ RandomCatUser.github.io/
 
 Feel free to reach out to me or check out my other projects:
 
--   **GitHub 1:** [DihanRamanayaka](https://github.com/DihanRamanayaka)
--   **GitHub 2:** [RandomCatUser](https://github.com/RandomCatUser)
+-   **GitHub:** [RandomCatUser](https://github.com/RandomCatUser)
 -   **Blog:** [RandomThoughts](https://randomcatuser.github.io/RandomThoughts-/)
 
 ---
