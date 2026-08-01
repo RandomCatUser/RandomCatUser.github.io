@@ -255,15 +255,17 @@
                 box-shadow: none !important;
             }
 
+            /* ===================== NAV BAR DARK MODE TEXT COLOR ===================== */
             body.dark-theme .header-links,
             body.dark-theme header .tw-text-black,
             body.dark-theme #collapse-btn {
-                color: var(--theme-text) !important;
+                color: #ffffff !important; /* white color for dark mode nav */
             }
 
             body.dark-theme .header-links:hover {
-                color: var(--theme-accent) !important;
+                color: #ffffff !important; 
             }
+            /* ======================================================================= */
 
             @media (max-width: 1023px) {
                 body.dark-theme #collapsed-header-items {
@@ -441,17 +443,18 @@
             .theme-settings-panel {
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
-                padding: 14px 16px;
-                border-radius: 14px;
+                gap: 4px; /* Reduced gap to accommodate padding inside rows */
+                padding: 10px 10px;
+                border-radius: 16px;
                 background-color: var(--theme-card-bg, #fff);
                 border: 1px solid var(--theme-border, rgba(0,0,0,0.15));
                 box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
-                min-width: 190px;
+                min-width: 220px;
                 opacity: 0;
                 transform: translateY(-8px) scale(0.96);
                 pointer-events: none;
                 transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.5s ease, border-color 0.5s ease;
+                overflow: hidden;
             }
 
             .theme-settings-panel.open {
@@ -460,12 +463,62 @@
                 pointer-events: auto;
             }
 
+            /* ===================== LIQUID GLASS HOVER ROW ===================== */
             .theme-settings-row {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 gap: 12px;
+                position: relative;
+                padding: 12px 14px;
+                border-radius: 12px;
+                margin: 0; /* Reset margin */
+                transition: background 0.3s ease, border-color 0.3s ease;
+                overflow: hidden;
+                border: 1px solid transparent;
+                cursor: default;
             }
+
+            .theme-settings-row::before {
+                content: '';
+                position: absolute;
+                top: var(--mouse-y, 50%);
+                left: var(--mouse-x, 50%);
+                width: 120px;
+                height: 120px;
+                transform: translate(-50%, -50%);
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 70%);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+                z-index: 0;
+                filter: blur(8px);
+            }
+
+            body.dark-theme .theme-settings-row::before {
+                background: radial-gradient(circle, rgba(20, 184, 166, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            }
+
+            .theme-settings-row:hover {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(4px);
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+
+            body.dark-theme .theme-settings-row:hover {
+                background: rgba(255, 255, 255, 0.05);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+
+            .theme-settings-row:hover::before {
+                opacity: 1;
+            }
+
+            .theme-settings-row > * {
+                position: relative;
+                z-index: 1;
+            }
+            /* ================================================================== */
 
             .theme-settings-label {
                 font-size: 13px;
@@ -539,75 +592,14 @@
             .slider.round .sun-moon {
                 border-radius: 50%;
             }
-            #moon-dot-1 {
-                left: 10px;
-                top: 3px;
-                position: absolute;
-                width: 6px;
-                height: 6px;
-                z-index: 4;
-            }
-            #moon-dot-2 {
-                left: 2px;
-                top: 10px;
-                position: absolute;
-                width: 10px;
-                height: 10px;
-                z-index: 4;
-            }
-            #moon-dot-3 {
-                left: 16px;
-                top: 18px;
-                position: absolute;
-                width: 3px;
-                height: 3px;
-                z-index: 4;
-            }
-            #light-ray-1 {
-                left: -8px;
-                top: -8px;
-                position: absolute;
-                width: 43px;
-                height: 43px;
-                z-index: -1;
-                fill: white;
-                opacity: 10%;
-            }
-            #light-ray-2 {
-                left: -50%;
-                top: -50%;
-                position: absolute;
-                width: 55px;
-                height: 55px;
-                z-index: -1;
-                fill: white;
-                opacity: 10%;
-            }
-            #light-ray-3 {
-                left: -18px;
-                top: -18px;
-                position: absolute;
-                width: 60px;
-                height: 60px;
-                z-index: -1;
-                fill: white;
-                opacity: 10%;
-            }
-            .cloud-light {
-                position: absolute;
-                fill: #eee;
-                animation-name: cloud-move;
-                animation-duration: 6s;
-                animation-iteration-count: infinite;
-            }
-            .cloud-dark {
-                position: absolute;
-                fill: #ccc;
-                animation-name: cloud-move;
-                animation-duration: 6s;
-                animation-iteration-count: infinite;
-                animation-delay: 1s;
-            }
+            #moon-dot-1 { left: 10px; top: 3px; position: absolute; width: 6px; height: 6px; z-index: 4; }
+            #moon-dot-2 { left: 2px; top: 10px; position: absolute; width: 10px; height: 10px; z-index: 4; }
+            #moon-dot-3 { left: 16px; top: 18px; position: absolute; width: 3px; height: 3px; z-index: 4; }
+            #light-ray-1 { left: -8px; top: -8px; position: absolute; width: 43px; height: 43px; z-index: -1; fill: white; opacity: 10%; }
+            #light-ray-2 { left: -50%; top: -50%; position: absolute; width: 55px; height: 55px; z-index: -1; fill: white; opacity: 10%; }
+            #light-ray-3 { left: -18px; top: -18px; position: absolute; width: 60px; height: 60px; z-index: -1; fill: white; opacity: 10%; }
+            .cloud-light { position: absolute; fill: #eee; animation-name: cloud-move; animation-duration: 6s; animation-iteration-count: infinite; }
+            .cloud-dark { position: absolute; fill: #ccc; animation-name: cloud-move; animation-duration: 6s; animation-iteration-count: infinite; animation-delay: 1s; }
             #cloud-1 { left: 30px; top: 15px; width: 40px; }
             #cloud-2 { left: 44px; top: 10px; width: 20px; }
             #cloud-3 { left: 18px; top: 24px; width: 30px; }
@@ -620,20 +612,8 @@
                 80% { transform: translateX(-4px); }
                 100% { transform: translateX(0px); }
             }
-            .stars {
-                transform: translateY(-32px);
-                opacity: 0;
-                transition: 0.4s;
-            }
-            .star {
-                fill: white;
-                position: absolute;
-                -webkit-transition: 0.4s;
-                transition: 0.4s;
-                animation-name: star-twinkle;
-                animation-duration: 2s;
-                animation-iteration-count: infinite;
-            }
+            .stars { transform: translateY(-32px); opacity: 0; transition: 0.4s; }
+            .star { fill: white; position: absolute; -webkit-transition: 0.4s; transition: 0.4s; animation-name: star-twinkle; animation-duration: 2s; animation-iteration-count: infinite; }
             #theme-toggle-input:checked + .slider .stars {
                 -webkit-transform: translateY(0);
                 -ms-transform: translateY(0);
@@ -656,64 +636,67 @@
             }
 
             /* ============================================================
-               HAPPY DAYS SWITCH (Renamed to prevent CSS conflicts)
+               QUIZ SWITCH STYLES (From Uiverse.io by RaspberryBee)
+               Prefixed with 'quiz-' to avoid conflicts with theme switch
                ============================================================ */
-            .hd-switch {
-                font-size: 17px;
-                position: relative;
-                display: inline-block;
-                width: 3.5em;
-                height: 2em;
-                flex-shrink: 0;
+            .quiz-switch {
+              font-size: 17px;
+              position: relative;
+              display: inline-block;
+              width: 3.5em;
+              height: 2em;
+              flex-shrink: 0;
             }
-            .hd-switch input {
-                opacity: 0;
-                width: 0;
-                height: 0;
+            .quiz-switch input {
+              opacity: 0;
+              width: 0;
+              height: 0;
             }
-            .hd-slider {
-                position: absolute;
-                cursor: pointer;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: #ccc;
-                transition: 0.4s;
-                border-radius: 30px;
+            .quiz-slider {
+              position: absolute;
+              cursor: pointer;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: rgb(182, 182, 182);
+              transition: .4s;
+              border-radius: 10px;
             }
-            .hd-slider:before {
-                position: absolute;
-                content: "";
-                height: 1.4em;
-                width: 1.4em;
-                border-radius: 20px;
-                left: 0.3em;
-                bottom: 0.3em;
-                background-color: white;
-                transition: 0.4s;
+            .quiz-slider:before {
+              position: absolute;
+              content: "";
+              height: 1.4em;
+              width: 1.4em;
+              border-radius: 8px;
+              left: 0.3em;
+              bottom: 0.3em;
+              transform: rotate(270deg);
+              background-color: rgb(255, 255, 255);
+              transition: .4s;
             }
-            .hd-switch input:checked + .hd-slider {
-                background-color: #2196f3;
+            .quiz-switch input:checked + .quiz-slider {
+              background-color: #21cc4c;
             }
-            .hd-switch input:focus + .hd-slider {
-                box-shadow: 0 0 1px #2196f3;
+            .quiz-switch input:focus + .quiz-slider {
+              box-shadow: 0 0 1px #2196F3;
             }
-            .hd-switch input:checked + .hd-slider:before {
-                transform: translateX(1.5em);
+            .quiz-switch input:checked + .quiz-slider:before {
+              transform: translateX(1.5em);
             }
 
             /* ============================================================
-               HAPPY DAYS LIGHTBOX STYLES
+               QUIZ LIGHTBOX STYLES (UI IMPROVEMENTS)
                ============================================================ */
             .hd-lightbox-overlay {
                 position: fixed;
                 inset: 0;
-                background: rgba(0, 0, 0, 0.75);
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(8px);
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                z-index: 1000000; /* Stays on top of loader */
+                z-index: 1000000; 
                 opacity: 0;
                 visibility: hidden;
                 transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -726,43 +709,175 @@
             }
             .hd-lightbox-card {
                 background: var(--theme-card-bg, #fff);
-                border: 1px solid var(--theme-border, #ddd);
+                border: 1px solid rgba(0,0,0,0.05);
                 color: var(--theme-text, #000);
-                padding: 32px;
-                border-radius: 16px;
-                max-width: 420px;
+                padding: 0;
+                border-radius: 24px;
+                max-width: 520px;
                 width: 100%;
                 text-align: center;
-                transform: translateY(20px);
-                transition: transform 0.3s ease;
-                box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+                transform: translateY(20px) scale(0.95);
+                transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
                 box-sizing: border-box;
+                overflow: hidden; /* Keeps image inside rounded corners */
+            }
+            body.dark-theme .hd-lightbox-card {
+                background: #161c2a;
+                border-color: rgba(255,255,255,0.05);
             }
             .hd-lightbox-overlay.active .hd-lightbox-card {
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
+            }
+            
+            .hd-lightbox-image-container {
+                position: relative;
+                width: 100%;
+                height: 180px;
+                overflow: hidden;
+                background-color: #f3f3f3;
+            }
+            .hd-lightbox-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 5s ease-out; 
+            }
+            .hd-lightbox-overlay.active .hd-lightbox-image {
+                transform: scale(1.05); /* Subtle zoom effect */
+            }
+            .hd-lightbox-image-overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to bottom, transparent 0%, var(--theme-card-bg, #fff) 100%);
+            }
+            body.dark-theme .hd-lightbox-image-overlay {
+                background: linear-gradient(to bottom, transparent 0%, #161c2a 100%);
+            }
+
+            .hd-lightbox-body {
+                padding: 8px 28px 28px;
             }
             .hd-lightbox-title {
-                font-size: 1.5rem;
-                font-weight: bold;
-                margin-bottom: 12px;
+                font-size: 1rem;
+                font-weight: 700;
+                margin-bottom: 16px;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                color: #6b7280;
+                transition: color 0.3s ease;
+            }
+            .hd-lightbox-title.success {
+                color: #10b981;
+            }
+            .hd-lightbox-title.error {
+                color: #ef4444;
             }
             .hd-lightbox-content {
-                font-size: 1rem;
+                font-size: 1.25rem;
                 margin-bottom: 24px;
                 line-height: 1.5;
+                font-weight: 700;
             }
             .hd-lightbox-close {
-                background: #2196f3;
-                color: white;
+                background: var(--theme-text, #000);
+                color: var(--theme-bg, #fff);
                 border: none;
-                padding: 10px 24px;
-                border-radius: 8px;
+                padding: 14px 24px;
+                border-radius: 12px;
                 cursor: pointer;
                 font-weight: 600;
-                transition: background 0.2s;
+                transition: all 0.2s;
+                width: 100%;
+                font-size: 1rem;
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
             }
             .hd-lightbox-close:hover {
-                background: #1976D2;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                opacity: 0.9;
+            }
+
+            /* Quiz specific button styles */
+            .hd-quiz-options {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                margin-bottom: 24px;
+                text-align: left;
+            }
+            .hd-quiz-option {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                background: var(--theme-bg-soft, #f3f3f3);
+                border: 1px solid var(--theme-border, #e2e8f0);
+                padding: 14px 18px;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.2s ease-in-out;
+                font-family: inherit;
+                color: var(--theme-text);
+                font-size: 0.95rem;
+                width: 100%;
+                font-weight: 500;
+                text-align: left;
+            }
+            body.dark-theme .hd-quiz-option {
+                background: rgba(255,255,255,0.03);
+                border-color: rgba(255,255,255,0.1);
+            }
+            .hd-quiz-option:hover:not(:disabled) {
+                border-color: #2196f3;
+                background: rgba(33, 150, 243, 0.05);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            }
+            body.dark-theme .hd-quiz-option:hover:not(:disabled) {
+                background: rgba(33, 150, 243, 0.1);
+            }
+            .hd-quiz-option:disabled {
+                cursor: not-allowed;
+            }
+            .hd-quiz-option-letter {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                background: rgba(0,0,0,0.1);
+                color: var(--theme-text);
+                font-weight: 700;
+                font-size: 0.85rem;
+                flex-shrink: 0;
+                transition: all 0.2s;
+            }
+            body.dark-theme .hd-quiz-option-letter {
+                background: rgba(255,255,255,0.1);
+            }
+            .hd-quiz-option:hover:not(:disabled) .hd-quiz-option-letter {
+                background: #2196f3;
+                color: white;
+            }
+            .hd-quiz-option.correct {
+                border-color: #10b981 !important;
+                background: rgba(16, 185, 129, 0.1) !important;
+                color: #10b981;
+            }
+            .hd-quiz-option.correct .hd-quiz-option-letter {
+                background: #10b981;
+                color: white;
+            }
+            .hd-quiz-option.incorrect {
+                border-color: #ef4444 !important;
+                background: rgba(239, 68, 68, 0.1) !important;
+                color: #ef4444;
+            }
+            .hd-quiz-option.incorrect .hd-quiz-option-letter {
+                background: #ef4444;
+                color: white;
             }
         </style>
     </head>
@@ -818,12 +933,13 @@
                     </label>
                 </div>
 
-                <!-- ===================== HAPPY DAYS TOGGLE ROW ===================== -->
+                <!-- ===================== QUIZ TOGGLE ROW ===================== -->
                 <div class="theme-settings-row">
-                    <span class="theme-settings-label">This Day</span>
-                    <label class="hd-switch">
-                        <input id="happy-days-toggle-input" type="checkbox" />
-                        <span class="hd-slider"></span>
+                    <span class="theme-settings-label">Quiz</span>
+                    <!-- From Uiverse.io by RaspberryBee -->
+                    <label class="quiz-switch">
+                      <input id="happy-days-toggle-input" type="checkbox">
+                      <span class="quiz-slider"></span>
                     </label>
                 </div>
                 <!-- ================================================================= -->
@@ -831,12 +947,20 @@
         </div>
         <!-- =================== END THEME SETTINGS PANEL =================== -->
 
-        <!-- ===================== HAPPY DAYS LIGHTBOX MODAL ===================== -->
+        <!-- ===================== QUIZ LIGHTBOX MODAL ===================== -->
         <div class="hd-lightbox-overlay" id="hd-lightbox">
             <div class="hd-lightbox-card">
-                <div class="hd-lightbox-title" id="hd-title">This Day!</div>
-                <div class="hd-lightbox-content" id="hd-content">Loading info...</div>
-                <button class="hd-lightbox-close" id="hd-close-btn">Awesome!</button>
+                <!-- Random Image Banner -->
+                <div class="hd-lightbox-image-container">
+                    <img id="hd-quiz-image" class="hd-lightbox-image" src="" alt="Random Quiz Banner" />
+                    <div class="hd-lightbox-image-overlay"></div>
+                </div>
+                
+                <div class="hd-lightbox-body">
+                    <div class="hd-lightbox-title" id="hd-title">Quiz Time!</div>
+                    <div class="hd-lightbox-content" id="hd-content">Loading info...</div>
+                    <button class="hd-lightbox-close" id="hd-close-btn">Close</button>
+                </div>
             </div>
         </div>
         <!-- ===================================================================== -->
@@ -2052,8 +2176,9 @@
                 return;
               }
 
-              // Convert relative track to absolute path with scheme to bypass jsmediatags constraints
-              const absoluteUrl = window.location.origin + '/' + filePath;
+              // Construct absolute URL properly relative to the current document
+              // Fixes issues with subdirectories and local file:// protocols
+              const absoluteUrl = new URL(filePath, window.location.href).href;
 
               jsmediatags.read(absoluteUrl, {
                 onSuccess: function(tag) {
@@ -2120,18 +2245,21 @@
               expArt.textContent = "♪";
               expArt.style.backgroundImage = "";
 
-              // Display hardcoded metadata
-              const title = '3:03 PM';
-              const artist = 'しゃろう Sharou';
-              const artworkPath = 'assets/music/art1.jpg';
-              
-              expTitle.textContent = title;
-              expArtist.textContent = artist;
-              
-              compactArt.style.backgroundImage = `url('${artworkPath}')`;
-              compactArt.textContent = '';
-              expArt.style.backgroundImage = `url('${artworkPath}')`;
-              expArt.textContent = '';
+              // Attempt to extract metadata, fallback to hardcoded if it fails
+              extractMetadata(trackPath, function(data) {
+                const title = data.title || '3:03 PM';
+                const artist = data.artist || 'しゃろう Sharou';
+                // Fallback to local image if no embedded artwork is found
+                const artwork = data.artwork || './assets/music/art1.jpg';
+
+                expTitle.textContent = title;
+                expArtist.textContent = artist;
+                
+                compactArt.style.backgroundImage = `url('${artwork}')`;
+                compactArt.textContent = '';
+                expArt.style.backgroundImage = `url('${artwork}')`;
+                expArt.textContent = '';
+              });
 
               if (triggerPlay) {
                 audioPlayer.play().catch(err => {
@@ -2347,7 +2475,7 @@
             });
         </script>
 
-        <!-- ===================== THEME TOGGLE LOGIC ===================== -->
+        <!-- ===================== THEME TOGGLE LOGIC & LIQUID GLASS CURSOR ===================== -->
         <script>
             (function () {
                 const THEME_KEY = "site-theme";
@@ -2431,18 +2559,32 @@
                 document.addEventListener("keydown", function (e) {
                     if (e.key === "Escape") closePanel();
                 });
+
+                // ===================== LIQUID GLASS CURSOR LOGIC =====================
+                const glassRows = document.querySelectorAll('.theme-settings-row');
+                glassRows.forEach(row => {
+                    row.addEventListener('mousemove', (e) => {
+                        const rect = row.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        row.style.setProperty('--mouse-x', `${x}px`);
+                        row.style.setProperty('--mouse-y', `${y}px`);
+                    });
+                });
+                // ==================================================================================
             })();
         </script>
 
-        <!-- ===================== HAPPY DAYS LOGIC ===================== -->
+        <!-- ===================== QUIZ LOGIC ===================== -->
         <script>
             (function () {
-                const HD_KEY = "happy-days-enabled";
+                const HD_KEY = "happy-days-enabled"; // Keeping key same to respect previous user states
                 const hdToggle = document.getElementById("happy-days-toggle-input");
                 const hdLightbox = document.getElementById("hd-lightbox");
                 const hdTitle = document.getElementById("hd-title");
                 const hdContent = document.getElementById("hd-content");
                 const hdCloseBtn = document.getElementById("hd-close-btn");
+                const hdQuizImage = document.getElementById("hd-quiz-image");
 
                 // 1. Initialize default state (disabled by default)
                 try {
@@ -2464,53 +2606,107 @@
                     hdLightbox.classList.remove("active");
                 });
 
-                function showLightbox(title, content) {
-                    hdTitle.textContent = title;
-                    hdContent.textContent = content;
-                    hdLightbox.classList.add("active");
-                }
-
-                // 4. Fetch special event for the day
-                async function fetchHappyDayInfo() {
-                    const now = new Date();
-                    const month = now.getMonth() + 1; // 1-12
-                    const day = now.getDate();
-
-                    // Check for custom birthday: Nov 4 (Month 11, Day 4)
-                    if (month === 11 && day === 4) {
-                        showLightbox(
-                            "🎉 It's Dihan's Birthday! 🎂",
-                            "Whish him a happy birthday and celebrate the day with joy and love!"
-                        );
-                        return;
-                    }
-
-                    // Fetch from free API (byabbe.se/on-this-day)
+                // 4. Fetch Quiz from Open Trivia DB & Random Image from Picsum
+                async function fetchQuizInfo() {
                     try {
-                        const response = await fetch(`https://byabbe.se/on-this-day/${month}/${day}/events.json`);
+                        // Reset states
+                        hdTitle.textContent = "Quiz Time!";
+                        hdTitle.classList.remove("success", "error");
+                        hdCloseBtn.textContent = "Close";
+                        
+                        // Fetch random image from Picsum
+                        const imageUrl = `https://picsum.photos/seed/${Math.floor(Math.random() * 10000)}/500/200`;
+                        hdQuizImage.src = imageUrl;
+
+                        // Using Open Trivia Database API (No key required)
+                        const response = await fetch('https://opentdb.com/api.php?amount=1&type=multiple');
                         if (!response.ok) throw new Error("Network response was not ok");
                         const data = await response.json();
                         
-                        if (data.events && data.events.length > 0) {
-                            // Grab a random interesting event from the top 10 to keep it fresh
-                            const topEvents = data.events.slice(0, 10);
-                            const randomEvent = topEvents[Math.floor(Math.random() * topEvents.length)];
+                        if (data.results && data.results.length > 0) {
+                            const quizData = data.results[0];
                             
-                            const eventYear = randomEvent.year;
-                            const eventDesc = randomEvent.description;
+                            // Decode HTML entities returned by the API (e.g., &quot; &#039;)
+                            function decodeHTML(html) {
+                                var txt = document.createElement("textarea");
+                                txt.innerHTML = html;
+                                return txt.value;
+                            }
+
+                            const question = decodeHTML(quizData.question);
+                            const correctAnswer = decodeHTML(quizData.correct_answer);
+                            const incorrectAnswers = quizData.incorrect_answers.map(decodeHTML);
                             
-                            showLightbox(
-                                ` On This Day: ${now.toLocaleString('default', { month: 'long' })} ${day} `,
-                                `In ${eventYear}, ${eventDesc}`
-                            );
+                            // Combine and shuffle answers
+                            let answers = [correctAnswer, ...incorrectAnswers];
+                            answers.sort(() => Math.random() - 0.5);
+
+                            // Update modal content
+                            hdTitle.textContent = "Select the correct answer";
+                            
+                            // Create HTML for quiz options with A, B, C, D letters
+                            const letters = ['A', 'B', 'C', 'D'];
+                            const optionsHTML = answers.map((ans, i) => 
+                                `<button class="hd-quiz-option" data-answer="${ans.replace(/"/g, '&quot;')}">
+                                    <span class="hd-quiz-option-letter">${letters[i]}</span>
+                                    <span class="hd-quiz-option-text">${ans}</span>
+                                </button>`
+                            ).join('');
+                            
+                            hdContent.innerHTML = `
+                                <div style="margin-bottom: 24px; font-size: 1.25rem; font-weight: 700; line-height: 1.4;">${question}</div>
+                                <div class="hd-quiz-options" id="quiz-options-container">
+                                    ${optionsHTML}
+                                </div>
+                            `;
+                            hdLightbox.classList.add("active");
+                            
+                            // Handle answer selection
+                            const optionsContainer = document.getElementById('quiz-options-container');
+                            optionsContainer.addEventListener('click', function(e) {
+                                // Find the closest button ancestor if clicking on inner elements
+                                const clickedBtn = e.target.closest('.hd-quiz-option');
+                                if (clickedBtn) {
+                                    const selected = clickedBtn.getAttribute('data-answer');
+                                    const allBtns = this.querySelectorAll('.hd-quiz-option');
+                                    
+                                    allBtns.forEach(btn => {
+                                        btn.style.pointerEvents = 'none'; // Disable further clicks
+                                        btn.classList.remove('correct', 'incorrect'); // Clear any existing state
+                                        
+                                        if (btn.getAttribute('data-answer') === correctAnswer) {
+                                            btn.classList.add('correct');
+                                        } else if (btn.getAttribute('data-answer') === selected) {
+                                            btn.classList.add('incorrect');
+                                        }
+                                    });
+
+                                    // Update title to show result
+                                    if (selected === correctAnswer) {
+                                        hdTitle.textContent = "Correct! 🎉";
+                                        hdTitle.classList.add('success');
+                                    } else {
+                                        hdTitle.textContent = "Oops! Wrong 😢";
+                                        hdTitle.classList.add('error');
+                                    }
+                                    
+                                    hdCloseBtn.textContent = "Done";
+                                }
+                            });
+
                         } else {
-                            showLightbox("Have a Great Day!", "No major historical events found for today, but today is a great day to make history!");
+                            showLightbox("Quiz Time!", "Couldn't load a question right now. Try again later!");
                         }
                     } catch (error) {
-                        console.error("Failed to fetch This day info:", error);
-                        // Fallback if API fails
-                        showLightbox("Have a Great Day!", "Today is a special day just because! Enjoy your time.");
+                        console.error("Failed to fetch quiz info:", error);
+                        showLightbox("Quiz Time!", "Failed to load the quiz. Make sure you are connected to the internet.");
                     }
+                }
+
+                function showLightbox(title, content) {
+                    hdTitle.textContent = title;
+                    hdContent.innerHTML = content;
+                    hdLightbox.classList.add("active");
                 }
 
                 // 5. Trigger on load if enabled
@@ -2520,7 +2716,7 @@
                         if (isEnabled) {
                             // Small delay to let the site loader fade out smoothly first
                             setTimeout(() => {
-                                fetchHappyDayInfo();
+                                fetchQuizInfo();
                             }, 1200);
                         }
                     } catch (e) {}

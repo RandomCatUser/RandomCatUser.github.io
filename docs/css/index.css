@@ -117,6 +117,7 @@ header > .collapsible-header{
     border-radius: 32px;
     box-shadow: 0 28px 80px rgba(15, 23, 42, 0.14);
     background-color: #f7f8fa;
+    object-fit: contain;
 }
 
 div[class*="tw-w-[450px]"].tw-break-inside-avoid {

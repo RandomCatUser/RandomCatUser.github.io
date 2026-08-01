@@ -138,22 +138,25 @@
         .connect-stack { display: flex; flex-direction: row; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; }
 
         /* ================================================================ */
-        /* === SETTINGS BUTTON & DROPDOWN ================================== */
+        /* === HOME & SETTINGS BUTTONS / DROPDOWN ========================== */
         /* ================================================================ */
-        .settings-wrapper {
+        .nav-wrapper {
             position: fixed;
             top: 20px;
-            right: 20px;
             z-index: 120; /* Above lightbox which is 110 */
             display: flex;
             align-items: center;
         }
+        .home-wrapper { left: 20px; }
+        .settings-wrapper { right: 20px; }
+
         .filter {
             width: 40px; height: 40px; border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
             border: 1px solid rgba(0, 0, 0, 0.192); cursor: pointer;
             box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.021);
             transition: all 0.3s; background-color: transparent;
+            cursor: url('assets/cursor/pointinghand.svg'), pointer;
         }
         .filter svg { height: 16px; fill: rgb(77, 77, 77); transition: all 0.3s; }
         .filter:hover {
@@ -296,7 +299,7 @@
             color: #fb923c !important;
         }
 
-        /* Settings Dropdown */
+        /* Settings/Home Dropdown Buttons */
         [data-theme="dark"] .filter {
             border-color: rgba(255, 255, 255, 0.12) !important;
             background-color: transparent;
@@ -315,8 +318,17 @@
 </head>
 <body class="min-h-screen p-4 md:p-10 flex flex-col items-center justify-start">
 
+    <!-- ===== BACK TO HOME BUTTON ===== -->
+    <div class="nav-wrapper home-wrapper">
+        <a href="https://randomcatuser.github.io/" title="Back to Home" class="filter">
+            <svg viewBox="0 0 576 512" height="1em">
+                <path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 1 22 8L564.8 231.5c8 7 12 15 11 24z"/>
+            </svg>
+        </a>
+    </div>
+
     <!-- ===== SETTINGS BUTTON + DROPDOWN ===== -->
-    <div class="settings-wrapper">
+    <div class="nav-wrapper settings-wrapper">
         <button title="Settings" class="filter" id="settings-btn" type="button">
             <svg viewBox="0 0 512 512" height="1em">
                 <path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"></path>
