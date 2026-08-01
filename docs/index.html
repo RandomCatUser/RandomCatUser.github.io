@@ -879,6 +879,50 @@
                 background: #ef4444;
                 color: white;
             }
+
+            /* ===================== MOBILE NAV CLICKABILITY FIX ===================== */
+            /* The fixed .theme-settings-wrap overlaps the mobile menu area. */
+            .theme-settings-wrap {
+                pointer-events: none !important;
+            }
+            .theme-settings-panel.open {
+                pointer-events: auto !important;
+            }
+            #theme-settings-btn-nav {
+                pointer-events: auto !important;
+            }
+
+            @media (max-width: 1023px) {
+                /* Ensure the closed mobile menu doesn't act as an invisible box blocking clicks */
+                #collapsed-header-items {
+                    pointer-events: none !important;
+                }
+
+                /* Only enable pointer events when the menu is actually open */
+                #collapsed-header-items.active,
+                #collapsed-header-items.expanded,
+                #collapsed-header-items.show {
+                    pointer-events: auto !important;
+                }
+
+                #collapsed-header-items.active .header-links,
+                #collapsed-header-items.active a,
+                #collapsed-header-items.active button {
+                    pointer-events: auto !important;
+                    position: relative;
+                    z-index: 1;
+                }
+
+                #collapse-btn {
+                    z-index: 60 !important;
+                    pointer-events: auto !important;
+                }
+            }
+
+            /* Ensure the dynamic island music player is always clickable */
+            #sc-dynamic-island {
+                pointer-events: auto !important;
+            }
         </style>
     </head>
     <body class="tw-flex tw-min-h-[100vh] tw-flex-col tw-bg-[#fff] tw-font-mono">
@@ -1641,13 +1685,13 @@
             class="tw-mt-auto tw-flex tw-min-h-[100px] tw-w-full tw-place-content-around tw-place-items-center tw-gap-3 tw-p-[2%] tw-px-[10%] tw-text-black max-md:tw-flex-col"
         >
             <div class="tw-flex tw-gap-6 tw-text-2xl">
-                <a href="https://github.com/DihanRamanayaka" aria-label="Github">
+                <a href="https://github.com/RandomCatUser" aria-label="Github">
                     <i class="bi bi-github"></i>
                 </a>
             </div>
             <div class="tw-flex tw-gap-6 tw-text-2xl">
-                <a href="https://github.com/RandomCatUser" aria-label="Github">
-                    <i class="bi bi-git"></i>
+                <a href="/" aria-label="Github">
+                    <i class="bi bi-book"></i>
                 </a>
             </div>
         </footer>
@@ -2724,5 +2768,52 @@
             })();
         </script>
         <!-- ============================================================= -->
+        
+        <!-- ===================== MOBILE NAV TOGGLE FALLBACK ===================== -->
+        <script>
+        /* If ./index.js already defines toggleHeader(), the deferred script
+           overwrites this silently — no conflict. This only activates when
+           the external file is missing or doesn't define the function.      */
+        (function () {
+            if (typeof window.toggleHeader === 'function') return;
+
+            window.toggleHeader = function () {
+                var headerItems = document.getElementById('collapsed-header-items');
+                var btn = document.getElementById('collapse-btn');
+                if (!headerItems) return;
+
+                var isVisible =
+                    headerItems.classList.contains('active') ||
+                    headerItems.classList.contains('expanded') ||
+                    headerItems.classList.contains('show');
+
+                if (isVisible) {
+                    headerItems.classList.remove('active', 'expanded', 'show');
+                    if (btn) { btn.classList.remove('bi-x'); btn.classList.add('bi-list'); }
+                } else {
+                    headerItems.classList.add('active', 'expanded', 'show');
+                    if (btn) { btn.classList.remove('bi-list'); btn.classList.add('bi-x'); }
+                }
+            };
+        })();
+
+        /* ===================== CLOSE MENU ON LINK TAP (MOBILE) =============== */
+        (function () {
+            var links = document.querySelectorAll('#collapsed-header-items .header-links');
+            links.forEach(function (link) {
+                link.addEventListener('click', function () {
+                    var headerItems = document.getElementById('collapsed-header-items');
+                    var btn = document.getElementById('collapse-btn');
+                    if (headerItems) {
+                        headerItems.classList.remove('active', 'expanded', 'show');
+                    }
+                    if (btn) {
+                        btn.classList.remove('bi-x');
+                        btn.classList.add('bi-list');
+                    }
+                });
+            });
+        })();
+        </script>
     </body>
 </html>
