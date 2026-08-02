@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact <3</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+  :root {
+    --bg: #F8F8F7;
+    --fg: #111110;
+    --muted: #6B6B6B;
+    --card: #FFFFFF;
+    --border: #E8E8E6;
+    --accent: #111110;
+  }
+  [data-theme="dark"] {
+    --bg: #0C0C0C;
+    --fg: #F8F8F7;
+    --muted: #888888;
+    --card: #161616;
+    --border: #222222;
+    --accent: #F8F8F7;
+  }
+
+  * { -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .serif { font-family: 'Instrument Serif', serif; font-weight: 400; }
+
+  /* --- Header Elements --- */
+  .back-btn {
+    position: relative; display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.6rem 1.2rem; border-radius: 8px;
+    background: transparent; color: var(--fg);
+    border: 1px solid var(--border);
+    font-weight: 500; font-size: 0.9rem;
+    cursor: pointer; overflow: hidden; isolation: isolate;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+  .back-btn::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: var(--fg); transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .back-btn:hover { color: var(--bg); border-color: var(--fg); }
+  .back-btn:hover::before { transform: translateY(0); }
+  .back-btn i { transition: transform 0.3s ease; }
+  .back-btn:hover i { transform: translateX(-4px); }
+
+  .theme-toggle {
+    width: 56px; height: 30px; border-radius: 100px;
+    background: var(--bg); border: 1px solid var(--border);
+    cursor: pointer; position: relative;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 8px;
+  }
+  .theme-toggle .knob {
+    position: absolute; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--fg); top: 3px; left: 3px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2; display: flex; align-items: center; justify-content: center;
+    color: var(--bg); font-size: 9px;
+  }
+  [data-theme="dark"] .theme-toggle .knob { transform: translateX(26px); }
+  .theme-toggle i { font-size: 10px; color: var(--muted); }
+
+  /* --- Minimal Form --- */
+  .form-input, .form-textarea {
+    width: 100%; padding: 0.5rem 0;
+    background: transparent; border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0; color: var(--fg);
+    font-family: 'Inter', sans-serif; font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  .form-input::placeholder, .form-textarea::placeholder {
+    color: var(--muted); opacity: 0.6;
+  }
+  .form-input:focus, .form-textarea:focus {
+    outline: none; border-bottom-color: var(--fg);
+  }
+  .form-textarea {
+    resize: none; min-height: 80px;
+  }
+
+  /* Submit Button */
+  .submit-btn {
+    position: relative; display: inline-flex; align-items: center; justify-content: center;
+    gap: 0.5rem; padding: 0.85rem 2rem; margin-top: 1rem;
+    border-radius: 100px; background: var(--fg); color: var(--bg);
+    border: 1px solid var(--fg);
+    font-weight: 500; font-size: 0.9rem; cursor: pointer;
+    overflow: hidden; isolation: isolate;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .submit-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn i { transition: transform 0.3s ease; }
+  .submit-btn:hover i { transform: translateX(4px); }
+  .submit-btn.success { background: transparent; border-color: #1DB954; color: #1DB954; }
+
+  /* --- Minimal Social Grid --- */
+  .social-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+  }
+  .social-card {
+    display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+    padding: 1.5rem 1rem; border-radius: 16px;
+    border: 1px solid var(--border); background: var(--card);
+    text-decoration: none; color: var(--fg);
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+  .social-card:hover {
+    transform: translateY(-3px); border-color: var(--fg);
+  }
+  .social-card i { font-size: 1.2rem; }
+  .social-card span { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+
+  /* Animations */
+  .fade-in { opacity: 0; transform: translateY(10px); animation: fadeIn 0.8s ease forwards; }
+  @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 md:p-8" style="background: linear-gradient(to bottom, var(--bg) 60%, transparent);">
+  <button class="back-btn fade-in" onclick="window.location.href='index.html'" aria-label="Back to home">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back</span>
+  </button>
+
+  <div class="theme-toggle fade-in" id="themeToggle" role="button" tabindex="0" aria-label="Toggle dark mode" aria-pressed="false">
+    <i class="fa-solid fa-sun"></i>
+    <i class="fa-solid fa-moon"></i>
+    <div class="knob">
+      <i class="fa-solid fa-sun" id="knobIcon"></i>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="max-w-xl mx-auto px-6 py-32 md:py-44">
+  
+  <!-- Hero -->
+  <section class="text-center mb-20 fade-in" style="animation-delay: 0.1s;">
+    <p class="text-xs uppercase tracking-[0.2em] mb-4" style="color: var(--muted);">Contact</p>
+    <h1 class="serif text-6xl md:text-7xl mb-6 leading-none">Let's talk.</h1>
+    <p class="text-base md:text-lg max-w-md mx-auto" style="color: var(--muted);">
+      Have a project in mind, or just want to say hello? My inbox is always open.
+    </p>
+  </section>
+
+  <!-- Form Section -->
+  <section class="mb-20 fade-in" style="animation-delay: 0.2s;">
+    <form id="contactForm" class="flex flex-col gap-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <label for="name" class="sr-only">Name</label>
+          <input type="text" id="name" class="form-input" placeholder="Your Name" required />
+        </div>
+        <div>
+          <label for="email" class="sr-only">Email</label>
+          <input type="email" id="email" class="form-input" placeholder="Email Address" required />
+        </div>
+      </div>
+
+      <div>
+        <label for="subject" class="sr-only">Subject</label>
+        <input type="text" id="subject" class="form-input" placeholder="Subject" required />
+      </div>
+
+      <div>
+        <label for="message" class="sr-only">Message</label>
+        <textarea id="message" class="form-textarea" placeholder="Your Message..." required></textarea>
+      </div>
+
+      <div class="flex justify-center md:justify-start">
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span id="btnText">Send Message</span>
+          <i class="fa-solid fa-arrow-right" id="btnIcon"></i>
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Socials Section -->
+  <section class="fade-in" style="animation-delay: 0.3s;">
+    <h2 class="text-xs uppercase tracking-[0.2em] text-center mb-8" style="color: var(--muted);">Or reach me here</h2>
+    
+    <div class="social-grid">
+      <a href="https://discord.com/users/1068541705596448788" target="_blank" rel="noopener" class="social-card">
+        <i class="fa-brands fa-discord"></i>
+        <span>Discord</span>
+      </a>
+      <a href="https://x.com/DihanRamanayaka" target="_blank" rel="noopener" class="social-card">
+        <i class="fa-brands fa-x-twitter"></i>
+        <span>X (Twitter)</span>
+      </a>
+      <a href="https://github.com/randomcatuser" target="_blank" rel="noopener" class="social-card">
+        <i class="fa-brands fa-github"></i>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="text-center pb-10 text-sm" style="color: var(--muted);">
+  :D
+</footer>
+
+<script>
+  // ---------- Theme Toggle Logic ----------
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const knobIcon = document.getElementById('knobIcon');
+
+  function applyTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    knobIcon.className = theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+    themeToggle.setAttribute('aria-pressed', theme === 'dark');
+    try { localStorage.setItem('rc-theme', theme); } catch (e) {}
+  }
+
+  let savedTheme = 'light';
+  try { savedTheme = localStorage.getItem('rc-theme') || 'light'; } catch (e) {}
+  applyTheme(savedTheme);
+
+  function toggleTheme() {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  }
+  
+  themeToggle.addEventListener('click', toggleTheme);
+  themeToggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTheme(); }
+  });
+
+  // ---------- Contact Form Logic ----------
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const btnIcon = document.getElementById('btnIcon');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault(); 
+
+    btnText.textContent = 'Sending...';
+    btnIcon.style.display = 'none';
+    submitBtn.style.pointerEvents = 'none';
+    submitBtn.style.opacity = '0.6';
+
+    setTimeout(() => {
+      submitBtn.classList.add('success');
+      btnText.textContent = 'Sent successfully';
+      form.reset();
+
+      setTimeout(() => {
+        submitBtn.classList.remove('success');
+        btnText.textContent = 'Send Message';
+        btnIcon.style.display = 'inline-block';
+        submitBtn.style.pointerEvents = 'auto';
+        submitBtn.style.opacity = '1';
+      }, 3000);
+    }, 1200);
+  });
+</script>
+</body>
+</html>

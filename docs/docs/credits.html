@@ -8,7 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
-    <!-- ===== EARLY THEME INIT ===== -->
     <script>
         (function() {
             var savedTheme = localStorage.getItem('theme') || 'light';
@@ -36,7 +35,6 @@
         h1, h2, h3, h4, p, ul, li, span, code { cursor: text; }
         button, a, .sidebar-link, select { cursor: url('assets/cursor/pointinghand.svg'), pointer; }
 
-        /* Dynamic Background Orbs */
         .orb {
             position: fixed;
             border-radius: 50%;
@@ -69,7 +67,6 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* ===== NAV BUTTONS & DROPDOWN ===== */
         .nav-wrapper { position: fixed; top: 20px; z-index: 120; display: flex; align-items: center; }
         .home-wrapper { left: 20px; }
         .settings-wrapper { right: 20px; }
@@ -93,7 +90,6 @@
         .dropdown-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
         .settings-label { font-size: 14px; font-weight: 600; color: #333; transition: color 0.4s ease; }
 
-        /* ===== THEME TOGGLE SWITCH ===== */
         .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
         .switch #theme-toggle { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #2196f3; -webkit-transition: 0.4s; transition: 0.4s; z-index: 0; overflow: hidden; }
@@ -221,7 +217,6 @@
         }
         code { font-family: 'JetBrains Mono', monospace; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #db2777; word-break: break-word; }
 
-        /* Mobile Select Dropdown */
         .mobile-nav-select {
             display: none;
             width: 100%;
@@ -280,7 +275,6 @@
             }
         }
 
-        /* ===== BEAUTIFUL GLASSY DARK MODE ===== */
         [data-theme="dark"] { color-scheme: dark; }
         [data-theme="dark"] body { background: #08080d !important; color: #e4e4e7 !important; }
         [data-theme="dark"] #loading-overlay { background-color: #08080d !important; }
@@ -326,17 +320,14 @@
 </head>
 <body class="text-gray-900 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
 
-    <!-- Dynamic Background Orbs -->
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
 
-    <!-- Loading Overlay -->
     <div id="loading-overlay">
         <div class="spinner"></div>
     </div>
 
-    <!-- ===== BACK TO UNIVERSE BUTTON ===== -->
     <div class="nav-wrapper home-wrapper">
         <a href="index.html" title="Back to Universe" class="filter">
             <svg viewBox="0 0 576 512" height="1em">
@@ -345,7 +336,6 @@
         </a>
     </div>
 
-    <!-- ===== SETTINGS BUTTON + DROPDOWN ===== -->
     <div class="nav-wrapper settings-wrapper">
         <button title="Settings" class="filter" id="settings-btn" type="button">
             <svg viewBox="0 0 512 512" height="1em"><path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"></path></svg>
@@ -462,7 +452,6 @@
                     </div>
                 </section>
 
-                <!-- Section 2: Terms of Service -->
                 <section id="terms-of-service" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-red-100">
@@ -483,7 +472,6 @@
                     </div>
                 </section>
 
-                <!-- Section 3: Disclaimer & Liability -->
                 <section id="disclaimer" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-amber-100">
@@ -502,7 +490,6 @@
                     </div>
                 </section>
 
-                <!-- Section 4: Data & Privacy -->
                 <section id="privacy" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-green-100">
@@ -519,7 +506,6 @@
                     </div>
                 </section>
 
-                <!-- Section 5: Tools & Technologies -->
                 <section id="tools-used" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-yellow-100">
@@ -542,7 +528,6 @@
                     </div>
                 </section>
 
-                <!-- Section 6: How to Clone -->
                 <section id="how-to-clone" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-purple-100">
@@ -574,7 +559,6 @@
                     </div>
                 </section>
 
-                <!-- Section 7: Assets & UI -->
                 <section id="assets-ui" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-blue-100">
@@ -609,7 +593,6 @@
                     </div>
                 </section>
 
-                <!-- Section 8: Special Thanks -->
                 <section id="special-thanks" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-pink-100">
@@ -628,7 +611,6 @@
                     </div>
                 </section>
 
-                <!-- Section 9: Help & Support -->
                 <section id="help-support" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-cyan-100">
@@ -647,7 +629,6 @@
                     </div>
                 </section>
 
-                <!-- Section 10: Contact & Inquiries -->
                 <section id="contact" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-indigo-100">
@@ -669,9 +650,8 @@
             </main>
         </div>
 
-        <!-- Footer -->
         <footer class="mt-6 sm:mt-12 text-center border-t border-gray-200 pt-6 sm:pt-8" data-aos="fade-up" data-aos-delay="100">
-            <a href="https://randomcatuser.github.io/" class="text-orange-600 hover:text-orange-800 font-medium text-base sm:text-lg transition-colors duration-200 inline-flex items-center gap-2">
+            <a href="https://randomcatuser.github.io/index.html" class="text-orange-600 hover:text-orange-800 font-medium text-base sm:text-lg transition-colors duration-200 inline-flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 Back to My Universe
             </a>
