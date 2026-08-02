@@ -10,19 +10,26 @@ const collapseHeaderItems = document.getElementById("collapsed-header-items")
 
 
 function onHeaderClickOutside(e) {
+    if (!collapseBtn || !collapseHeaderItems) return
 
-    if (!collapseHeaderItems.contains(e.target)) {
-        toggleHeader()
+    if (collapseBtn.contains(e.target) || collapseHeaderItems.contains(e.target)) {
+        return
     }
 
+    toggleHeader()
 }
 
 
-function toggleHeader() {
+function toggleHeader(event) {
+    if (event && typeof event.stopPropagation === "function") {
+        event.stopPropagation()
+    }
+
+    if (!collapseBtn || !collapseHeaderItems) return
+
     if (isHeaderCollapsed) {
-        // collapseHeaderItems.classList.remove("max-md:tw-opacity-0")
-        collapseHeaderItems.classList.add("opacity-100",)
-        collapseHeaderItems.style.width = "60vw"
+        collapseHeaderItems.classList.add("active", "expanded", "show")
+        collapseHeaderItems.style.width = window.innerWidth < RESPONSIVE_WIDTH ? "100%" : "60vw"
         collapseBtn.classList.remove("bi-list")
         collapseBtn.classList.add("bi-x", "max-lg:tw-fixed")
         isHeaderCollapsed = false
@@ -30,7 +37,7 @@ function toggleHeader() {
         setTimeout(() => window.addEventListener("click", onHeaderClickOutside), 1)
 
     } else {
-        collapseHeaderItems.classList.remove("opacity-100")
+        collapseHeaderItems.classList.remove("active", "expanded", "show", "opacity-100")
         collapseHeaderItems.style.width = "0vw"
         collapseBtn.classList.remove("bi-x", "max-lg:tw-fixed")
         collapseBtn.classList.add("bi-list")
@@ -41,10 +48,17 @@ function toggleHeader() {
 }
 
 function responsive() {
+    if (!collapseBtn || !collapseHeaderItems) return
+
     if (window.innerWidth > RESPONSIVE_WIDTH) {
         collapseHeaderItems.style.width = ""
+        collapseHeaderItems.classList.remove("active", "expanded", "show", "opacity-100")
+        collapseBtn.classList.remove("bi-x", "max-lg:tw-fixed")
+        collapseBtn.classList.add("bi-list")
+        isHeaderCollapsed = true
 
     } else {
+        collapseHeaderItems.style.width = isHeaderCollapsed ? "0vw" : "100%"
         isHeaderCollapsed = true
     }
 }

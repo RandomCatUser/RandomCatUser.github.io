@@ -372,20 +372,29 @@
             /* ---------- Settings launcher + panel ---------- */
             .theme-settings-wrap {
                 position: fixed;
-                top: 70px;
-                right: 5%;
-                z-index: 100000;
+                top: 80px; /* Sits nicely below the 60px navbar */
+                left: 50%;
+                transform: translateX(-50%);
+                /* CRITICAL FIX: must be higher than header's z-index */
+                z-index: 10000000000;
+                pointer-events: auto;
                 display: flex;
                 flex-direction: column;
-                align-items: flex-end;
+                align-items: center;
                 gap: 10px;
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                width: 100%;
+                max-width: 380px; /* Constrain width for a clean pop-up */
             }
 
             @media (max-width: 1023px) {
                 .theme-settings-wrap {
-                    top: 62px;
-                    right: 16px;
+                    top: 75px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    z-index: 999999998;
+                    padding: 0 16px;
+                    max-width: calc(100% - 32px);
                 }
             }
 
@@ -443,24 +452,94 @@
             .theme-settings-panel {
                 display: flex;
                 flex-direction: column;
-                gap: 4px; /* Reduced gap to accommodate padding inside rows */
-                padding: 10px 10px;
-                border-radius: 16px;
-                background-color: var(--theme-card-bg, #fff);
-                border: 1px solid var(--theme-border, rgba(0,0,0,0.15));
-                box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
-                min-width: 220px;
+                gap: 6px;
+                padding: 20px;
+                border-radius: 20px;
+                background-color: rgba(255, 255, 255, 0.85); /* Liquid glass feel */
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0,0,0,0.05);
+                width: 100%;
+                box-sizing: border-box;
                 opacity: 0;
-                transform: translateY(-8px) scale(0.96);
+                transform: translateY(-10px) scale(0.95);
                 pointer-events: none;
-                transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.5s ease, border-color 0.5s ease;
-                overflow: hidden;
+                transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.5s ease, border-color 0.5s ease;
+            }
+
+            body.dark-theme .theme-settings-panel {
+                background-color: rgba(22, 28, 42, 0.85);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             }
 
             .theme-settings-panel.open {
                 opacity: 1;
                 transform: translateY(0) scale(1);
                 pointer-events: auto;
+            }
+
+            /* ===================== DETAILED PANEL ELEMENTS ===================== */
+            .panel-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 4px 12px 4px;
+            }
+            .panel-title {
+                font-size: 16px;
+                font-weight: 700;
+                color: var(--theme-text, #111);
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .panel-close-btn {
+                background: rgba(0,0,0,0.05);
+                border: none;
+                color: var(--theme-text-muted, #666);
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: background 0.2s, color 0.2s, transform 0.1s;
+                font-size: 14px;
+            }
+            .panel-close-btn:hover {
+                background: rgba(0,0,0,0.1);
+                color: var(--theme-text, #000);
+            }
+            .panel-close-btn:active {
+                transform: scale(0.9);
+            }
+            body.dark-theme .panel-close-btn {
+                background: rgba(255,255,255,0.05);
+            }
+            body.dark-theme .panel-close-btn:hover {
+                background: rgba(255,255,255,0.1);
+                color: #fff;
+            }
+
+            .panel-divider {
+                height: 1px;
+                background: var(--theme-border, #ccc);
+                opacity: 0.2;
+                margin: 4px 0;
+                width: 100%;
+            }
+
+            .panel-section-title {
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: var(--theme-text-muted, #888);
+                padding: 4px 6px 6px 6px;
             }
 
             /* ===================== LIQUID GLASS HOVER ROW ===================== */
@@ -472,10 +551,9 @@
                 position: relative;
                 padding: 12px 14px;
                 border-radius: 12px;
-                margin: 0; /* Reset margin */
-                transition: background 0.3s ease, border-color 0.3s ease;
+                margin: 0;
+                transition: background 0.3s ease;
                 overflow: hidden;
-                border: 1px solid transparent;
                 cursor: default;
             }
 
@@ -501,13 +579,10 @@
 
             .theme-settings-row:hover {
                 background: rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(4px);
-                border-color: rgba(255, 255, 255, 0.2);
             }
 
             body.dark-theme .theme-settings-row:hover {
                 background: rgba(255, 255, 255, 0.05);
-                border-color: rgba(255, 255, 255, 0.1);
             }
 
             .theme-settings-row:hover::before {
@@ -518,14 +593,36 @@
                 position: relative;
                 z-index: 1;
             }
-            /* ================================================================== */
 
+            .row-content {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                flex-grow: 1;
+            }
+            .row-icon {
+                font-size: 18px;
+                color: var(--theme-text-muted, #888);
+                width: 24px;
+                text-align: center;
+            }
+            .row-text {
+                display: flex;
+                flex-direction: column;
+            }
             .theme-settings-label {
-                font-size: 13px;
+                font-size: 14px;
                 font-weight: 600;
                 color: var(--theme-text, #111);
                 letter-spacing: 0.2px;
             }
+            .theme-settings-desc {
+                font-size: 11px;
+                color: var(--theme-text-muted, #888);
+                margin-top: 3px;
+                line-height: 1.2;
+            }
+            /* ================================================================== */
 
             /* ---------- From Uiverse.io by RiccardoRapelli (dark/light switch) ---------- */
             .switch {
@@ -880,47 +977,114 @@
                 color: white;
             }
 
-            /* ===================== MOBILE NAV CLICKABILITY FIX ===================== */
-            /* The fixed .theme-settings-wrap overlaps the mobile menu area. */
+            /* ================= MOBILE NAV FIX ================= */
+
+            header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 999999999;
+            }
+
+            /* Nothing should cover the header */
+            section,
+            main,
+            .hero,
+            .tw-relative {
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Mobile menu */
+            #collapsed-header-items {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 100%;
+                background: var(--theme-card-bg, #fff);
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                transform: translateY(-10px);
+                transition: .25s;
+                z-index: 999999999;
+            }
+
+            #collapsed-header-items.active,
+            #collapsed-header-items.show,
+            #collapsed-header-items.expanded {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+                transform: none;
+            }
+
+            /* Bigger touch targets */
+            .header-links {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                min-height: 56px;
+                padding: 16px 22px;
+            }
+
+            /* Menu button */
+            #collapse-btn {
+                width: 52px;
+                height: 52px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000000000;
+            }
+
+            /* Theme button shouldn't float over menu */
             .theme-settings-wrap {
-                pointer-events: none !important;
-            }
-            .theme-settings-panel.open {
-                pointer-events: auto !important;
-            }
-            #theme-settings-btn-nav {
-                pointer-events: auto !important;
+                z-index: 10000000000;
+                pointer-events: auto;
             }
 
             @media (max-width: 1023px) {
-                /* Ensure the closed mobile menu doesn't act as an invisible box blocking clicks */
-                #collapsed-header-items {
-                    pointer-events: none !important;
+                .theme-settings-wrap {
+                    top: 75px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    z-index: 999999998;
+                    padding: 0 16px;
+                    max-width: calc(100% - 32px);
                 }
 
-                /* Only enable pointer events when the menu is actually open */
-                #collapsed-header-items.active,
-                #collapsed-header-items.expanded,
-                #collapsed-header-items.show {
-                    pointer-events: auto !important;
+                /* Disable decorative overlays catching taps */
+                .reveal-hero-img,
+                .reveal-hero-text,
+                .loader,
+                #loader-overlay.hidden {
+                    pointer-events: none;
                 }
 
-                #collapsed-header-items.active .header-links,
-                #collapsed-header-items.active a,
-                #collapsed-header-items.active button {
-                    pointer-events: auto !important;
-                    position: relative;
-                    z-index: 1;
-                }
-
-                #collapse-btn {
-                    z-index: 60 !important;
-                    pointer-events: auto !important;
+                /* Make links easy to tap */
+                .header-links,
+                #collapsed-header-items a,
+                #collapsed-header-items button {
+                    pointer-events: auto;
                 }
             }
 
-            /* Ensure the dynamic island music player is always clickable */
+            /* Ensure the dynamic island music player container is always clickable */
             #sc-dynamic-island {
+                pointer-events: auto !important;
+            }
+
+            /* Enable interaction for music player controls when expanded.
+               Scoped to .expanded so invisible buttons in collapsed state
+               don't intercept taps meant for the island's click-to-expand. */
+            #sc-dynamic-island.expanded .sc-btn,
+            #sc-dynamic-island.expanded .sc-btn i,
+            #sc-dynamic-island.expanded .sc-btn span,
+            #sc-dynamic-island.expanded #sc-timeline-bar,
+            #sc-dynamic-island.expanded #sc-timeline-fill,
+            #sc-dynamic-island.expanded #sc-timeline-handle {
                 pointer-events: auto !important;
             }
         </style>
@@ -946,9 +1110,31 @@
         <!-- Opened via the circular theme button that lives in the nav bar. -->
         <div class="theme-settings-wrap">
             <div class="theme-settings-panel" id="theme-settings-panel">
-                <div class="theme-settings-row">
-                    <span class="theme-settings-label">Dark mode</span>
+                
+                <!-- Panel Header -->
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <i class="bi bi-sliders"></i>
+                        Settings
+                    </h3>
+                    <button class="panel-close-btn" id="panel-close-btn" aria-label="Close settings">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
 
+                <div class="panel-divider"></div>
+
+                <!-- Theme Section -->
+                <div class="panel-section-title">Theme</div>
+                
+                <div class="theme-settings-row">
+                    <div class="row-content">
+                        <i class="bi bi-circle-half row-icon"></i>
+                        <div class="row-text">
+                            <span class="theme-settings-label">Dark Mode</span>
+                            <span class="theme-settings-desc">Switch between light and dark themes</span>
+                        </div>
+                    </div>
                     <!-- From Uiverse.io by RiccardoRapelli -->
                     <label class="switch">
                         <input id="theme-toggle-input" type="checkbox" />
@@ -977,9 +1163,20 @@
                     </label>
                 </div>
 
+                <div class="panel-divider"></div>
+
+                <!-- Experience Section -->
+                <div class="panel-section-title">Experience</div>
+
                 <!-- ===================== QUIZ TOGGLE ROW ===================== -->
                 <div class="theme-settings-row">
-                    <span class="theme-settings-label">Quiz</span>
+                    <div class="row-content">
+                        <i class="bi bi-patch-question row-icon"></i>
+                        <div class="row-text">
+                            <span class="theme-settings-label">Quiz Mode</span>
+                            <span class="theme-settings-desc">Enable interactive quizzes on page load</span>
+                        </div>
+                    </div>
                     <!-- From Uiverse.io by RaspberryBee -->
                     <label class="quiz-switch">
                       <input id="happy-days-toggle-input" type="checkbox">
@@ -1031,13 +1228,13 @@
         </div>
 
         <header
-            class="tw-absolute tw-top-0 tw-z-20 tw-flex tw-h-[60px] tw-w-full tw-bg-opacity-0 tw-px-[5%] max-lg:tw-mr-auto max-lg:tw-px-4 lg:tw-justify-around"
+            class="tw-absolute tw-top-0 tw-z-[9999999] tw-flex tw-h-[60px] tw-w-full tw-bg-opacity-0 tw-px-[5%] max-lg:tw-mr-auto max-lg:tw-px-4 lg:tw-justify-around"
         >
             <a
                 class="tw-h-[50px] tw-p-[40px] tw-text-2xl tw-font-medium"
                 href="#"
             >
-                -
+                
             </a>
             <div
                 class="collapsible-header animated-collapse max-lg:tw-shadow-md"
@@ -1087,14 +1284,14 @@
             </div>
             <button
                 class="bi bi-list tw-absolute tw-right-3 tw-top-3 tw-z-50 tw-text-3xl tw-text-black lg:tw-hidden"
-                onclick="toggleHeader()"
+                onclick="toggleHeader(event)"
                 aria-label="menu"
                 id="collapse-btn"
             ></button>
         </header>
 
         <section
-            class="tw-relative tw-flex tw-min-h-[100vh] tw-w-full tw-max-w-[100vw] tw-flex-col tw-overflow-hidden max-lg:tw-p-4 max-md:tw-mt-[50px]"
+            class="tw-relative tw-flex tw-min-h-[100vh] tw-w-full tw-max-w-[100vw] tw-flex-col tw-overflow-hidden max-lg:tw-p-4 max-md:tw-mt-[60px]"
         >
             <div
                 class="tw-flex tw-h-full tw-min-h-[100vh] tw-w-full tw-place-content-center tw-gap-6 tw-p-[5%] max-xl:tw-place-items-center max-lg:tw-flex-col"
@@ -1690,7 +1887,7 @@
                 </a>
             </div>
             <div class="tw-flex tw-gap-6 tw-text-2xl">
-                <a href="/" aria-label="Github">
+                <a href="./docs/credits.html" aria-label="Github">
                     <i class="bi bi-book"></i>
                 </a>
             </div>
@@ -1859,7 +2056,7 @@
           .sc-dynamic-island.expanded .sc-expanded-layout {
             opacity: 1;
             transform: scale(1);
-            pointer-events: auto;
+            pointer-events: auto !important;
           }
 
           /* Metadata Track Header Row */
@@ -2527,6 +2724,7 @@
                 const settingsPanel = document.getElementById("theme-settings-panel");
                 const themeInput = document.getElementById("theme-toggle-input");
                 const navThemeBtn = document.getElementById("theme-settings-btn-nav");
+                const panelCloseBtn = document.getElementById("panel-close-btn");
 
                 function getSavedTheme() {
                     try {
@@ -2587,8 +2785,28 @@
                         closePanel();
                     } else {
                         openPanel();
+                        
+                        // If on mobile, close the hamburger menu to prevent overlap
+                        if (window.innerWidth < 1024) {
+                            const headerItems = document.getElementById('collapsed-header-items');
+                            const collapseBtn = document.getElementById('collapse-btn');
+                            if (headerItems && headerItems.classList.contains('active')) {
+                                headerItems.classList.remove('active', 'expanded', 'show');
+                                if (collapseBtn) {
+                                    collapseBtn.classList.remove('bi-x');
+                                    collapseBtn.classList.add('bi-list');
+                                }
+                            }
+                        }
                     }
                 });
+
+                if (panelCloseBtn) {
+                    panelCloseBtn.addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        closePanel();
+                    });
+                }
 
                 document.addEventListener("click", function (e) {
                     if (

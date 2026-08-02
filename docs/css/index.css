@@ -76,11 +76,15 @@ header > .collapsible-header{
         overflow-y: auto;
         box-shadow: -2px 0px 12px rgba(0,0,0,0.12);
         opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
     }
 
     header .collapsible-header.opacity-100 {
         width: 100vw;
         opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
     }
 
     .header-links {
@@ -151,7 +155,7 @@ div[class*="tw-h-[150px]"][class*="tw-w-[350px]"]:hover {
 }
 
 .opacity-100{
-    opacity: 100 !important;
+    opacity: 1 !important;
 }
 
 .btn{
