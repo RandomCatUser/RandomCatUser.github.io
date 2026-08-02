@@ -203,7 +203,7 @@
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
-        .docs-text { font-size: 15px; line-height: 1.7; color: #475569; }
+        .docs-text { font-size: 15px; line-height: 1.7; color: #475569; word-break: break-word; }
         .docs-text strong { color: #1e293b; }
         .docs-subheading {
             font-family: 'Space Grotesk', sans-serif;
@@ -219,7 +219,7 @@
             font-family: 'JetBrains Mono', monospace; font-size: 13px; overflow-x: auto;
             border: 1px solid #334155; margin: 12px 0;
         }
-        code { font-family: 'JetBrains Mono', monospace; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #db2777; }
+        code { font-family: 'JetBrains Mono', monospace; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #db2777; word-break: break-word; }
 
         /* Mobile Select Dropdown */
         .mobile-nav-select {
@@ -240,8 +240,44 @@
             .docs-container { grid-template-columns: 1fr; gap: 0; }
             .sidebar { display: none; }
             .mobile-nav-select { display: block; }
-            .docs-content { padding: 24px; }
-            .docs-heading { font-size: 22px; }
+            .docs-content { 
+                padding: 20px; 
+                border-radius: 16px;
+                margin-bottom: 40px;
+            }
+            .docs-heading { 
+                font-size: 20px; 
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .docs-subheading { font-size: 16px; }
+            .docs-text { 
+                font-size: 14px; 
+            }
+            .docs-icon-box { 
+                width: 36px; 
+                height: 36px; 
+            }
+            pre { 
+                font-size: 12px; 
+                padding: 12px; 
+                white-space: pre-wrap; 
+                word-break: break-all;
+            }
+            code { 
+                font-size: 0.85em; 
+            }
+        }
+
+        @media (max-width: 480px) {
+            body { padding-left: 16px; padding-right: 16px; }
+            .nav-wrapper.home-wrapper { left: 16px; }
+            .nav-wrapper.settings-wrapper { right: 16px; }
+            .settings-dropdown {
+                right: -16px;
+                min-width: calc(100vw - 64px);
+                max-width: 280px;
+            }
         }
 
         /* ===== BEAUTIFUL GLASSY DARK MODE ===== */
@@ -349,14 +385,14 @@
 
     <div class="max-w-6xl w-full relative z-10 mx-auto">
         <!-- Header -->
-        <header class="text-center mb-12 sm:mb-16" data-aos="fade-down" data-aos-duration="800">
+        <header class="text-center mb-8 sm:mb-16" data-aos="fade-down" data-aos-duration="800">
             <div class="inline-block mb-4">
-                <span class="bg-orange-100 text-orange-600 text-xs font-semibold px-4 py-2 rounded-full border border-orange-200">Quick Run</span>
+                <span class="bg-orange-100 text-orange-600 text-xs font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-orange-200">Quick Run</span>
             </div>
-            <h1 class="text-4xl sm:text-6xl font-bold text-gray-900 mb-4 tracking-tight" style="font-family: 'Space Grotesk', sans-serif;">
+            <h1 class="text-3xl sm:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 tracking-tight" style="font-family: 'Space Grotesk', sans-serif;">
                 Credits & Legal
             </h1>
-            <p class="text-base text-gray-600 max-w-xl mx-auto mb-8 leading-relaxed">
+            <p class="text-sm sm:text-base text-gray-600 max-w-xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2">
                 Building this universe wouldn't have been possible without the amazing open-source tools and assets. Navigate through the document to learn more.
             </p>
         </header>
@@ -569,7 +605,7 @@
                                 <strong>Image Assets:</strong> Profile images and banners are sourced from friends, Unsplash, and Pinterest. Earth favicon from favicon.io.
                             </li>
                         </ul>
-                        <p class="text-xs text-gray-500">All other original content within this repository is &copy; 2024 RandomCatUser, and is licensed under the Apache 2.0 License.</p>
+                        <p class="text-xs text-gray-500">All other original content within this repository is &copy; RandomCatUser, and is licensed under the Apache 2.0 License.</p>
                     </div>
                 </section>
 
@@ -634,8 +670,8 @@
         </div>
 
         <!-- Footer -->
-        <footer class="mt-8 sm:mt-12 text-center border-t border-gray-200 pt-8" data-aos="fade-up" data-aos-delay="100">
-            <a href="index.html" class="text-orange-600 hover:text-orange-800 font-medium text-base sm:text-lg transition-colors duration-200 inline-flex items-center gap-2">
+        <footer class="mt-6 sm:mt-12 text-center border-t border-gray-200 pt-6 sm:pt-8" data-aos="fade-up" data-aos-delay="100">
+            <a href="https://randomcatuser.github.io/" class="text-orange-600 hover:text-orange-800 font-medium text-base sm:text-lg transition-colors duration-200 inline-flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 Back to My Universe
             </a>
