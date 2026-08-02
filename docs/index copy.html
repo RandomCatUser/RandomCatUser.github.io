@@ -377,7 +377,7 @@
                 transform: translateX(-50%);
                 /* CRITICAL FIX: must be higher than header's z-index */
                 z-index: 10000000000;
-                pointer-events: auto;
+                pointer-events: none; /* Prevent blocking nav bar and buttons */
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -477,7 +477,7 @@
             .theme-settings-panel.open {
                 opacity: 1;
                 transform: translateY(0) scale(1);
-                pointer-events: auto;
+                pointer-events: auto; /* Re-enable pointer events only when open */
             }
 
             /* ===================== DETAILED PANEL ELEMENTS ===================== */
@@ -1042,7 +1042,7 @@
             /* Theme button shouldn't float over menu */
             .theme-settings-wrap {
                 z-index: 10000000000;
-                pointer-events: auto;
+                pointer-events: none; /* Prevent blocking clicks */
             }
 
             @media (max-width: 1023px) {
