@@ -11,6 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Add Canvas Confetti for celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -24,7 +28,7 @@
 
     <!-- Header -->
     <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 md:p-8">
-        <button class="back-btn fade-in" onclick="window.history.back()" aria-label="Back">
+        <button class="back-btn fade-in" onclick="window.location.href='https://randomcatuser.github.io/'" aria-label="Back">
             <i class="fa-solid fa-arrow-left"></i>
             <span>Back</span>
         </button>
@@ -44,9 +48,7 @@
 
         <!-- Hero -->
         <section class="flex flex-col items-center text-center mb-20 fade-in" style="animation-delay: 0.1s;">
-            
-                
-            
+            </div>
             <h1 class="serif hero-title text-6xl md:text-7xl mb-3 leading-tight">Guest Book</h1>
             <p class="text-base md:text-lg" style="color: var(--muted);">Leave a message, share a thought.</p>
         </section>
@@ -110,7 +112,9 @@
         Made with Supabase
     </footer>
 
-    <!-- ADMIN LIGHTBOX MODAL -->
+    <!-- =============================
+         ADMIN LIGHTBOX MODAL
+         ============================= -->
     <div id="adminLightbox" class="lightbox-overlay">
         <div class="lightbox-modal">
             <div class="lightbox-header">
@@ -124,7 +128,7 @@
             </div>
             
             <div class="lightbox-content">
-                <!-- Login Form (Shows if logged out) -->
+                <!-- Login Form -->
                 <div id="adminLoginForm" class="hidden">
                     <div class="card p-6" style="background: var(--card);">
                         <p class="text-sm mb-4" style="color: var(--muted);">Please sign in to manage messages.</p>
@@ -136,7 +140,7 @@
                     </div>
                 </div>
 
-                <!-- Admin Dashboard (Shows if logged in) -->
+                <!-- Admin Dashboard -->
                 <div id="adminDashboard" class="hidden">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-xs uppercase tracking-widest" style="color: var(--muted);">Moderation</h3>
@@ -144,6 +148,10 @@
                             <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
                         </button>
                     </div>
+                    
+                    <!-- Analytics Stats Grid -->
+                    <div id="adminStats" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6"></div>
+
                     <div id="adminMessages" class="space-y-4"></div>
                 </div>
             </div>

@@ -33,9 +33,7 @@ const themeToggle = document.getElementById('themeToggle');
 
 function applyTheme(theme) {
     root.setAttribute('data-theme', theme);
-    if (themeToggle) {
-        themeToggle.checked = (theme === 'dark');
-    }
+    if (themeToggle) themeToggle.checked = (theme === 'dark');
     try { localStorage.setItem('gb-theme', theme); } catch (e) {}
 }
 
@@ -45,8 +43,7 @@ applyTheme(savedTheme);
 
 if (themeToggle) {
     themeToggle.addEventListener('change', () => {
-        const next = themeToggle.checked ? 'dark' : 'light';
-        applyTheme(next);
+        applyTheme(themeToggle.checked ? 'dark' : 'light');
     });
 }
 
@@ -60,21 +57,16 @@ function renderEmojiGrid(category) {
     const data = EMOJI_DATA[category];
 
     if (header) header.textContent = data.label;
-    document.querySelectorAll('.emoji-cat-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.cat === category);
-    });
+    document.querySelectorAll('.emoji-cat-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.cat === category));
 
     if (grid) {
-        grid.innerHTML = data.emojis.map(emoji =>
-            `<button class="emoji-item" onclick="insertEmoji('${emoji}')">${emoji}</button>`
-        ).join('');
+        grid.innerHTML = data.emojis.map(emoji => `<button class="emoji-item" onclick="insertEmoji('${emoji}')">${emoji}</button>`).join('');
     }
 }
 
 function toggleEmojiPicker(targetId) {
     const picker = document.getElementById(`emojiPicker-${targetId}`);
     const btn = document.getElementById(`emojiBtn-${targetId}`);
-
     if (!picker || !btn) return;
 
     const isOpen = picker.classList.contains('open');
@@ -92,14 +84,12 @@ function toggleEmojiPicker(targetId) {
 function insertEmoji(emoji) {
     const target = document.getElementById(activeEmojiTarget);
     if (!target) return;
-
     const start = target.selectionStart;
     const end = target.selectionEnd;
     const text = target.value;
 
     target.value = text.slice(0, start) + emoji + text.slice(end);
     target.focus();
-
     const newPos = start + emoji.length;
     target.setSelectionRange(newPos, newPos);
 
@@ -111,13 +101,11 @@ document.addEventListener('click', (e) => {
         document.querySelectorAll('.emoji-picker').forEach(p => p.classList.remove('open'));
         document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('active'));
     }
-    if (e.target.classList.contains('emoji-cat-btn')) {
-        renderEmojiGrid(e.target.dataset.cat);
-    }
+    if (e.target.classList.contains('emoji-cat-btn')) renderEmojiGrid(e.target.dataset.cat);
 });
 
 // =============================
-// CHARACTER COUNT
+// HELPER FUNCTIONS
 // =============================
 function updateCharCount() {
     const msg = document.getElementById('message');
@@ -127,27 +115,20 @@ function updateCharCount() {
         count.style.color = msg.value.length > 450 ? '#EF4444' : 'var(--muted)';
     }
 }
+document.addEventListener('input', (e) => { if (e.target.id === 'message') updateCharCount(); });
 
-document.addEventListener('input', (e) => {
-    if (e.target.id === 'message') updateCharCount();
-});
-
-// =============================
-// HELPER FUNCTIONS
-// =============================
-// Fetches IP Address to prevent clearing site data to re-like
 async function getUserIP() {
     try {
         const response = await fetch('https://api.ipify.org?format=json');
         const data = await response.json();
         return data.ip;
     } catch (e) {
-        let visitorID = localStorage.getItem("visitor_id");
-        if (!visitorID) {
-            visitorID = crypto.randomUUID();
-            localStorage.setItem("visitor_id", visitorID);
+        let localFallback = localStorage.getItem("fallback_id");
+        if (!localFallback) {
+            localFallback = crypto.randomUUID();
+            localStorage.setItem("fallback_id", localFallback);
         }
-        return visitorID;
+        return localFallback;
     }
 }
 
@@ -161,22 +142,15 @@ function escapeHTML(text) {
 function formatDateTime(dateString) {
     if (!dateString) return "Unknown date";
     let dateStr = String(dateString);
-    if (dateStr.indexOf('T') === -1 && dateStr.indexOf(' ') !== -1) {
-        dateStr = dateStr.replace(' ', 'T');
-    }
+    if (dateStr.indexOf('T') === -1 && dateStr.indexOf(' ') !== -1) dateStr = dateStr.replace(' ', 'T');
     const timePart = dateStr.split('T')[1] || '';
     const hasTimezone = timePart.includes('Z') || timePart.includes('+') || (timePart.includes('-') && timePart.indexOf('-') > 0);
-    if (!hasTimezone) {
-        dateStr += 'Z';
-    }
+    if (!hasTimezone) dateStr += 'Z';
+    
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return "Unknown date";
 
-    const options = { 
-        year: 'numeric', month: 'short', day: 'numeric', 
-        hour: '2-digit', minute: '2-digit', hour12: true 
-    };
-    return date.toLocaleString(undefined, options);
+    return date.toLocaleString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
 }
 
 // =============================
@@ -188,6 +162,9 @@ function checkAdminRoute() {
     } else {
         closeAdminModal(false);
     }
+    supabaseClient.auth.getSession().then(({ data }) => {
+        updateAdminUI(data.session);
+    });
 }
 
 function openAdminModal() {
@@ -209,7 +186,33 @@ function closeAdminModal(updateHash = true) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function updateAdminUI(session) {
+    const loginForm = document.getElementById('adminLoginForm');
+    const dashboard = document.getElementById('adminDashboard');
+    const isAdmin = session && !session.user.is_anonymous;
+
+    if (isAdmin) {
+        if (loginForm) loginForm.classList.add('hidden');
+        if (dashboard) dashboard.classList.remove('hidden');
+    } else {
+        if (dashboard) dashboard.classList.add('hidden');
+        if (window.location.hash === '#admin' && loginForm) {
+            loginForm.classList.remove('hidden');
+        } else if (loginForm) {
+            loginForm.classList.add('hidden');
+        }
+    }
+}
+
+function onDOMReady(callback) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', callback);
+    } else {
+        callback();
+    }
+}
+
+onDOMReady(() => {
     const modal = document.getElementById('adminLightbox');
     if (modal) {
         modal.addEventListener('click', (e) => {
@@ -220,9 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        if (document.getElementById('adminLightbox')?.classList.contains('open')) {
-            closeAdminModal();
-        }
+        if (document.getElementById('adminLightbox')?.classList.contains('open')) closeAdminModal();
         document.querySelectorAll('.emoji-picker').forEach(p => p.classList.remove('open'));
         document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('active'));
     }
@@ -267,12 +268,14 @@ async function loadMessages() {
                 <div class="author">${escapeHTML(item.name)}</div>
                 <div class="date whitespace-nowrap">${formatDateTime(item.created_at)}</div>
             </div>
-            <div class="content">${escapeHTML(item.message)}</div>
+            <div class="content mt-3">${escapeHTML(item.message)}</div>
 
-            <button class="like-btn ${hasLiked ? 'liked' : ''}" onclick="toggleLike('${item.id}', this)">
-                <i class="fa-${hasLiked ? 'solid' : 'regular'} fa-heart"></i>
-                <span>${likeCount}</span>
-            </button>
+            <div class="flex items-center gap-4 mt-4">
+                <button class="like-btn ${hasLiked ? 'liked' : ''}" onclick="toggleLike('${item.id}', this)">
+                    <i class="fa-${hasLiked ? 'solid' : 'regular'} fa-heart"></i>
+                    <span>${likeCount}</span>
+                </button>
+            </div>
 
             ${item.admin_reply ? `
                 <div class="reply-block">
@@ -325,8 +328,16 @@ async function addMessage() {
     button.innerHTML = originalHTML;
     button.disabled = false;
 
+    // Trigger Confetti!
+    if (typeof confetti === 'function') {
+        confetti({
+            particleCount: 120,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    }
+
     showToast("Message sent! 🎉", "success");
-    loadMessages();
 }
 
 // =============================
@@ -360,7 +371,7 @@ function showToast(message, type = 'info') {
 }
 
 // =============================
-// TOGGLE LIKE SYSTEM (IP + Anonymous Token)
+// TOGGLE LIKE SYSTEM (IP-BASED)
 // =============================
 async function toggleLike(messageId, btnElement) {
     const userIP = await getUserIP();
@@ -368,7 +379,6 @@ async function toggleLike(messageId, btnElement) {
     const countSpan = btnElement.querySelector('span');
     const icon = btnElement.querySelector('i');
 
-    // Optimistic UI Update
     if (isLiked) {
         btnElement.classList.remove('liked');
         icon.className = 'fa-regular fa-heart';
@@ -380,13 +390,8 @@ async function toggleLike(messageId, btnElement) {
         createFloatingHeart(btnElement);
     }
 
-    // Database Operation (Secured by Anonymous Token RLS)
     if (isLiked) {
-        const { error } = await supabaseClient
-            .from("guestbook_likes")
-            .delete()
-            .match({ message_id: messageId, ip_address: userIP });
-
+        const { error } = await supabaseClient.from("guestbook_likes").delete().match({ message_id: messageId, ip_address: userIP });
         if (error) {
             btnElement.classList.add('liked');
             icon.className = 'fa-solid fa-heart';
@@ -394,10 +399,7 @@ async function toggleLike(messageId, btnElement) {
             showToast("Error removing reaction.", "error");
         }
     } else {
-        const { error } = await supabaseClient
-            .from("guestbook_likes")
-            .insert([{ message_id: messageId, ip_address: userIP }]);
-
+        const { error } = await supabaseClient.from("guestbook_likes").insert([{ message_id: messageId, ip_address: userIP }]);
         if (error) {
             btnElement.classList.remove('liked');
             icon.className = 'fa-regular fa-heart';
@@ -437,25 +439,19 @@ style.textContent = `
 document.head.appendChild(style);
 
 // =============================
-// AUTHENTICATION (Admin & Anonymous)
+// AUTHENTICATION
 // =============================
 async function login() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-
     const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-    if (error) {
-        showToast(error.message, "error");
-    } else {
-        showToast("Welcome back, Admin! 👑", "success");
-    }
+    if (error) showToast(error.message, "error");
+    else showToast("Welcome back, Admin! 👑", "success");
 }
 
 async function logout() {
     await supabaseClient.auth.signOut();
     showToast("Logged out successfully.", "info");
-    // Immediately sign back in anonymously to maintain secure session
     supabaseClient.auth.signInAnonymously(); 
 }
 
@@ -469,11 +465,11 @@ async function loadAdminMessages() {
         .order("created_at", { ascending: false });
 
     const container = document.getElementById("adminMessages");
-
     if (error) { showToast(error.message, "error"); return; }
 
-    let html = "";
+    renderAdminStats(data);
 
+    let html = "";
     if (!data || data.length === 0) {
         container.innerHTML = "<div class='np-empty'><span>No messages to moderate.</span></div>";
         return;
@@ -523,101 +519,89 @@ async function loadAdminMessages() {
     container.innerHTML = html;
 }
 
+function renderAdminStats(data) {
+    const total = data.length;
+    const visible = data.filter(m => m.approved).length;
+    const hidden = total - visible;
+    const likes = data.reduce((acc, m) => acc + (m.likes?.length || 0), 0);
+    
+    const ipCounts = {};
+    data.forEach(m => m.likes?.forEach(l => { ipCounts[l.ip_address] = (ipCounts[l.ip_address] || 0) + 1; }));
+    const topIpEntry = Object.entries(ipCounts).sort((a,b) => b[1]-a[1])[0];
+    const topIp = topIpEntry ? topIpEntry[0] : 'None';
+
+    document.getElementById('adminStats').innerHTML = `
+        <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Total Messages</div></div>
+        <div class="stat-card"><div class="stat-value">${visible}</div><div class="stat-label">Visible</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:#EF4444">${hidden}</div><div class="stat-label">Hidden</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--like-color)">${likes}</div><div class="stat-label">Total Likes</div></div>
+        <div class="stat-card col-span-2 md:col-span-4"><div class="stat-label" style="margin-bottom:5px;">Top Active IP (Spammer Check)</div><div class="stat-value" style="font-size: 1rem; font-family: monospace;">${topIp}</div></div>
+    `;
+}
+
 async function saveReply(id) {
     const reply = document.getElementById("reply-" + id).value;
-    const { error } = await supabaseClient
-        .from("guestbook")
-        .update({ admin_reply: reply })
-        .eq("id", id);
-
+    const { error } = await supabaseClient.from("guestbook").update({ admin_reply: reply }).eq("id", id);
     if (error) { showToast(error.message, "error"); return; }
     showToast("Reply saved! 💬", "success");
-    loadAdminMessages();
-    loadMessages();
 }
 
 async function clearAllLikes(id) {
     if (!confirm("Remove ALL heart reactions from this message?")) return;
-
-    const { error } = await supabaseClient
-        .from("guestbook_likes")
-        .delete()
-        .eq("message_id", id);
-
-    if (error) { 
-        showToast(error.message, "error"); 
-        return; 
-    }
+    const { error } = await supabaseClient.from("guestbook_likes").delete().eq("message_id", id);
+    if (error) { showToast(error.message, "error"); return; }
     showToast("All reactions cleared.", "success");
-    loadAdminMessages();
-    loadMessages();
 }
 
 async function deleteMessage(id) {
     if (!confirm("Delete this message permanently?")) return;
-
-    const { error } = await supabaseClient
-        .from("guestbook")
-        .delete()
-        .eq("id", id);
-
+    const { error } = await supabaseClient.from("guestbook").delete().eq("id", id);
     if (error) { showToast(error.message, "error"); return; }
     showToast("Message deleted.", "info");
-    loadAdminMessages();
-    loadMessages();
 }
 
 async function toggleMessage(id, status) {
-    const { error } = await supabaseClient
-        .from("guestbook")
-        .update({ approved: !status })
-        .eq("id", id);
-
+    const { error } = await supabaseClient.from("guestbook").update({ approved: !status }).eq("id", id);
     if (error) { showToast(error.message, "error"); return; }
     showToast(status ? "Message hidden." : "Message approved!", "success");
-    loadAdminMessages();
-    loadMessages();
 }
 
 // =============================
-// APP INITIALIZATION (Anonymous Token Logic)
+// APP INITIALIZATION & REALTIME
 // =============================
 loadMessages();
 
-// Listen to auth state changes (Handles both Admin logins and Anonymous sessions)
+// Listen to auth state changes
 supabaseClient.auth.onAuthStateChange((event, session) => {
-    const loginForm = document.getElementById('adminLoginForm');
-    const dashboard = document.getElementById('adminDashboard');
+    updateAdminUI(session);
 
     if (session && !session.user.is_anonymous) {
-        // Admin is logged in
-        if (loginForm) loginForm.classList.add('hidden');
-        if (dashboard) dashboard.classList.remove('hidden');
         loadAdminMessages();
-    } else {
-        // Anonymous user or logged out
-        if (dashboard) dashboard.classList.add('hidden');
-        
-        // Only show login form if on #admin route
-        if (window.location.hash === '#admin' && loginForm) {
-            loginForm.classList.remove('hidden');
-        } else if (loginForm) {
-            loginForm.classList.add('hidden');
-        }
+    }
 
-        // If user logs out or has no session, immediately sign them in anonymously
-        if (event === 'SIGNED_OUT' || !session) {
-            supabaseClient.auth.signInAnonymously();
-        }
+    if (event === 'SIGNED_OUT' || !session) {
+        supabaseClient.auth.signInAnonymously();
     }
 });
 
 // Initial auth check
 supabaseClient.auth.getSession().then(({ data }) => {
     if (!data.session) {
-        // No session found, sign in anonymously to get the Signed Anonymous Token
         supabaseClient.auth.signInAnonymously();
-    } else if (data.session.user.is_anonymous) {
-        // Already have an anonymous session, RLS is secured
+    } else {
+        updateAdminUI(data.session);
     }
 });
+
+// Supabase Realtime Listeners
+supabaseClient
+    .channel('guestbook-realtime')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'guestbook' }, payload => {
+        loadMessages();
+        if (!document.getElementById('adminDashboard')?.classList.contains('hidden')) loadAdminMessages();
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'guestbook_likes' }, payload => {
+        loadMessages();
+        if (!document.getElementById('adminDashboard')?.classList.contains('hidden')) loadAdminMessages();
+    })
+    .subscribe();
