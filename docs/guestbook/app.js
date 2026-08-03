@@ -21,7 +21,7 @@ let currentEmojiCategory = "smileys";
 let activeEmojiTarget = null;
 
 // =============================
-// THEME LOGIC (Compatible with Pixel Switch)
+// THEME LOGIC
 // =============================
 const root = document.documentElement;
 const themeToggle = document.getElementById('themeToggle');
@@ -55,7 +55,6 @@ function renderEmojiGrid(category) {
     const data = EMOJI_DATA[category];
 
     if (header) header.textContent = data.label;
-
     document.querySelectorAll('.emoji-cat-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.cat === category);
     });
@@ -74,7 +73,6 @@ function toggleEmojiPicker(targetId) {
     if (!picker || !btn) return;
 
     const isOpen = picker.classList.contains('open');
-
     document.querySelectorAll('.emoji-picker').forEach(p => p.classList.remove('open'));
     document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('active'));
 
@@ -108,9 +106,6 @@ document.addEventListener('click', (e) => {
         document.querySelectorAll('.emoji-picker').forEach(p => p.classList.remove('open'));
         document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('active'));
     }
-});
-
-document.addEventListener('click', (e) => {
     if (e.target.classList.contains('emoji-cat-btn')) {
         renderEmojiGrid(e.target.dataset.cat);
     }
@@ -151,23 +146,35 @@ function escapeHTML(text) {
     return div.innerHTML;
 }
 
-function formatTimeAgo(dateString) {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diff = Math.floor((now - date) / 1000);
+// Fixed Date/Time Formatter (Displays full date and time, prevents timezone bugs)
+function formatDateTime(dateString) {
+    if (!dateString) return "Unknown date";
+    
+    // Safely parse the date string to prevent timezone offset bugs
+    let dateStr = String(dateString);
+    if (dateStr.indexOf('T') === -1 && dateStr.indexOf(' ') !== -1) {
+        dateStr = dateStr.replace(' ', 'T');
+    }
+    
+    const timePart = dateStr.split('T')[1] || '';
+    const hasTimezone = timePart.includes('Z') || timePart.includes('+') || (timePart.includes('-') && timePart.indexOf('-') > 0);
+    if (!hasTimezone) {
+        dateStr += 'Z'; // Append 'Z' to force JavaScript to parse it as UTC
+    }
+    
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return "Unknown date";
 
-    if (diff < 60) return "just now";
-    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-    if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
-
-    const options = { month: 'short', day: 'numeric', year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined };
-    return date.toLocaleDateString(undefined, options);
-}
-
-function formatDate(dateString) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    const options = { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+    };
+    
+    return date.toLocaleString(undefined, options);
 }
 
 // =============================
@@ -185,7 +192,7 @@ function openAdminModal() {
     const modal = document.getElementById('adminLightbox');
     if (modal) {
         modal.classList.add('open');
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        document.body.style.overflow = 'hidden';
     }
 }
 
@@ -200,7 +207,6 @@ function closeAdminModal(updateHash = true) {
     }
 }
 
-// Close modal if clicking outside the modal content
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('adminLightbox');
     if (modal) {
@@ -212,7 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Close modal on Escape key
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         if (document.getElementById('adminLightbox') && document.getElementById('adminLightbox').classList.contains('open')) {
@@ -260,11 +265,11 @@ async function loadMessages() {
         <div class="card message-card stagger-item" style="animation-delay: ${delay}s;">
             <div class="flex justify-between items-start gap-3">
                 <div class="author">${escapeHTML(item.name)}</div>
-                <div class="date whitespace-nowrap">${formatTimeAgo(item.created_at)}</div>
+                <div class="date whitespace-nowrap">${formatDateTime(item.created_at)}</div>
             </div>
             <div class="content">${escapeHTML(item.message)}</div>
 
-            <button class="like-btn ${hasLiked ? 'liked' : ''}" onclick="likeMessage('${item.id}', this)" ${hasLiked ? 'disabled' : ''}>
+            <button class="like-btn ${hasLiked ? 'liked' : ''}" onclick="toggleLike('${item.id}', this)">
                 <i class="fa-${hasLiked ? 'solid' : 'regular'} fa-heart"></i>
                 <span>${likeCount}</span>
             </button>
@@ -355,32 +360,64 @@ function showToast(message, type = 'info') {
 }
 
 // =============================
-// LIKE SYSTEM
+// TOGGLE LIKE SYSTEM (Add/Remove)
 // =============================
-async function likeMessage(messageId, btnElement) {
+async function toggleLike(messageId, btnElement) {
     const visitorID = getVisitorID();
+    const isLiked = btnElement.classList.contains('liked');
+    const countSpan = btnElement.querySelector('span');
+    const icon = btnElement.querySelector('i');
 
-    const { error } = await supabaseClient
-        .from("guestbook_likes")
-        .insert([{ message_id: messageId, visitor_id: visitorID }]);
-
-    if (error) {
-        if (error.code === '23505') {
-            showToast("You already liked this message ❤️", "info");
-        } else {
-            showToast("Error liking message: " + error.message, "error");
-        }
-        return;
+    // Optimistic UI Update (Instant feedback)
+    if (isLiked) {
+        btnElement.classList.remove('liked');
+        icon.className = 'fa-regular fa-heart';
+        countSpan.innerText = Math.max(0, parseInt(countSpan.innerText) - 1);
+    } else {
+        btnElement.classList.add('liked');
+        icon.className = 'fa-solid fa-heart';
+        countSpan.innerText = parseInt(countSpan.innerText) + 1;
+        createFloatingHeart(btnElement);
     }
 
-    btnElement.classList.add('liked');
-    btnElement.disabled = true;
-    const icon = btnElement.querySelector('i');
-    icon.className = 'fa-solid fa-heart';
-    const countSpan = btnElement.querySelector('span');
-    countSpan.innerText = parseInt(countSpan.innerText) + 1;
+    // Database Operation
+    if (isLiked) {
+        // REMOVE LIKE
+        const { error } = await supabaseClient
+            .from("guestbook_likes")
+            .delete()
+            .match({ message_id: messageId, visitor_id: visitorID });
 
-    createFloatingHeart(btnElement);
+        if (error) {
+            // Revert UI on failure
+            btnElement.classList.add('liked');
+            icon.className = 'fa-solid fa-heart';
+            countSpan.innerText = parseInt(countSpan.innerText) + 1;
+            showToast("Error removing reaction.", "error");
+        }
+    } else {
+        // ADD LIKE
+        const { error } = await supabaseClient
+            .from("guestbook_likes")
+            .insert([{ message_id: messageId, visitor_id: visitorID }]);
+
+        if (error) {
+            // Revert UI on failure
+            btnElement.classList.remove('liked');
+            icon.className = 'fa-regular fa-heart';
+            countSpan.innerText = Math.max(0, parseInt(countSpan.innerText) - 1);
+            
+            if (error.code === '23505') {
+                showToast("You already liked this message ❤️", "info");
+                // Fix UI state if DB says it's already liked
+                btnElement.classList.add('liked');
+                icon.className = 'fa-solid fa-heart';
+                countSpan.innerText = parseInt(countSpan.innerText) + 1;
+            } else {
+                showToast("Error liking message: " + error.message, "error");
+            }
+        }
+    }
 }
 
 function createFloatingHeart(element) {
@@ -464,7 +501,7 @@ async function loadAdminMessages() {
             <div class="mt-3 text-sm flex items-center gap-2" style="color: var(--muted);">
                 <i class="fa-solid fa-heart" style="color: var(--like-color);"></i> ${likeCount} Likes
                 <span class="mx-1">•</span>
-                <i class="fa-regular fa-clock"></i> ${formatTimeAgo(item.created_at)}
+                <i class="fa-regular fa-clock"></i> ${formatDateTime(item.created_at)}
             </div>
 
             <textarea id="reply-${item.id}" class="custom-input mt-4" rows="2" placeholder="Write admin reply...">${escapeHTML(item.admin_reply || "")}</textarea>
