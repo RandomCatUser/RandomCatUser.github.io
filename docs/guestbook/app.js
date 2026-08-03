@@ -3,7 +3,12 @@
 // =============================
 const SUPABASE_URL = "https://hlcohkseahqddctnduso.supabase.co";
 const SUPABASE_KEY = "sb_publishable_77Ja7au_gSrZVVJuou3SiA_FlSVil2O";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: {
+        autoRefreshToken: true,
+        persistSession: true
+    }
+});
 
 // =============================
 // EMOJI DATA
@@ -130,13 +135,20 @@ document.addEventListener('input', (e) => {
 // =============================
 // HELPER FUNCTIONS
 // =============================
-function getVisitorID() {
-    let visitorID = localStorage.getItem("visitor_id");
-    if (!visitorID) {
-        visitorID = crypto.randomUUID();
-        localStorage.setItem("visitor_id", visitorID);
+// Fetches IP Address to prevent clearing site data to re-like
+async function getUserIP() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+    } catch (e) {
+        let visitorID = localStorage.getItem("visitor_id");
+        if (!visitorID) {
+            visitorID = crypto.randomUUID();
+            localStorage.setItem("visitor_id", visitorID);
+        }
+        return visitorID;
     }
-    return visitorID;
 }
 
 function escapeHTML(text) {
@@ -146,34 +158,24 @@ function escapeHTML(text) {
     return div.innerHTML;
 }
 
-// Fixed Date/Time Formatter (Displays full date and time, prevents timezone bugs)
 function formatDateTime(dateString) {
     if (!dateString) return "Unknown date";
-    
-    // Safely parse the date string to prevent timezone offset bugs
     let dateStr = String(dateString);
     if (dateStr.indexOf('T') === -1 && dateStr.indexOf(' ') !== -1) {
         dateStr = dateStr.replace(' ', 'T');
     }
-    
     const timePart = dateStr.split('T')[1] || '';
     const hasTimezone = timePart.includes('Z') || timePart.includes('+') || (timePart.includes('-') && timePart.indexOf('-') > 0);
     if (!hasTimezone) {
-        dateStr += 'Z'; // Append 'Z' to force JavaScript to parse it as UTC
+        dateStr += 'Z';
     }
-    
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return "Unknown date";
 
     const options = { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: true 
+        year: 'numeric', month: 'short', day: 'numeric', 
+        hour: '2-digit', minute: '2-digit', hour12: true 
     };
-    
     return date.toLocaleString(undefined, options);
 }
 
@@ -211,16 +213,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('adminLightbox');
     if (modal) {
         modal.addEventListener('click', (e) => {
-            if (e.target.id === 'adminLightbox') {
-                closeAdminModal();
-            }
+            if (e.target.id === 'adminLightbox') closeAdminModal();
         });
     }
 });
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        if (document.getElementById('adminLightbox') && document.getElementById('adminLightbox').classList.contains('open')) {
+        if (document.getElementById('adminLightbox')?.classList.contains('open')) {
             closeAdminModal();
         }
         document.querySelectorAll('.emoji-picker').forEach(p => p.classList.remove('open'));
@@ -237,7 +237,7 @@ checkAdminRoute();
 async function loadMessages() {
     const { data, error } = await supabaseClient
         .from("guestbook")
-        .select("*, likes:guestbook_likes(visitor_id)")
+        .select("*, likes:guestbook_likes(ip_address)")
         .eq("approved", true)
         .order("created_at", { ascending: false });
 
@@ -253,12 +253,12 @@ async function loadMessages() {
         return;
     }
 
-    const currentVisitorID = getVisitorID();
+    const currentUserIP = await getUserIP();
     let html = "";
 
     data.forEach((item, index) => {
         const likeCount = item.likes ? item.likes.length : 0;
-        const hasLiked = item.likes ? item.likes.some(l => l.visitor_id === currentVisitorID) : false;
+        const hasLiked = item.likes ? item.likes.some(l => l.ip_address === currentUserIP) : false;
         const delay = Math.min(index * 0.06, 0.6);
 
         html += `
@@ -360,15 +360,15 @@ function showToast(message, type = 'info') {
 }
 
 // =============================
-// TOGGLE LIKE SYSTEM (Add/Remove)
+// TOGGLE LIKE SYSTEM (IP + Anonymous Token)
 // =============================
 async function toggleLike(messageId, btnElement) {
-    const visitorID = getVisitorID();
+    const userIP = await getUserIP();
     const isLiked = btnElement.classList.contains('liked');
     const countSpan = btnElement.querySelector('span');
     const icon = btnElement.querySelector('i');
 
-    // Optimistic UI Update (Instant feedback)
+    // Optimistic UI Update
     if (isLiked) {
         btnElement.classList.remove('liked');
         icon.className = 'fa-regular fa-heart';
@@ -380,36 +380,31 @@ async function toggleLike(messageId, btnElement) {
         createFloatingHeart(btnElement);
     }
 
-    // Database Operation
+    // Database Operation (Secured by Anonymous Token RLS)
     if (isLiked) {
-        // REMOVE LIKE
         const { error } = await supabaseClient
             .from("guestbook_likes")
             .delete()
-            .match({ message_id: messageId, visitor_id: visitorID });
+            .match({ message_id: messageId, ip_address: userIP });
 
         if (error) {
-            // Revert UI on failure
             btnElement.classList.add('liked');
             icon.className = 'fa-solid fa-heart';
             countSpan.innerText = parseInt(countSpan.innerText) + 1;
             showToast("Error removing reaction.", "error");
         }
     } else {
-        // ADD LIKE
         const { error } = await supabaseClient
             .from("guestbook_likes")
-            .insert([{ message_id: messageId, visitor_id: visitorID }]);
+            .insert([{ message_id: messageId, ip_address: userIP }]);
 
         if (error) {
-            // Revert UI on failure
             btnElement.classList.remove('liked');
             icon.className = 'fa-regular fa-heart';
             countSpan.innerText = Math.max(0, parseInt(countSpan.innerText) - 1);
             
             if (error.code === '23505') {
                 showToast("You already liked this message ❤️", "info");
-                // Fix UI state if DB says it's already liked
                 btnElement.classList.add('liked');
                 icon.className = 'fa-solid fa-heart';
                 countSpan.innerText = parseInt(countSpan.innerText) + 1;
@@ -442,7 +437,7 @@ style.textContent = `
 document.head.appendChild(style);
 
 // =============================
-// AUTHENTICATION
+// AUTHENTICATION (Admin & Anonymous)
 // =============================
 async function login() {
     const email = document.getElementById("email").value;
@@ -460,6 +455,8 @@ async function login() {
 async function logout() {
     await supabaseClient.auth.signOut();
     showToast("Logged out successfully.", "info");
+    // Immediately sign back in anonymously to maintain secure session
+    supabaseClient.auth.signInAnonymously(); 
 }
 
 // =============================
@@ -468,7 +465,7 @@ async function logout() {
 async function loadAdminMessages() {
     const { data, error } = await supabaseClient
         .from("guestbook")
-        .select("*, likes:guestbook_likes(visitor_id)")
+        .select("*, likes:guestbook_likes(ip_address)")
         .order("created_at", { ascending: false });
 
     const container = document.getElementById("adminMessages");
@@ -506,12 +503,15 @@ async function loadAdminMessages() {
 
             <textarea id="reply-${item.id}" class="custom-input mt-4" rows="2" placeholder="Write admin reply...">${escapeHTML(item.admin_reply || "")}</textarea>
 
-            <div class="grid grid-cols-3 gap-2 mt-3">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
                 <button class="action-btn" style="background: var(--accent-grad); color: var(--bg); border-color: transparent;" onclick="saveReply('${item.id}')">
                     <i class="fa-solid fa-save mr-1"></i> Save
                 </button>
                 <button class="action-btn" onclick="toggleMessage('${item.id}', ${item.approved})">
                     <i class="fa-solid fa-eye${item.approved ? '-slash' : ''} mr-1"></i> ${item.approved ? "Hide" : "Approve"}
+                </button>
+                <button class="action-btn" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.3);" onclick="clearAllLikes('${item.id}')">
+                    <i class="fa-solid fa-heart-crack mr-1"></i> Clear Likes
                 </button>
                 <button class="action-btn btn-logout" onclick="deleteMessage('${item.id}')">
                     <i class="fa-solid fa-trash mr-1"></i> Delete
@@ -532,6 +532,23 @@ async function saveReply(id) {
 
     if (error) { showToast(error.message, "error"); return; }
     showToast("Reply saved! 💬", "success");
+    loadAdminMessages();
+    loadMessages();
+}
+
+async function clearAllLikes(id) {
+    if (!confirm("Remove ALL heart reactions from this message?")) return;
+
+    const { error } = await supabaseClient
+        .from("guestbook_likes")
+        .delete()
+        .eq("message_id", id);
+
+    if (error) { 
+        showToast(error.message, "error"); 
+        return; 
+    }
+    showToast("All reactions cleared.", "success");
     loadAdminMessages();
     loadMessages();
 }
@@ -563,36 +580,44 @@ async function toggleMessage(id, status) {
 }
 
 // =============================
-// APP INITIALIZATION
+// APP INITIALIZATION (Anonymous Token Logic)
 // =============================
 loadMessages();
 
-// Auth State Listener
+// Listen to auth state changes (Handles both Admin logins and Anonymous sessions)
 supabaseClient.auth.onAuthStateChange((event, session) => {
     const loginForm = document.getElementById('adminLoginForm');
     const dashboard = document.getElementById('adminDashboard');
 
-    if (session) {
+    if (session && !session.user.is_anonymous) {
+        // Admin is logged in
         if (loginForm) loginForm.classList.add('hidden');
         if (dashboard) dashboard.classList.remove('hidden');
         loadAdminMessages();
     } else {
-        if (loginForm) loginForm.classList.remove('hidden');
+        // Anonymous user or logged out
         if (dashboard) dashboard.classList.add('hidden');
+        
+        // Only show login form if on #admin route
+        if (window.location.hash === '#admin' && loginForm) {
+            loginForm.classList.remove('hidden');
+        } else if (loginForm) {
+            loginForm.classList.add('hidden');
+        }
+
+        // If user logs out or has no session, immediately sign them in anonymously
+        if (event === 'SIGNED_OUT' || !session) {
+            supabaseClient.auth.signInAnonymously();
+        }
     }
 });
 
 // Initial auth check
 supabaseClient.auth.getSession().then(({ data }) => {
-    const loginForm = document.getElementById('adminLoginForm');
-    const dashboard = document.getElementById('adminDashboard');
-    
-    if (data.session) {
-        if (loginForm) loginForm.classList.add('hidden');
-        if (dashboard) dashboard.classList.remove('hidden');
-        loadAdminMessages();
-    } else {
-        if (loginForm) loginForm.classList.remove('hidden');
-        if (dashboard) dashboard.classList.add('hidden');
+    if (!data.session) {
+        // No session found, sign in anonymously to get the Signed Anonymous Token
+        supabaseClient.auth.signInAnonymously();
+    } else if (data.session.user.is_anonymous) {
+        // Already have an anonymous session, RLS is secured
     }
 });
