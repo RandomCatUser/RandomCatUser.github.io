@@ -54,7 +54,6 @@
             66% { transform: translate(-30px, 30px) scale(0.9); }
         }
 
-        /* Loading Overlay */
         #loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #f8fafc; display: flex; justify-content: center; align-items: center;
@@ -116,7 +115,6 @@
         @keyframes star-twinkle { 0% { transform: scale(1); } 40% { transform: scale(1.2); } 80% { transform: scale(0.8); } 100% { transform: scale(1); } }
         @keyframes rotate-center { 0% { transform: translateX(26px) rotate(0); } 100% { transform: translateX(26px) rotate(360deg); } }
 
-        /* ===== DOCS LAYOUT STYLING ===== */
         .docs-container {
             display: grid;
             grid-template-columns: 250px 1fr;
@@ -231,6 +229,55 @@
             color: #334155;
         }
 
+        /* Music credit card styling */
+        .music-credit-card {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 14px;
+            background: rgba(249, 115, 22, 0.03);
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            transition: all 0.3s ease;
+            align-items: center;
+        }
+        .music-credit-card:hover {
+            background: rgba(249, 115, 22, 0.06);
+            border-color: rgba(249, 115, 22, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .music-credit-artwork-link {
+            display: block;
+            line-height: 0;
+            flex-shrink: 0;
+        }
+        
+        .music-credit-artwork {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .music-credit-artwork:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .music-credit-info { flex: 1; min-width: 0; }
+        .music-credit-title { font-size: 15px; font-weight: 600; color: #1e293b; margin-bottom: 2px; }
+        .music-credit-artist { font-size: 14px; color: #f97316; font-weight: 500; margin-bottom: 4px; }
+        .music-credit-note { font-size: 13px; color: #64748b; line-height: 1.5; }
+
+        .copyright-notice-box {
+            background: rgba(239, 68, 68, 0.04);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-top: 20px;
+        }
+
         @media (max-width: 768px) {
             .docs-container { grid-template-columns: 1fr; gap: 0; }
             .sidebar { display: none; }
@@ -262,6 +309,11 @@
             code { 
                 font-size: 0.85em; 
             }
+            .music-credit-card { padding: 12px; gap: 12px; }
+            .music-credit-artwork { width: 48px; height: 48px; }
+            .music-credit-title { font-size: 14px; }
+            .music-credit-artist { font-size: 13px; }
+            .music-credit-note { font-size: 12px; }
         }
 
         @media (max-width: 480px) {
@@ -316,6 +368,23 @@
         [data-theme="dark"] .filter:hover svg { fill: #ffffff; }
         [data-theme="dark"] .settings-dropdown { background: rgba(20, 20, 32, 0.85) !important; border-color: rgba(255, 255, 255, 0.1) !important; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
         [data-theme="dark"] .settings-label { color: #e4e4e7 !important; }
+
+        [data-theme="dark"] .music-credit-card {
+            background: rgba(251, 146, 60, 0.05);
+            border-color: rgba(251, 146, 60, 0.15);
+        }
+        [data-theme="dark"] .music-credit-card:hover {
+            background: rgba(251, 146, 60, 0.1);
+            border-color: rgba(251, 146, 60, 0.25);
+        }
+        [data-theme="dark"] .music-credit-artwork { border-color: rgba(255,255,255,0.1); }
+        [data-theme="dark"] .music-credit-title { color: #f4f4f5; }
+        [data-theme="dark"] .music-credit-artist { color: #fb923c; }
+        [data-theme="dark"] .music-credit-note { color: #9ca3af; }
+        [data-theme="dark"] .copyright-notice-box {
+            background: rgba(239, 68, 68, 0.06);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
     </style>
 </head>
 <body class="text-gray-900 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
@@ -329,7 +398,7 @@
     </div>
 
     <div class="nav-wrapper home-wrapper">
-        <a href="index.html" title="Back to Universe" class="filter">
+        <a href="https://randomcatuser.github.io/" title="Back to Universe" class="filter">
             <svg viewBox="0 0 576 512" height="1em">
                 <path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 1 22 8L564.8 231.5c8 7 12 15 11 24z"/>
             </svg>
@@ -402,6 +471,7 @@
 
                 <div class="sidebar-category">Community & Assets</div>
                 <a href="#assets-ui" class="sidebar-link">Assets & UI Attributions</a>
+                <a href="#music-credits" class="sidebar-link">Music Credits & Copyrights</a>
                 <a href="#special-thanks" class="sidebar-link">Special Thanks</a>
 
                 <div class="sidebar-category">Support</div>
@@ -421,6 +491,7 @@
                     <option value="#tools-used">Tools & Technologies</option>
                     <option value="#how-to-clone">How to Clone</option>
                     <option value="#assets-ui">Assets & UI Attributions</option>
+                    <option value="#music-credits">Music Credits & Copyrights</option>
                     <option value="#special-thanks">Special Thanks</option>
                     <option value="#help-support">Help & Support</option>
                     <option value="#contact">Contact & Inquiries</option>
@@ -593,6 +664,78 @@
                     </div>
                 </section>
 
+                <!-- NEW SECTION: Music Credits & Copyrights -->
+                <section id="music-credits" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-violet-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" /></svg>
+                        </div>
+                        Music Credits & Copyrights
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">The background music featured on this website is created by talented independent artists who generously share their work for free use. All tracks are used under their respective free-use licenses for non-commercial, personal portfolio purposes. <strong>Click the album artwork next to each track to listen to the original source.</strong></p>
+                        
+                        <h4 class="docs-subheading">Featured Tracks:</h4>
+                        <div class="space-y-3 mb-4">
+                            
+                            <!-- Track 1 -->
+                            <div class="music-credit-card">
+                                <a href="https://www.youtube.com/results?search_query=しゃろう+3:03+PM" target="_blank" rel="noopener noreferrer" class="music-credit-artwork-link" title="Click to find the original track">
+                                    <img src="./assets/album-arts/music1.jpg" alt="3:03 PM Album Art" class="music-credit-artwork">
+                                </a>
+                                <div class="music-credit-info">
+                                    <div class="music-credit-title">"3:03 PM"</div>
+                                    <div class="music-credit-artist">by しゃろう (Sharou)</div>
+                                    <div class="music-credit-note">All rights to this track belong to the artist. Used on this site for non-commercial purposes under free-use provisions.</div>
+                                </div>
+                            </div>
+
+                            <!-- Track 2 -->
+                            <div class="music-credit-card">
+                                <a href="https://www.youtube.com/results?search_query=JayM+Fly+a+letter+to+the+Wind" target="_blank" rel="noopener noreferrer" class="music-credit-artwork-link" title="Click to find the original track">
+                                    <img src="./assets/album-arts/Fly a letter to the Wind.webp" alt="Fly a letter to the Wind Album Art" class="music-credit-artwork">
+                                </a>
+                                <div class="music-credit-info">
+                                    <div class="music-credit-title">"Fly a letter to the Wind"</div>
+                                    <div class="music-credit-artist">by JayM</div>
+                                    <div class="music-credit-note">All rights to this track belong to the artist. Used on this site for non-commercial purposes under free-use provisions.</div>
+                                </div>
+                            </div>
+
+                            <!-- Track 3 -->
+                            <div class="music-credit-card">
+                                <a href="https://www.youtube.com/results?search_query=さんうさぎ+必ずそばにきみがいる" target="_blank" rel="noopener noreferrer" class="music-credit-artwork-link" title="Click to find the original track">
+                                    <img src="./assets/album-arts/フリーBGM必ずそばにきみがいる(Not Only Me)かわいい配信用作業用.webp" alt="必ずそばに、きみがいる Album Art" class="music-credit-artwork">
+                                </a>
+                                <div class="music-credit-info">
+                                    <div class="music-credit-title">"必ずそばに、きみがいる (Not Only Me)"</div>
+                                    <div class="music-credit-artist">by さんうさぎ (San Usagi)</div>
+                                    <div class="music-credit-note">フリーBGM (Free BGM) distributed for streaming and work-use. All rights to this track belong to the artist.</div>
+                                </div>
+                            </div>
+
+                            <!-- Track 4 -->
+                            <div class="music-credit-card">
+                                <a href="https://www.youtube.com/results?search_query=꽃이+피면+When+the+flowers+AcousticHappy" target="_blank" rel="noopener noreferrer" class="music-credit-artwork-link" title="Click to find the original track">
+                                    <img src="./assets/album-arts/[음악팀] 꽃이 피면, When the flowers (AcousticHappy) [BGM무료음악브금].webp" alt="When the Flowers Album Art" class="music-credit-artwork">
+                                </a>
+                                <div class="music-credit-info">
+                                    <div class="music-credit-title">"꽃이 피면, When the Flowers (Acoustic Happy)"</div>
+                                    <div class="music-credit-artist">by TeamMusicCreative / 당신의 드라마 O.S.T</div>
+                                    <div class="music-credit-note">BGM무료음악 (Free BGM). All rights to this track belong to the creators. Used on this site for non-commercial purposes.</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="copyright-notice-box">
+                            <p class="text-sm" style="color: #475569;"><strong style="color: #1e293b;">⚠️ Copyright Notice:</strong> The music tracks featured on this website are the intellectual property of their respective creators and artists listed above. They are used here solely for non-commercial, personal portfolio purposes under free-use provisions. No copyright infringement is intended. All music is credited to its original creators, and we claim no ownership over any of the tracks. If you are a rights holder and believe any content is used inappropriately, or if you would like your track removed, please <a href="#contact" class="text-orange-600 hover:underline font-medium">contact me</a> and I will address it promptly.</p>
+                        </div>
+
+                        <p class="text-xs text-gray-500 mt-4">Support these amazing artists by checking out their other works and following them on their respective platforms!</p>
+                    </div>
+                </section>
+
                 <section id="special-thanks" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-pink-100">
@@ -604,6 +747,7 @@
                         <p class="mb-4">A massive thank you to everyone who contributed to this project, provided feedback, or let me feature them in my digital universe.</p>
                         <ul class="list-disc pl-5 mb-4 space-y-2">
                             <li><strong>The "Universe" Crew:</strong> Su ZhyZai, Minnie, Chaniru, Minku, Frank, and Yenuja. Thank you for letting me use your profiles, banners, and quotes!</li>
+                            <li><strong>Music Artists:</strong> しゃろう (Sharou), JayM, さんうさぎ (San Usagi), and TeamMusicCreative. Thank you for creating such beautiful music and sharing it freely!</li>
                             <li><strong>The Open Source Community:</strong> For building and maintaining the incredible tools that make web development accessible and fun.</li>
                             <li><strong>Unsplash & Pinterest Creators:</strong> For providing high-quality, free-to-use imagery that makes the site look professional.</li>
                             <li><strong>You:</strong> Thank you for visiting my universe and exploring this project!</li>
@@ -718,7 +862,6 @@
                             link.classList.remove('active');
                             if (link.getAttribute('href') === `#${id}`) {
                                 link.classList.add('active');
-                                // Also update mobile dropdown
                                 const mobileNav = document.getElementById('mobile-nav');
                                 if (mobileNav) mobileNav.value = `#${id}`;
                             }
