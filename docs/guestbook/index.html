@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guest Book</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- Animated Background -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 md:p-8">
+        <button class="back-btn fade-in" onclick="window.history.back()" aria-label="Back">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back</span>
+        </button>
+
+        <div class="theme-toggle-wrapper fade-in" style="animation-delay: 0.05s;">
+            <input type="checkbox" id="themeToggle" class="theme-checkbox" aria-label="Toggle dark mode">
+            <label for="themeToggle" class="theme-track">
+                <i class="fa-solid fa-sun theme-icon sun-icon"></i>
+                <i class="fa-solid fa-moon theme-icon moon-icon"></i>
+                <div class="theme-knob"></div>
+            </label>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-2xl mx-auto px-6 py-32 md:py-40">
+
+        <!-- Hero -->
+        <section class="flex flex-col items-center text-center mb-20 fade-in" style="animation-delay: 0.1s;">
+            
+                
+            
+            <h1 class="serif hero-title text-6xl md:text-7xl mb-3 leading-tight">Guest Book</h1>
+            <p class="text-base md:text-lg" style="color: var(--muted);">Leave a message, share a thought.</p>
+        </section>
+
+        <!-- Leave a Message -->
+        <section class="mb-16 fade-in" style="animation-delay: 0.2s;">
+            <h2 class="text-xs uppercase tracking-widest mb-4 flex items-center gap-2" style="color: var(--muted);">
+                <i class="fa-solid fa-pen-to-square"></i> Leave a Message
+            </h2>
+            <div class="card p-6">
+                <input id="name" type="text" class="custom-input mb-3" placeholder="Your name" maxlength="50" />
+
+                <div class="input-wrapper">
+                    <textarea id="message" class="custom-input" rows="4" placeholder="Your message..." maxlength="500"></textarea>
+                    <button class="emoji-btn" onclick="toggleEmojiPicker('message')" id="emojiBtn-message" aria-label="Insert emoji">
+                        <i class="fa-regular fa-face-smile"></i>
+                    </button>
+
+                    <!-- Emoji Picker -->
+                    <div class="emoji-picker" id="emojiPicker-message">
+                        <div class="emoji-categories" id="emojiCategories">
+                            <button class="emoji-cat-btn active" data-cat="smileys" title="Smileys">😀</button>
+                            <button class="emoji-cat-btn" data-cat="gestures" title="Gestures">👍</button>
+                            <button class="emoji-cat-btn" data-cat="hearts" title="Hearts">❤️</button>
+                            <button class="emoji-cat-btn" data-cat="animals" title="Animals">🐶</button>
+                            <button class="emoji-cat-btn" data-cat="food" title="Food">🍕</button>
+                            <button class="emoji-cat-btn" data-cat="symbols" title="Symbols">✨</button>
+                        </div>
+                        <div class="emoji-picker-header" id="emojiHeader">Smileys & People</div>
+                        <div class="emoji-grid" id="emojiGrid"></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mt-2 mb-4">
+                    <span class="text-xs" style="color: var(--muted);"><i class="fa-solid fa-shield-halved mr-1"></i> Be kind & respectful</span>
+                    <span class="text-xs font-mono" style="color: var(--muted);" id="charCount">0 / 500</span>
+                </div>
+
+                <button class="btn-primary" onclick="addMessage()">
+                    <i class="fa-solid fa-paper-plane mr-2"></i> Send Message
+                </button>
+            </div>
+        </section>
+
+        <!-- Messages -->
+        <section class="mb-16 fade-in" style="animation-delay: 0.3s;">
+            <h2 class="text-xs uppercase tracking-widest mb-4 flex items-center gap-2" style="color: var(--muted);">
+                <i class="fa-solid fa-comments"></i> Messages
+            </h2>
+            <div id="messages" class="space-y-4">
+                <div class="np-empty">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <span>Loading messages...</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center pb-10 text-sm" style="color: var(--muted);">
+        Made with <i class="fa-solid fa-heart" style="color: var(--like-color);"></i> & Supabase
+    </footer>
+
+    <!-- =============================
+         ADMIN LIGHTBOX MODAL
+         ============================= -->
+    <div id="adminLightbox" class="lightbox-overlay">
+        <div class="lightbox-modal">
+            <div class="lightbox-header">
+                <div class="lightbox-title">
+                    <i class="fa-solid fa-shield-halved" style="color: var(--muted);"></i>
+                    <span>Admin Dashboard</span>
+                </div>
+                <button class="lightbox-close" onclick="closeAdminModal()" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="lightbox-content">
+                <!-- Login Form (Shows if logged out) -->
+                <div id="adminLoginForm" class="hidden">
+                    <div class="card p-6" style="background: var(--card);">
+                        <p class="text-sm mb-4" style="color: var(--muted);">Please sign in to manage messages.</p>
+                        <input id="email" type="email" class="custom-input mb-3" placeholder="Admin email" />
+                        <input id="password" type="password" class="custom-input" placeholder="Password" />
+                        <button class="btn-primary mt-4" onclick="login()">
+                            <i class="fa-solid fa-right-to-bracket mr-2"></i> Sign In
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Admin Dashboard (Shows if logged in) -->
+                <div id="adminDashboard" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xs uppercase tracking-widest" style="color: var(--muted);">Moderation</h3>
+                        <button class="action-btn btn-logout" style="width: auto; padding: 6px 14px; font-size: 0.8rem;" onclick="logout()">
+                            <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
+                        </button>
+                    </div>
+                    <div id="adminMessages" class="space-y-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
