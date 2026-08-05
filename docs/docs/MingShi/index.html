@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uostige — Advanced Design Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- CUTE LOADING SCREEN -->
+<div id="splash" class="splash-screen">
+  <div class="splash-shapes">
+    <div class="shape s1"></div>
+    <div class="shape s2"></div>
+    <div class="shape s3"></div>
+    <div class="shape s4"></div>
+  </div>
+  <h1 class="splash-logo">Uostige</h1>
+  <div class="splash-loader"></div>
+</div>
+
+<div id="app">
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="menu-btn" id="menu-btn"><i class="fa-solid fa-grip"></i></div>
+      <div class="file-info">
+        <span class="file-name" id="file-name">Untitled</span>
+        <span class="save-status" id="save-status">Saved</span>
+      </div>
+    </div>
+    <div class="topbar-center">
+      <button class="tb-tool" id="btn-undo" title="Undo (Ctrl+Z)"><i class="fa-solid fa-rotate-left"></i></button>
+      <button class="tb-tool" id="btn-redo" title="Redo (Ctrl+Y)"><i class="fa-solid fa-rotate-right"></i></button>
+      <div class="tb-divider"></div>
+      <button class="tb-tool active" data-tool="move" title="Move (V)"><i class="fa-solid fa-arrow-pointer"></i></button>
+      <button class="tb-tool" data-tool="frame" title="Frame (F)"><i class="fa-solid fa-vector-square"></i></button>
+      <button class="tb-tool" data-tool="rect" title="Rectangle (R)"><i class="fa-regular fa-square"></i></button>
+      <button class="tb-tool" data-tool="ellipse" title="Ellipse (O)"><i class="fa-regular fa-circle"></i></button>
+      <button class="tb-tool" data-tool="polygon" title="Polygon (G)"><i class="fa-solid fa-draw-polygon"></i></button>
+      <button class="tb-tool" data-tool="star" title="Star (S)"><i class="fa-solid fa-star"></i></button>
+      <button class="tb-tool" data-tool="line" title="Line (L)"><i class="fa-solid fa-minus"></i></button>
+      <button class="tb-tool" data-tool="text" title="Text (T)"><i class="fa-solid fa-font"></i></button>
+      <button class="tb-tool" id="btn-add-image" title="Image"><i class="fa-regular fa-image"></i></button>
+      <button class="tb-tool" data-tool="hand" title="Hand (H)"><i class="fa-solid fa-hand"></i></button>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-tool" id="btn-theme" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+      <div class="tb-divider"></div>
+      <button class="action-btn ghost" id="btn-export-png"><i class="fa-solid fa-image"></i> PNG</button>
+      <button class="action-btn ghost" id="btn-export-svg"><i class="fa-solid fa-code"></i> SVG</button>
+      <button class="action-btn" id="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+      <button class="action-btn ghost" id="btn-open"><i class="fa-solid fa-folder-open"></i> Open</button>
+    </div>
+  </header>
+
+  <input type="file" id="image-upload" accept="image/*" style="display: none;">
+
+  <main class="workspace">
+    <!-- LEFT PANEL: PAGES & LAYERS -->
+    <aside class="left-panel">
+      <div class="pages-section">
+        <div class="panel-header">
+          <span>Pages</span>
+          <button id="add-page" title="Add Page"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div id="pages-list" class="pages-list"></div>
+      </div>
+
+      <div class="layers-section">
+        <div class="panel-header">
+          <span>Layers</span>
+          <div class="layer-actions">
+            <button id="layer-front" title="Bring to Front"><i class="fa-solid fa-arrow-up-from-bracket"></i></button>
+            <button id="layer-back" title="Send to Back"><i class="fa-solid fa-arrow-down-to-bracket"></i></button>
+          </div>
+        </div>
+        <div id="layers-list" class="layers-list"></div>
+      </div>
+    </aside>
+
+    <!-- CANVAS AREA -->
+    <section class="canvas-area" id="canvas-area">
+      <canvas id="canvas"></canvas>
+      
+      <div id="text-editor" class="text-editor" contenteditable="true"></div>
+      
+      <div class="cursor-coords" id="cursor-coords">0, 0</div>
+      
+      <div class="zoom-controls">
+        <button id="zoom-out"><i class="fa-solid fa-minus"></i></button>
+        <button id="zoom-reset">100%</button>
+        <button id="zoom-fit" title="Zoom to Fit"><i class="fa-solid fa-expand"></i></button>
+        <button id="zoom-in"><i class="fa-solid fa-plus"></i></button>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: PROPERTIES -->
+    <aside class="right-panel">
+      <div class="panel-header">Design</div>
+      
+      <div class="prop-section">
+        <div class="prop-title">Align & Arrange</div>
+        <div class="align-grid">
+          <button class="align-btn" data-align="left"><i class="fa-solid fa-align-left"></i></button>
+          <button class="align-btn" data-align="h-center"><i class="fa-solid fa-align-center"></i></button>
+          <button class="align-btn" data-align="right"><i class="fa-solid fa-align-right"></i></button>
+          <button class="align-btn" data-align="top"><i class="fa-solid fa-arrow-up"></i></button>
+          <button class="align-btn" data-align="v-center"><i class="fa-solid fa-grip-lines"></i></button>
+          <button class="align-btn" data-align="bottom"><i class="fa-solid fa-arrow-down"></i></button>
+        </div>
+        <div class="flip-grid mt-2">
+          <button class="align-btn" id="flip-h" title="Flip Horizontal"><i class="fa-solid fa-arrows-left-right"></i> Flip H</button>
+          <button class="align-btn" id="flip-v" title="Flip Vertical"><i class="fa-solid fa-arrows-up-down"></i> Flip V</button>
+        </div>
+      </div>
+
+      <div class="prop-section">
+        <div class="prop-title">Transform</div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label>X</label>
+            <input type="number" id="prop-x" disabled>
+          </div>
+          <div class="input-group">
+            <label>Y</label>
+            <input type="number" id="prop-y" disabled>
+          </div>
+          <div class="input-group">
+            <label>W</label>
+            <input type="number" id="prop-w" disabled>
+          </div>
+          <div class="input-group">
+            <label>H</label>
+            <input type="number" id="prop-h" disabled>
+          </div>
+          <div class="input-group">
+            <label><i class="fa-solid fa-rotate-right"></i></label>
+            <input type="number" id="prop-r" disabled>
+          </div>
+          <div class="input-group">
+            <label>%</label>
+            <input type="number" id="prop-opacity" value="100" min="0" max="100" disabled>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-section">
+        <div class="prop-title">Fill</div>
+        <div class="fill-header">
+          <select id="fill-type" disabled>
+            <option value="solid">Solid</option>
+            <option value="gradient">Linear Gradient</option>
+          </select>
+        </div>
+        <div id="solid-fill-controls" class="color-row">
+          <div class="color-swatch" id="fill-swatch" style="background: #d9d9d9;"></div>
+          <input type="color" id="fill-input" value="#d9d9d9" class="color-native">
+          <input type="text" id="fill-hex" value="#D9D9D9" class="hex-input" disabled>
+        </div>
+        <div id="gradient-fill-controls" class="gradient-controls" style="display: none;">
+          <div class="color-row">
+            <div class="color-swatch" id="grad-swatch-1" style="background: #ff0000;"></div>
+            <input type="color" id="grad-input-1" value="#ff0000" class="color-native">
+            <input type="text" id="grad-hex-1" value="#FF0000" class="hex-input" disabled>
+          </div>
+          <div class="color-row mt-2">
+            <div class="color-swatch" id="grad-swatch-2" style="background: #0000ff;"></div>
+            <input type="color" id="grad-input-2" value="#0000ff" class="color-native">
+            <input type="text" id="grad-hex-2" value="#0000FF" class="hex-input" disabled>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-section">
+        <div class="prop-title">Stroke</div>
+        <div class="color-row">
+          <div class="color-swatch" id="stroke-swatch" style="background: #000000;"></div>
+          <input type="color" id="stroke-input" value="#000000" class="color-native">
+          <input type="text" id="stroke-hex" value="#000000" class="hex-input" disabled>
+        </div>
+        <div class="grid-2 mt-2">
+          <div class="input-group"><label>S</label><input type="number" id="stroke-width" value="1" min="0" max="20" disabled></div>
+          <div class="input-group">
+            <label><i class="fa-solid fa-pencil"></i></label>
+            <select id="stroke-cap" disabled>
+              <option value="butt">Butt</option>
+              <option value="round">Round</option>
+              <option value="square">Square</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-section" id="section-radius">
+        <div class="prop-title">Corner Radius</div>
+        <div class="input-group">
+          <label><i class="fa-solid fa-up-right-and-down-left-from-center"></i></label>
+          <input type="number" id="prop-radius" value="0" min="0" max="500" disabled>
+        </div>
+      </div>
+
+      <div class="prop-section" id="section-text" style="display: none;">
+        <div class="prop-title">Typography</div>
+        <div class="input-group">
+          <label>T</label>
+          <input type="text" id="text-content" placeholder="Text content" disabled>
+        </div>
+        <div class="grid-2 mt-2">
+          <div class="input-group">
+            <label>S</label>
+            <input type="number" id="text-size" value="16" min="8" max="144" disabled>
+          </div>
+          <div class="input-group">
+            <label>W</label>
+            <select id="text-weight" disabled>
+              <option value="400">Regular</option>
+              <option value="500">Medium</option>
+              <option value="600">Semibold</option>
+              <option value="700">Bold</option>
+              <option value="800">Black</option>
+            </select>
+          </div>
+        </div>
+        <div class="text-align-group mt-2">
+          <button class="align-btn" id="text-align-left"><i class="fa-solid fa-align-left"></i></button>
+          <button class="align-btn" id="text-align-center"><i class="fa-solid fa-align-center"></i></button>
+          <button class="align-btn" id="text-align-right"><i class="fa-solid fa-align-right"></i></button>
+        </div>
+      </div>
+
+      <div class="prop-section" id="section-effects">
+        <div class="prop-title">Effects</div>
+        <div class="effects-list">
+          <div class="effect-item">
+            <i class="fa-solid fa-sun"></i>
+            <span>Drop Shadow</span>
+            <button id="add-shadow" class="action-btn ghost small">+</button>
+          </div>
+          <div id="shadow-controls" style="display: none;">
+            <div class="color-row mt-2">
+              <div class="color-swatch" id="shadow-swatch" style="background: #000000;"></div>
+              <input type="color" id="shadow-input" value="#000000" class="color-native">
+              <input type="text" id="shadow-hex" value="#000000" class="hex-input">
+            </div>
+            <div class="grid-2 mt-2">
+              <div class="input-group"><label>X</label><input type="number" id="shadow-x" value="0" min="-50" max="50"></div>
+              <div class="input-group"><label>Y</label><input type="number" id="shadow-y" value="4" min="-50" max="50"></div>
+              <div class="input-group"><label>B</label><input type="number" id="shadow-blur" value="8" min="0" max="50"></div>
+              <div class="input-group"><label>%</label><input type="number" id="shadow-opacity" value="40" min="0" max="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<!-- CONTEXT MENU -->
+<div id="context-menu" class="context-menu">
+  <button data-action="duplicate"><i class="fa-solid fa-clone"></i> Duplicate</button>
+  <button data-action="copy"><i class="fa-solid fa-copy"></i> Copy</button>
+  <button data-action="paste"><i class="fa-solid fa-paste"></i> Paste</button>
+  <div class="ctx-divider"></div>
+  <button data-action="front"><i class="fa-solid fa-arrow-up-from-bracket"></i> Bring to Front</button>
+  <button data-action="back"><i class="fa-solid fa-arrow-down-to-bracket"></i> Send to Back</button>
+  <div class="ctx-divider"></div>
+  <button data-action="delete" class="danger"><i class="fa-solid fa-trash"></i> Delete</button>
+</div>
+
+<!-- PROJECT MANAGER MODAL -->
+<div id="project-modal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Open Project</h2>
+      <button class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="save-new">
+        <input type="text" id="new-project-name" placeholder="Save current work as...">
+        <button id="btn-save-new">Save New</button>
+      </div>
+      <div class="project-list" id="project-list"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
