@@ -1746,9 +1746,83 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+// ===== DESKTOP NOTICE =====
+const deviceNotice = document.getElementById('device-notice');
+
+function showDeviceNotice(isWarning = false) {
+  if (isWarning) deviceNotice.querySelector('.modal').classList.add('warn');
+  else deviceNotice.querySelector('.modal').classList.remove('warn');
+  deviceNotice.classList.add('active');
+}
+
+function hideDeviceNotice() {
+  deviceNotice.classList.remove('active');
+}
+
+document.getElementById('device-ok').addEventListener('click', () => {
+  localStorage.setItem('mingshi_device_notice_seen', 'true');
+  hideDeviceNotice();
+});
+
+document.getElementById('device-continue').addEventListener('click', () => {
+  localStorage.setItem('mingshi_device_notice_seen', 'true');
+  hideDeviceNotice();
+});
+
+deviceNotice.addEventListener('click', (e) => {
+  if (e.target.id === 'device-notice') hideDeviceNotice();
+});
+
+function checkDevice() {
+  const hasSeenNotice = localStorage.getItem('mingshi_device_notice_seen');
+  const screenWidth = window.innerWidth;
+  const isTouchOnly = ('ontouchstart' in window) && (navigator.maxTouchPoints > 0) && !window.matchMedia('(pointer: fine)').matches;
+  const isSmallScreen = screenWidth < 1024;
+  
+  if (!hasSeenNotice || isSmallScreen || isTouchOnly) {
+    const isWarning = isSmallScreen || isTouchOnly;
+    setTimeout(() => showDeviceNotice(isWarning), 1800); // After splash screen
+    
+    if (isWarning) {
+      setTimeout(() => showMiniBanner(), 4000);
+    }
+  }
+}
+
+function showMiniBanner() {
+  if (window.innerWidth >= 1024) return;
+  let banner = document.getElementById('device-mini-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'device-mini-banner';
+    banner.className = 'device-mini-banner';
+    banner.innerHTML = '<i class="fa-solid fa-circle-info"></i> For the best experience, use a computer <button id="mini-banner-close"><i class="fa-solid fa-xmark"></i></button>';
+    document.body.appendChild(banner);
+    
+    document.getElementById('mini-banner-close').addEventListener('click', () => {
+      banner.classList.remove('show');
+    });
+  }
+  banner.classList.add('show');
+}
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (window.innerWidth < 1024) {
+      showMiniBanner();
+    } else {
+      const banner = document.getElementById('device-mini-banner');
+      if (banner) banner.classList.remove('show');
+    }
+  }, 500);
+});
+
 // ===== INIT =====
 initTheme();
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 saveHistory(); 
 updateUI();
+checkDevice();
