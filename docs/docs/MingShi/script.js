@@ -1,8 +1,9 @@
-
+/* MingShi - Cute Design Studio Engine */
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const canvasArea = document.getElementById('canvas-area');
+const emptyState = document.getElementById('empty-state');
 
 // ===== STATE =====
 let pages = [{ id: 'page_1', name: 'Page 1', objects: [] }];
@@ -18,7 +19,11 @@ let panStart = { x: 0, y: 0 };
 let camera = { x: 0, y: 0, zoom: 1 };
 let isSpaceDown = false;
 let clipboard = [];
+let styleClipboard = null;
 let snapLines = [];
+
+// For Aspect Ratio Resize
+let resizeStartBounds = null;
 
 // HISTORY (UNDO/REDO)
 let history = [];
@@ -48,7 +53,7 @@ window.addEventListener('load', () => {
 
 // ===== THEME TOGGLE =====
 function initTheme() {
-  const savedTheme = localStorage.getItem('uostige_theme') || 'light';
+  const savedTheme = localStorage.getItem('mingshi_theme') || 'light';
   document.documentElement.setAttribute('data-theme', savedTheme);
   updateThemeIcon(savedTheme);
 }
@@ -63,9 +68,9 @@ document.getElementById('btn-theme').addEventListener('click', () => {
   const currentTheme = document.documentElement.getAttribute('data-theme');
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', newTheme);
-  localStorage.setItem('uostige_theme', newTheme);
+  localStorage.setItem('mingshi_theme', newTheme);
   updateThemeIcon(newTheme);
-  render(); // Re-render canvas to update grid colors
+  render(); 
 });
 
 // ===== CANVAS SETUP =====
@@ -137,6 +142,10 @@ function render() {
   const rect = canvas.getBoundingClientRect();
   ctx.clearRect(0, 0, rect.width, rect.height);
   
+  // Check empty state
+  if (getObjects().length === 0) emptyState.classList.remove('hidden');
+  else emptyState.classList.add('hidden');
+  
   // Grid dots (theme aware)
   const styles = getComputedStyle(document.documentElement);
   const gridColor = styles.getPropertyValue('--bg-grid').trim();
@@ -147,7 +156,9 @@ function render() {
   const offsetY = camera.y % gridSize;
   for (let x = offsetX; x < rect.width; x += gridSize) {
     for (let y = offsetY; y < rect.height; y += gridSize) {
-      ctx.fillRect(x - 1, y - 1, 2, 2);
+      ctx.beginPath();
+      ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
   
@@ -172,7 +183,7 @@ function render() {
   
   // Draw Smart Guides
   if (snapLines.length > 0) {
-    ctx.strokeStyle = '#ff0000';
+    ctx.strokeStyle = '#EF4F6B'; // Cute pink for guides
     ctx.lineWidth = 1 / camera.zoom;
     snapLines.forEach(line => {
       ctx.beginPath();
@@ -193,7 +204,6 @@ function drawShape(obj, isPreview = false) {
   let w = Math.abs(obj.w);
   let h = Math.abs(obj.h);
   
-  // Apply rotation and flip around center
   ctx.translate(x + w/2, y + h/2);
   if (obj.rotation) ctx.rotate(obj.rotation * Math.PI / 180);
   if (obj.flipH) ctx.scale(-1, 1);
@@ -210,11 +220,10 @@ function drawShape(obj, isPreview = false) {
     ctx.shadowOffsetY = obj.shadow.y;
   }
   
-  // Fill Style
   if (obj.fillType === 'gradient') {
     const grad = ctx.createLinearGradient(x, y, x + w, y + h);
-    grad.addColorStop(0, obj.gradColor1 || '#ff0000');
-    grad.addColorStop(1, obj.gradColor2 || '#0000ff');
+    grad.addColorStop(0, obj.gradColor1 || '#FF6B81');
+    grad.addColorStop(1, obj.gradColor2 || '#7C6FF0');
     ctx.fillStyle = grad;
   } else {
     ctx.fillStyle = obj.fill;
@@ -222,7 +231,7 @@ function drawShape(obj, isPreview = false) {
   
   ctx.strokeStyle = obj.stroke;
   ctx.lineWidth = obj.strokeWidth;
-  ctx.lineCap = obj.strokeCap || 'butt';
+  ctx.lineCap = obj.strokeCap || 'round'; // Default round is cuter
   ctx.lineJoin = 'round';
   
   if (obj.type === 'rect' || obj.type === 'frame') {
@@ -266,7 +275,7 @@ function drawShape(obj, isPreview = false) {
     if (imageCache[obj.id]) {
       ctx.drawImage(imageCache[obj.id], x, y, w, h);
     } else {
-      ctx.fillStyle = '#eee';
+      ctx.fillStyle = '#F4F5F9';
       ctx.fillRect(x, y, w, h);
     }
   }
@@ -306,15 +315,19 @@ function getBounds(obj) {
 function drawSelection(obj) {
   const b = getBounds(obj);
   ctx.save();
-  ctx.strokeStyle = '#0d99ff';
+  ctx.strokeStyle = '#7C6FF0'; // Cute Purple
   ctx.lineWidth = 1.5 / camera.zoom;
-  ctx.strokeRect(b.x - (1/camera.zoom), b.y - (1/camera.zoom), b.w + (2/camera.zoom), b.h + (2/camera.zoom));
+  ctx.setLineDash([4 / camera.zoom, 3 / camera.zoom]);
+  ctx.strokeRect(b.x - (2/camera.zoom), b.y - (2/camera.zoom), b.w + (4/camera.zoom), b.h + (4/camera.zoom));
+  ctx.setLineDash([]);
   
   const handles = getHandles(b.x, b.y, b.w, b.h);
   ctx.fillStyle = 'white';
+  ctx.strokeStyle = '#7C6FF0';
+  ctx.lineWidth = 1.5 / camera.zoom;
   Object.values(handles).forEach(h => {
     ctx.beginPath();
-    ctx.rect(h.x - 4/camera.zoom, h.y - 4/camera.zoom, 8/camera.zoom, 8/camera.zoom);
+    ctx.arc(h.x, h.y, 5 / camera.zoom, 0, Math.PI * 2); // Circle handles are cuter
     ctx.fill();
     ctx.stroke();
   });
@@ -335,9 +348,11 @@ function drawMultiSelection() {
   });
   
   ctx.save();
-  ctx.strokeStyle = '#0d99ff';
+  ctx.strokeStyle = '#7C6FF0';
   ctx.lineWidth = 1.5 / camera.zoom;
-  ctx.strokeRect(minX - (1/camera.zoom), minY - (1/camera.zoom), (maxX - minX) + (2/camera.zoom), (maxY - minY) + (2/camera.zoom));
+  ctx.setLineDash([4 / camera.zoom, 3 / camera.zoom]);
+  ctx.strokeRect(minX - (2/camera.zoom), minY - (2/camera.zoom), (maxX - minX) + (4/camera.zoom), (maxY - minY) + (4/camera.zoom));
+  ctx.setLineDash([]);
   ctx.restore();
 }
 
@@ -410,27 +425,27 @@ function createShape(type, x, y, w, h) {
     rotation: 0,
     flipH: false,
     flipV: false,
-    fill: isText || isLine ? '#000000' : '#d9d9d9',
+    fill: isText || isLine ? '#1F2333' : '#FFD3E1', // Default cute pink
     fillType: 'solid',
-    gradColor1: '#ff0000',
-    gradColor2: '#0000ff',
-    stroke: '#000000',
+    gradColor1: '#FF6B81',
+    gradColor2: '#7C6FF0',
+    stroke: '#7C6FF0',
     strokeWidth: isLine ? 2 : 0,
-    strokeCap: 'butt',
+    strokeCap: 'round',
     opacity: 1,
     visible: true,
     locked: false,
-    radius: 0,
+    radius: type === 'rect' ? 12 : 0, // Cute rounded corners by default
     name: isText ? 'Text' : `${type.charAt(0).toUpperCase() + type.slice(1)} ${idCounter}`,
     text: isText ? 'Text' : null,
     fontSize: 16,
-    fontWeight: 400,
+    fontWeight: 600,
     textAlign: 'left',
-    shadow: { enabled: false, x: 0, y: 4, blur: 8, opacity: 40, color: '#000000' }
+    shadow: { enabled: false, x: 0, y: 4, blur: 12, opacity: 30, color: '#7C6FF0' }
   };
 }
 
-function resizeObject(obj, handle, pos) {
+function resizeObject(obj, handle, pos, shiftKey) {
   const b = getBounds(obj);
   let x = b.x, y = b.y, w = b.w, h = b.h;
   
@@ -438,6 +453,20 @@ function resizeObject(obj, handle, pos) {
   if (handle.includes('s')) h = pos.y - y;
   if (handle.includes('w')) { w += x - pos.x; x = pos.x; }
   if (handle.includes('n')) { h += y - pos.y; y = pos.y; }
+  
+  // Lock Aspect Ratio
+  if (shiftKey && resizeStartBounds) {
+    const ratio = resizeStartBounds.w / resizeStartBounds.h;
+    if (Math.abs(w / resizeStartBounds.w) > Math.abs(h / resizeStartBounds.h)) {
+      const newH = w / ratio;
+      if (handle.includes('n')) y = resizeStartBounds.y + resizeStartBounds.h - newH;
+      h = newH;
+    } else {
+      const newW = h * ratio;
+      if (handle.includes('w')) x = resizeStartBounds.x + resizeStartBounds.w - newW;
+      w = newW;
+    }
+  }
   
   obj.x = x; obj.y = y; obj.w = w; obj.h = h;
 }
@@ -491,7 +520,7 @@ canvas.addEventListener('mousedown', (e) => {
   startPos = canvasPos;
   isInteracting = true;
   
-  if (e.button === 2) return; // Right click
+  if (e.button === 2) return;
   
   if (e.button === 1 || isSpaceDown || currentTool === 'hand') {
     interactionMode = 'pan';
@@ -505,9 +534,10 @@ canvas.addEventListener('mousedown', (e) => {
   if (hit && hit.type === 'handle') {
     interactionMode = 'resize';
     activeHandle = hit.handle;
+    resizeStartBounds = getBounds(hit.obj);
   } else if (hit && hit.type === 'object') {
     if (hit.obj.type === 'text' && e.detail === 2) {
-      isInteracting = false; // CRITICAL FIX: Stop interaction so text editor works
+      isInteracting = false; 
       editText(hit.obj);
       return;
     }
@@ -535,7 +565,7 @@ canvas.addEventListener('mousedown', (e) => {
         selectedIds = [newText.id];
         updateUI();
         render();
-        isInteracting = false; // Stop canvas interaction
+        isInteracting = false; 
         editText(newText);
         return;
       }
@@ -593,7 +623,7 @@ canvas.addEventListener('mousemove', (e) => {
   } else if (interactionMode === 'resize' && selectedIds.length === 1) {
     const obj = getObjects().find(o => o.id === selectedIds[0]);
     if (obj && !obj.locked) {
-      resizeObject(obj, activeHandle, canvasPos);
+      resizeObject(obj, activeHandle, canvasPos, e.shiftKey);
       updateUI();
       render();
     }
@@ -616,6 +646,7 @@ canvas.addEventListener('mouseup', (e) => {
   }
   
   snapLines = [];
+  resizeStartBounds = null;
   isInteracting = false;
   interactionMode = null;
   activeHandle = null;
@@ -673,15 +704,16 @@ contextMenu.addEventListener('click', (e) => {
   if (action === 'duplicate') duplicateSelected();
   if (action === 'copy') copySelected();
   if (action === 'paste') pasteClipboard();
+  if (action === 'paste-style') pasteStyle();
+  if (action === 'group') groupSelected();
+  if (action === 'ungroup') ungroupSelected();
   if (action === 'front') bringToFront();
   if (action === 'back') sendToBack();
   if (action === 'delete') deleteSelected();
 });
 
-// ===== TEXT EDITING (FIXED) =====
+// ===== TEXT EDITING =====
 const textEditor = document.getElementById('text-editor');
-
-// CRITICAL FIX: Prevent canvas mousedown when interacting with text editor
 textEditor.addEventListener('mousedown', (e) => e.stopPropagation());
 textEditor.addEventListener('keydown', (e) => e.stopPropagation());
 
@@ -707,7 +739,7 @@ function editText(obj) {
   
   const finishEdit = () => {
     obj.text = textEditor.textContent || 'Text';
-    obj.name = obj.text; // Sync layer name
+    obj.name = obj.text; 
     textEditor.style.display = 'none';
     textEditor.onblur = null;
     textEditor.onkeydown = null;
@@ -719,9 +751,30 @@ function editText(obj) {
   
   textEditor.onblur = finishEdit;
   textEditor.onkeydown = (e) => {
-    e.stopPropagation(); // Prevent canvas shortcuts
+    e.stopPropagation(); 
     if (e.key === 'Escape') { e.preventDefault(); finishEdit(); }
   };
+}
+
+// ===== GROUPING =====
+function groupSelected() {
+  if (selectedIds.length < 2) return;
+  const groupId = `g_${Date.now()}`;
+  getObjects().forEach(obj => {
+    if (selectedIds.includes(obj.id)) obj.groupId = groupId;
+  });
+  markUnsaved();
+  saveHistory();
+  showToast('Grouped!');
+}
+
+function ungroupSelected() {
+  getObjects().forEach(obj => {
+    if (selectedIds.includes(obj.id)) obj.groupId = null;
+  });
+  markUnsaved();
+  saveHistory();
+  showToast('Ungrouped!');
 }
 
 // ===== IMAGE UPLOADING =====
@@ -815,19 +868,19 @@ function updateUI() {
     document.getElementById('fill-input').value = obj.fill;
     document.getElementById('fill-hex').value = obj.fill;
     
-    document.getElementById('grad-swatch-1').style.background = obj.gradColor1 || '#ff0000';
-    document.getElementById('grad-input-1').value = obj.gradColor1 || '#ff0000';
-    document.getElementById('grad-hex-1').value = obj.gradColor1 || '#FF0000';
+    document.getElementById('grad-swatch-1').style.background = obj.gradColor1 || '#FF6B81';
+    document.getElementById('grad-input-1').value = obj.gradColor1 || '#FF6B81';
+    document.getElementById('grad-hex-1').value = (obj.gradColor1 || '#FF6B81').toUpperCase();
     
-    document.getElementById('grad-swatch-2').style.background = obj.gradColor2 || '#0000ff';
-    document.getElementById('grad-input-2').value = obj.gradColor2 || '#0000ff';
-    document.getElementById('grad-hex-2').value = obj.gradColor2 || '#0000FF';
+    document.getElementById('grad-swatch-2').style.background = obj.gradColor2 || '#7C6FF0';
+    document.getElementById('grad-input-2').value = obj.gradColor2 || '#7C6FF0';
+    document.getElementById('grad-hex-2').value = (obj.gradColor2 || '#7C6FF0').toUpperCase();
     
     document.getElementById('stroke-swatch').style.background = obj.stroke;
     document.getElementById('stroke-input').value = obj.stroke;
     document.getElementById('stroke-hex').value = obj.stroke;
     document.getElementById('stroke-width').value = obj.strokeWidth;
-    document.getElementById('stroke-cap').value = obj.strokeCap || 'butt';
+    document.getElementById('stroke-cap').value = obj.strokeCap || 'round';
     
     document.getElementById('prop-radius').value = obj.radius || 0;
     
@@ -889,6 +942,7 @@ function renderLayers() {
     if (obj.type === 'image') icon = 'fa-image';
     if (obj.type === 'star') icon = 'fa-star';
     if (obj.type === 'polygon') icon = 'fa-draw-polygon';
+    if (obj.groupId) icon = 'fa-cube'; // Indicate group
     
     item.innerHTML = `
       <i class="fa-solid ${obj.locked ? 'fa-lock' : 'fa-lock-open'} action-icon" data-act="lock"></i>
@@ -921,18 +975,14 @@ function renderLayers() {
     item.querySelector('.layer-name').addEventListener('blur', (e) => {
       let newName = e.target.value || 'Unnamed';
       obj.name = newName;
-      
-      // FEATURE: If text object, rename the actual text content too
-      if (obj.type === 'text') {
-        obj.text = newName;
-      }
+      if (obj.type === 'text') obj.text = newName; // Sync text content
       
       item.querySelector('.name-text').textContent = newName;
       e.target.style.display = 'none';
       item.querySelector('.name-text').style.display = 'block';
       markUnsaved();
       saveHistory();
-      render(); // Re-render to show new text on canvas
+      render();
     });
     
     item.querySelector('.layer-name').addEventListener('keydown', (e) => {
@@ -1017,6 +1067,12 @@ document.querySelectorAll('.tb-tool[data-tool]').forEach(btn => {
 
 document.getElementById('btn-undo').addEventListener('click', undo);
 document.getElementById('btn-redo').addEventListener('click', redo);
+
+// ===== HELP MODAL =====
+const helpModal = document.getElementById('help-modal');
+document.getElementById('btn-help').addEventListener('click', () => helpModal.classList.add('active'));
+document.getElementById('help-close').addEventListener('click', () => helpModal.classList.remove('active'));
+helpModal.addEventListener('click', (e) => { if (e.target.id === 'help-modal') helpModal.classList.remove('active'); });
 
 // ===== Z-ORDER =====
 function bringToFront() {
@@ -1106,6 +1162,7 @@ document.getElementById('text-content').addEventListener('input', (e) => {
   if (obj && obj.type === 'text') {
     obj.text = e.target.value;
     obj.name = e.target.value;
+    renderLayers(); // Update layer name live
     render();
     markUnsaved();
   }
@@ -1137,7 +1194,6 @@ document.querySelectorAll('.text-align-group .align-btn').forEach(btn => {
   });
 });
 
-// Flip Buttons
 document.getElementById('flip-h').addEventListener('click', () => {
   if (selectedIds.length !== 1) return;
   const obj = getObjects().find(o => o.id === selectedIds[0]);
@@ -1149,14 +1205,13 @@ document.getElementById('flip-v').addEventListener('click', () => {
   if (obj) { obj.flipV = !obj.flipV; render(); markUnsaved(); saveHistory(); }
 });
 
-// Fill Listeners
 function bindColorInput(inputId, hexId, swatchId, prop) {
   document.getElementById(inputId).addEventListener('input', (e) => {
     if (selectedIds.length !== 1) return;
     const obj = getObjects().find(o => o.id === selectedIds[0]);
     if (obj) {
       obj[prop] = e.target.value;
-      document.getElementById(hexId).value = e.target.value;
+      document.getElementById(hexId).value = e.target.value.toUpperCase();
       document.getElementById(swatchId).style.background = e.target.value;
       render();
       markUnsaved();
@@ -1170,7 +1225,6 @@ bindColorInput('grad-input-1', 'grad-hex-1', 'grad-swatch-1', 'gradColor1');
 bindColorInput('grad-input-2', 'grad-hex-2', 'grad-swatch-2', 'gradColor2');
 bindColorInput('stroke-input', 'stroke-hex', 'stroke-swatch', 'stroke');
 
-// Shadow Listeners
 document.getElementById('add-shadow').addEventListener('click', () => {
   if (selectedIds.length !== 1) return;
   const obj = getObjects().find(o => o.id === selectedIds[0]);
@@ -1207,7 +1261,7 @@ document.getElementById('shadow-input').addEventListener('input', (e) => {
   const obj = getObjects().find(o => o.id === selectedIds[0]);
   if (obj && obj.shadow) {
     obj.shadow.color = e.target.value;
-    document.getElementById('shadow-hex').value = e.target.value;
+    document.getElementById('shadow-hex').value = e.target.value.toUpperCase();
     document.getElementById('shadow-swatch').style.background = e.target.value;
     render();
     markUnsaved();
@@ -1284,7 +1338,7 @@ document.getElementById('zoom-fit').addEventListener('click', () => {
 
 // ===== EXPORT =====
 function exportSVG() {
-  let svg = `<svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg" style="background:#e5e5e5;">`;
+  let svg = `<svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg" style="background:#F7F8FC;">`;
   getObjects().forEach(o => {
     const b = getBounds(o);
     let fill = o.fillType === 'gradient' ? 'url(#grad1)' : o.fill;
@@ -1308,10 +1362,10 @@ function exportSVG() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'uostige-export.svg';
+  a.download = 'mingshi-export.svg';
   a.click();
   URL.revokeObjectURL(url);
-  showToast('Exported as SVG');
+  showToast('Exported as SVG ✨');
 }
 
 function exportPNG() {
@@ -1320,7 +1374,7 @@ function exportPNG() {
   tempCanvas.height = 1000;
   const tCtx = tempCanvas.getContext('2d');
   
-  tCtx.fillStyle = '#e5e5e5';
+  tCtx.fillStyle = '#F7F8FC';
   tCtx.fillRect(0, 0, 1000, 1000);
   
   getObjects().forEach(obj => {
@@ -1358,10 +1412,10 @@ function exportPNG() {
   });
   
   const link = document.createElement('a');
-  link.download = 'uostige-export.png';
+  link.download = 'mingshi-export.png';
   link.href = tempCanvas.toDataURL('image/png');
   link.click();
-  showToast('Exported as PNG');
+  showToast('Exported as PNG 🎨');
 }
 
 document.getElementById('btn-export-svg').addEventListener('click', exportSVG);
@@ -1370,7 +1424,7 @@ document.getElementById('btn-export-png').addEventListener('click', exportPNG);
 // ===== KEYBOARD SHORTCUTS =====
 function copySelected() {
   clipboard = selectedIds.map(id => getObjects().find(o => o.id === id)).filter(Boolean);
-  showToast('Copied');
+  showToast('Copied 📋');
 }
 
 function pasteClipboard() {
@@ -1386,6 +1440,25 @@ function pasteClipboard() {
   });
   selectedIds = newIds;
   updateUI(); render(); markUnsaved(); saveHistory();
+}
+
+function pasteStyle() {
+  if (!styleClipboard || selectedIds.length === 0) return;
+  selectedIds.forEach(id => {
+    const obj = getObjects().find(o => o.id === id);
+    if (obj) {
+      obj.fill = styleClipboard.fill;
+      obj.fillType = styleClipboard.fillType;
+      obj.gradColor1 = styleClipboard.gradColor1;
+      obj.gradColor2 = styleClipboard.gradColor2;
+      obj.stroke = styleClipboard.stroke;
+      obj.strokeWidth = styleClipboard.strokeWidth;
+      obj.opacity = styleClipboard.opacity;
+      obj.radius = styleClipboard.radius;
+    }
+  });
+  updateUI(); render(); markUnsaved(); saveHistory();
+  showToast('Style pasted ✨');
 }
 
 function duplicateSelected() {
@@ -1422,11 +1495,32 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'Space') { isSpaceDown = true; canvas.style.cursor = 'grab'; }
   
   if (e.ctrlKey || e.metaKey) {
-    if (e.key === 'c') copySelected(); 
-    else if (e.key === 'v') pasteClipboard();
+    if (e.key === 'c') {
+      if (e.altKey) { // Copy Style
+        e.preventDefault();
+        if (selectedIds.length === 1) {
+          const obj = getObjects().find(o => o.id === selectedIds[0]);
+          styleClipboard = JSON.parse(JSON.stringify(obj));
+          showToast('Style copied 🎨');
+        }
+      } else {
+        copySelected();
+      }
+    } 
+    else if (e.key === 'v') {
+      if (e.altKey) { // Paste Style
+        e.preventDefault();
+        pasteStyle();
+      } else {
+        pasteClipboard();
+      }
+    }
     else if (e.key === 'd') { e.preventDefault(); duplicateSelected(); }
+    else if (e.key === 'g' && !e.shiftKey) { e.preventDefault(); groupSelected(); }
+    else if (e.key === 'g' && e.shiftKey) { e.preventDefault(); ungroupSelected(); }
     else if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
     else if (e.key === 'y' || (e.key === 'z' && e.shiftKey)) { e.preventDefault(); redo(); }
+    else if (e.key === '/') { e.preventDefault(); helpModal.classList.add('active'); }
     return;
   }
   
@@ -1441,7 +1535,6 @@ window.addEventListener('keydown', (e) => {
   if (key === 't') setTool('text');
   if (key === 'h') setTool('hand');
   
-  // Nudge with arrow keys
   if (selectedIds.length > 0) {
     let dx = 0, dy = 0;
     if (e.key === 'ArrowLeft') dx = e.shiftKey ? -10 : -1;
@@ -1469,6 +1562,7 @@ window.addEventListener('keydown', (e) => {
   if (key === 'escape') {
     selectedIds = [];
     updateUI(); render();
+    helpModal.classList.remove('active');
   }
 });
 
@@ -1484,12 +1578,12 @@ window.addEventListener('keyup', (e) => {
 
 // ===== LOCAL STORAGE =====
 function getProjects() {
-  return JSON.parse(localStorage.getItem('uostige_projects') || '{}');
+  return JSON.parse(localStorage.getItem('mingshi_projects') || '{}');
 }
 
 function saveProjects(projects) {
   try {
-    localStorage.setItem('uostige_projects', JSON.stringify(projects));
+    localStorage.setItem('mingshi_projects', JSON.stringify(projects));
     return true;
   } catch (e) {
     showToast('Storage full! Try removing large images.');
@@ -1499,7 +1593,7 @@ function saveProjects(projects) {
 
 function markUnsaved() {
   document.getElementById('save-status').textContent = "Unsaved changes";
-  document.getElementById('save-status').style.color = "#ffb347";
+  document.getElementById('save-status').style.color = "#EF4F6B"; // Cute danger
 }
 
 function markSaved() {
@@ -1527,7 +1621,7 @@ function saveCurrentProject(name) {
     document.getElementById('file-name').textContent = name;
     markSaved();
     closeModal();
-    showToast(`Saved as ${name}`);
+    showToast(`Saved as ${name} 💖`);
   }
 }
 
@@ -1656,5 +1750,5 @@ function hexToRgba(hex, alpha) {
 initTheme();
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
-saveHistory(); // Initial state
+saveHistory(); 
 updateUI();

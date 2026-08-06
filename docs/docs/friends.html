@@ -593,7 +593,7 @@
                 bestFriend: true,
                 quote: "Always curious about my best friend",
                 about: "A wonderful friend who is always curious and loves exploring new things. Has a deep affection for cats and enjoys sharing interesting discoveries.",
-                links: [{text: "Search for a cat", url: "catsearch.html", icon: "cat"}]
+                links: [{text: "Search for a cat", url: "./catsearch/catsearch.html", icon: "cat"}]
             },
             "Minnie": {
                 emoji: "🏳️‍🌈",
@@ -641,7 +641,7 @@
                 bestFriend: false,
                 quote: "Do you remember in the evening?",
                 about: "Yenuja is a thoughtful and funny person who like to day dream about his crush.",
-                links: []
+                links: [{text: "Ming Shi", url: "./loveletters/loveletters.html", icon: "heart"}]
             }
         };
 
@@ -682,6 +682,8 @@
                     return '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" /></svg>';
                 case 'paint':
                     return '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7h3m-3 4h3" /></svg>';
+                case 'heart':
+                    return '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>';
                 default:
                     return '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>';
             }
