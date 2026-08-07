@@ -7,7 +7,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <style>
   :root {
@@ -18,16 +18,13 @@
     --border: #E8E8E6;
     --accent: #111110;
 
-    /* Discord status colors */
     --status-online: #43B581;
     --status-idle: #FAA61A;
     --status-dnd: #F04747;
     --status-offline: #747F8D;
 
-    /* Spotify brand */
     --spotify: #1DB954;
 
-    /* Dynamic tint (overridden by JS) */
     --tint: 17, 17, 16;
   }
   [data-theme="dark"] {
@@ -49,7 +46,6 @@
   }
   .serif { font-family: 'Instrument Serif', serif; font-weight: 400; }
 
-  /* --- Back Button --- */
   .back-btn {
     position: relative; display: inline-flex; align-items: center; gap: 0.5rem;
     padding: 0.6rem 1.2rem; border-radius: 8px;
@@ -69,7 +65,6 @@
   .back-btn i { transition: transform 0.3s ease; }
   .back-btn:hover i { transform: translateX(-4px); }
 
-  /* --- Theme Toggle --- */
   .theme-toggle {
     width: 56px; height: 30px; border-radius: 100px;
     background: var(--bg); border: 1px solid var(--border);
@@ -87,7 +82,6 @@
   [data-theme="dark"] .theme-toggle .knob { transform: translateX(26px); }
   .theme-toggle i { font-size: 10px; color: var(--muted); }
 
-  /* --- Simple UI Elements --- */
   .card {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 16px; padding: 1.5rem;
@@ -105,74 +99,55 @@
   .fade-in { opacity: 0; transform: translateY(10px); animation: fadeIn 0.8s ease forwards; }
   @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
-  /* ============================================
-     NOW PLAYING WIDGET
-     ============================================ */
-  .np-widget {
+  /* ===== UNIFIED STATUS & ACTIVITY CARD ===== */
+  .unified-card {
     position: relative;
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 1.25rem;
+    border-radius: 20px;
+    padding: 1.5rem;
     overflow: hidden;
-    transition: border-color 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
-    cursor: pointer;
     isolation: isolate;
+    box-shadow: 0 4px 24px -8px rgba(0,0,0,0.08);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
   }
-  .np-widget:hover {
-    transform: translateY(-2px);
-    border-color: rgba(var(--tint), 0.4);
-    box-shadow: 0 10px 40px -12px rgba(var(--tint), 0.18);
+  .unified-card:hover {
+    border-color: rgba(var(--tint), 0.3);
+    box-shadow: 0 12px 40px -12px rgba(var(--tint), 0.15);
   }
 
-  /* Blurred album background tint */
+  /* Blurred background tint for Spotify */
   .np-bg {
     position: absolute; inset: -20px; z-index: 0;
     background-size: cover; background-position: center;
     filter: blur(48px) saturate(1.6) brightness(1.05);
-    opacity: 0;
-    transition: opacity 0.7s ease, background-image 0.4s ease;
+    opacity: 0; transition: opacity 0.7s ease, background-image 0.4s ease;
     pointer-events: none;
   }
-  .np-widget.is-playing .np-bg { opacity: 0.14; }
-  [data-theme="dark"] .np-widget.is-playing .np-bg { opacity: 0.22; }
-
-  /* Subtle glass overlay */
+  .unified-card.is-playing .np-bg { opacity: 0.14; }
+  [data-theme="dark"] .unified-card.is-playing .np-bg { opacity: 0.22; }
   .np-glass {
     position: absolute; inset: 0; z-index: 0;
     background: linear-gradient(180deg, rgba(var(--tint), 0.02), rgba(var(--tint), 0.05));
     pointer-events: none;
   }
 
-  .np-inner {
-    position: relative; z-index: 1;
-    display: flex; flex-direction: column; gap: 1rem;
-  }
-
-  /* Header row */
-  .np-header {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 0.75rem;
-  }
-  .np-label {
-    display: flex; align-items: center; gap: 0.5rem;
-    font-size: 0.78rem; color: var(--muted);
-    font-weight: 500;
-  }
-  .np-label .fa-spotify { color: var(--spotify); font-size: 0.9rem; }
+  .status-inner { position: relative; z-index: 1; }
+  
+  .np-header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .np-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: var(--fg); font-weight: 500; }
+  .np-label .fa-spotify { color: var(--spotify); font-size: 1.1rem; }
+  
   .np-status {
     display: inline-flex; align-items: center; gap: 0.4rem;
-    font-size: 0.72rem; font-weight: 500;
-    padding: 0.25rem 0.6rem; border-radius: 100px;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    background: var(--card);
-    transition: color 0.3s ease, border-color 0.3s ease;
+    font-size: 0.8rem; font-weight: 500;
+    padding: 0.3rem 0.7rem; border-radius: 100px;
+    border: 1px solid var(--border); color: var(--muted);
+    background: var(--card); transition: color 0.3s ease, border-color 0.3s ease;
   }
   .np-status .dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--status-offline);
-    box-shadow: 0 0 0 0 currentColor;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--status-offline); box-shadow: 0 0 0 0 currentColor;
     transition: background 0.3s ease;
   }
   .np-status.is-online { color: var(--status-online); border-color: rgba(67,181,129,0.3); }
@@ -183,38 +158,28 @@
   .np-status.is-dnd .dot { background: var(--status-dnd); }
   .np-status.is-offline { color: var(--muted); }
   .np-status.is-offline .dot { background: var(--status-offline); }
-
   @keyframes pulse {
     0%, 100% { box-shadow: 0 0 0 0 currentColor; }
     50% { box-shadow: 0 0 0 4px transparent; }
   }
 
-  /* Body row */
-  .np-body {
-    display: flex; align-items: center; gap: 1rem;
-  }
+  /* Spotify Body */
+  .np-body { display: flex; align-items: center; gap: 1rem; margin-top: 1.25rem; }
   .np-art {
-    position: relative;
-    width: 64px; height: 64px; border-radius: 12px;
-    overflow: hidden; flex-shrink: 0;
-    background: var(--bg);
-    border: 1px solid var(--border);
+    position: relative; width: 64px; height: 64px; border-radius: 12px;
+    overflow: hidden; flex-shrink: 0; background: var(--bg); border: 1px solid var(--border);
   }
   .np-art img {
     width: 100%; height: 100%; object-fit: cover;
-    opacity: 0; transition: opacity 0.5s ease;
-    display: block;
+    opacity: 0; transition: opacity 0.5s ease; display: block;
   }
   .np-art img.loaded { opacity: 1; }
   .np-art .placeholder {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
-    color: var(--muted); font-size: 1.25rem;
-    transition: opacity 0.3s ease;
+    color: var(--muted); font-size: 1.25rem; transition: opacity 0.3s ease;
   }
-  .np-widget.is-playing .np-art .placeholder { opacity: 0; }
-
-  /* Equalizer animation on art corner */
+  .unified-card.is-playing .np-art .placeholder { opacity: 0; }
   .np-eq {
     position: absolute; bottom: 6px; right: 6px;
     display: flex; align-items: flex-end; gap: 2px;
@@ -223,119 +188,155 @@
     backdrop-filter: blur(4px);
     opacity: 0; transition: opacity 0.3s ease;
   }
-  .np-widget.is-playing .np-eq { opacity: 1; }
-  .np-eq span {
-    width: 2px; background: var(--spotify); border-radius: 2px;
-    animation: eq 0.9s ease-in-out infinite;
-  }
+  .unified-card.is-playing .np-eq { opacity: 1; }
+  .np-eq span { width: 2px; background: var(--spotify); border-radius: 2px; animation: eq 0.9s ease-in-out infinite; }
   .np-eq span:nth-child(1) { animation-delay: 0s; }
   .np-eq span:nth-child(2) { animation-delay: 0.2s; }
   .np-eq span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes eq {
-    0%, 100% { height: 20%; }
-    50% { height: 100%; }
-  }
-
+  @keyframes eq { 0%, 100% { height: 20%; } 50% { height: 100%; } }
+  
   .np-meta { flex: 1; min-width: 0; }
   .np-title {
-    font-weight: 600; font-size: 0.98rem; line-height: 1.3;
-    color: var(--fg);
+    font-weight: 600; font-size: 1rem; line-height: 1.3; color: var(--fg);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     transition: opacity 0.4s ease;
   }
   .np-artist {
-    font-size: 0.82rem; color: var(--muted);
-    margin-top: 2px;
+    font-size: 0.85rem; color: var(--muted); margin-top: 2px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     transition: opacity 0.4s ease;
   }
-  .np-album-tip {
-    position: absolute; bottom: calc(100% + 8px); left: 50%;
-    transform: translateX(-50%) translateY(4px);
-    background: var(--fg); color: var(--bg);
-    padding: 0.35rem 0.65rem; border-radius: 6px;
-    font-size: 0.7rem; white-space: nowrap;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 10;
-  }
-  .np-album-tip::after {
-    content: ''; position: absolute; top: 100%; left: 50%;
-    transform: translateX(-50%);
-    border: 4px solid transparent; border-top-color: var(--fg);
-  }
-  .np-meta:hover .np-album-tip {
-    opacity: 1; transform: translateX(-50%) translateY(0);
-  }
-
-  /* Progress */
-  .np-progress {
-    display: flex; flex-direction: column; gap: 0.4rem;
-    margin-top: 0.25rem;
-  }
-  .np-bar {
-    position: relative; height: 4px; border-radius: 100px;
-    background: var(--border); overflow: hidden;
-  }
+  .np-progress { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 1rem; }
+  .np-bar { position: relative; height: 4px; border-radius: 100px; background: var(--border); overflow: hidden; }
   .np-bar-fill {
     position: absolute; top: 0; left: 0; height: 100%;
-    background: var(--fg);
-    border-radius: 100px;
+    background: var(--fg); border-radius: 100px;
     transition: width 0.1s linear;
   }
-  .np-widget.is-playing .np-bar-fill { background: var(--spotify); }
+  .unified-card.is-playing .np-bar-fill { background: var(--spotify); }
   .np-times {
     display: flex; justify-content: space-between;
-    font-size: 0.68rem; color: var(--muted);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
+    font-size: 0.75rem; color: var(--muted);
+    font-variant-numeric: tabular-nums; letter-spacing: 0.02em;
   }
-
-  /* Empty state */
-  .np-empty {
-    display: flex; align-items: center; gap: 0.75rem;
-    color: var(--muted); padding: 0.5rem 0;
-  }
-  .np-empty i { font-size: 1.5rem; opacity: 0.4; }
-  .np-empty span { font-size: 0.9rem; }
-
-  /* Crossfade */
   .np-fade-out { opacity: 0; transform: translateY(4px); }
-  .np-fade-in { opacity: 1; transform: translateY(0); }
+  .np-body, .np-progress { transition: opacity 0.35s ease, transform 0.35s ease; }
 
-  .np-body, .np-progress, .np-empty {
-    transition: opacity 0.35s ease, transform 0.35s ease;
+  /* Divider */
+  .card-divider {
+    height: 0;
+    background: var(--border);
+    margin: 0;
+    opacity: 0;
+    transition: height 0.4s ease, margin 0.4s ease, opacity 0.3s ease;
   }
 
-  /* Paused overlay */
-  .np-paused {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.55); color: #fff;
-    width: 28px; height: 28px; border-radius: 50%;
+  /* Activity Wrapper (Hover Expansion) */
+  .activity-wrap {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* Spacing between separated activities */
+    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+  }
+  /* Expand when the status box is hovered or focused */
+  .unified-card:hover .activity-wrap,
+  .unified-card:focus-within .activity-wrap {
+    max-height: 1000px; 
+    opacity: 1;
+  }
+  .unified-card:hover .card-divider,
+  .unified-card:focus-within .card-divider {
+    height: 1px;
+    margin: 1.5rem 0;
+    opacity: 1;
+  }
+  /* Touch device fallback */
+  @media (hover: none) {
+    .activity-wrap { max-height: 1000px; opacity: 1; }
+    .card-divider { height: 1px; margin: 1.5rem 0; opacity: 1; }
+  }
+
+  /* ===== ACTIVITY ITEMS ===== */
+  .activity-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .activity-img-wrap {
+    position: relative; flex-shrink: 0; width: 60px; height: 60px;
+  }
+  .activity-img {
+    width: 60px; height: 60px; border-radius: 12px;
+    object-fit: cover; display: block;
+    border: 1px solid var(--border); background: var(--bg);
+  }
+  .activity-img-placeholder {
+    width: 60px; height: 60px; border-radius: 12px;
+    border: 1px solid var(--border); background: var(--bg);
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.7rem;
-    opacity: 0; transition: opacity 0.3s ease;
+    color: var(--muted); font-size: 1.4rem;
   }
-  .np-widget.is-paused .np-paused { opacity: 1; }
-  .np-widget.is-paused .np-eq { opacity: 0; }
+  .activity-img-small {
+    position: absolute; bottom: -4px; right: -4px;
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 2px solid var(--card); background: var(--bg);
+  }
+  .activity-content { flex: 1; min-width: 0; }
+  .activity-type-badge {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em;
+    color: var(--muted); margin-bottom: 0.35rem; text-transform: uppercase;
+  }
+  .activity-name {
+    font-weight: 600; font-size: 1.05rem; line-height: 1.3; color: var(--fg);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .activity-detail {
+    font-size: 0.9rem; color: var(--fg);
+    margin-top: 3px; opacity: 0.8;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .activity-state {
+    font-size: 0.85rem; color: var(--muted);
+    margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .activity-time {
+    font-size: 0.8rem; color: var(--muted);
+    margin-top: 6px; font-variant-numeric: tabular-nums;
+    display: inline-flex; align-items: center; gap: 0.3rem;
+  }
+  .activity-buttons {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem;
+  }
+  .activity-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.8rem; font-weight: 500;
+    padding: 0.4rem 0.8rem; border-radius: 8px;
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--fg); text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+  }
+  .activity-btn:hover { background: var(--fg); color: var(--bg); }
+  .activity-btn .fa-youtube { color: #FF0000; }
+  .activity-btn:hover .fa-youtube { color: #FFFFFF; }
 
-  /* Reduced motion */
+  .activity-empty {
+    display: flex; align-items: center; gap: 0.75rem;
+    color: var(--muted); font-size: 0.9rem; padding: 0.5rem 0;
+  }
+  .activity-empty i { font-size: 1.3rem; opacity: 0.4; }
+
   @media (prefers-reduced-motion: reduce) {
     .np-eq span, .np-status.is-online .dot { animation: none !important; }
-    .np-widget:hover { transform: none; }
     * { transition-duration: 0.01ms !important; }
-  }
-
-  /* Focus ring */
-  .np-widget:focus-visible {
-    outline: 2px solid var(--fg); outline-offset: 3px;
   }
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 md:p-8">
   <button class="back-btn fade-in" onclick="window.location.href='https://randomcatuser.github.io'" aria-label="Back to home">
     <i class="fa-solid fa-arrow-left"></i>
@@ -351,41 +352,24 @@
   </div>
 </header>
 
-<!-- Main Content -->
 <main class="max-w-2xl mx-auto px-6 py-32 md:py-40">
 
-  <!-- Hero -->
   <section class="flex flex-col items-center text-center mb-20 fade-in" style="animation-delay: 0.1s;">
     <img src="https://github.com/RandomCatUser/RandomCatUser/blob/main/workflows/MyProfile.webp?raw=true" alt="Avatar" class="w-24 h-24 rounded-full object-cover mb-6 border" style="border-color: var(--border);" />
     <h1 class="serif text-5xl md:text-6xl mb-3 leading-tight">Dihan Ramanayaka</h1>
     <p class="text-base md:text-lg" style="color: var(--muted);">Lord Whiskers 𖹭 | RandomCatUser</p>
   </section>
 
-  <!-- Bio -->
-  <section class="mb-16 fade-in" style="animation-delay: 0.2s;">
-    <h2 class="text-xs uppercase tracking-widest mb-4" style="color: var(--muted);">About</h2>
-    <p class="text-xl md:text-2xl leading-relaxed serif">
-      I am just someone who tries to find my peace and just tries to get the feeling of being loved.
-    </p>
-  </section>
-
-  <!-- ============================================
-       NOW PLAYING WIDGET
-       ============================================ -->
-  <section class="mb-16 fade-in" style="animation-delay: 0.25s;" aria-labelledby="np-heading">
+  <!-- ===== UNIFIED STATUS & ACTIVITY CARD ===== -->
+  <section class="mb-16 fade-in" style="animation-delay: 0.2s;" aria-labelledby="np-heading">
     <h2 id="np-heading" class="text-xs uppercase tracking-widest mb-4" style="color: var(--muted);">Status</h2>
-    <div
-      id="nowPlaying"
-      class="np-widget"
-      role="button"
-      tabindex="0"
-      aria-label="Now playing widget"
-    >
-      <!-- Blurred background tint -->
+    
+    <div id="statusWrapper" class="unified-card" role="button" tabindex="0" aria-label="Status and Activity Widget">
+      <!-- Blurred Tints -->
       <div class="np-bg" id="npBg" aria-hidden="true"></div>
       <div class="np-glass" aria-hidden="true"></div>
 
-      <div class="np-inner">
+      <div class="status-inner">
         <!-- Header -->
         <div class="np-header">
           <div class="np-label">
@@ -398,22 +382,20 @@
           </div>
         </div>
 
-        <!-- Body (filled when playing) -->
+        <!-- Spotify Body -->
         <div class="np-body" id="npBody" style="display:none;">
           <div class="np-art">
             <div class="placeholder"><i class="fa-solid fa-music"></i></div>
             <img id="npArt" alt="" loading="lazy" />
             <div class="np-eq" aria-hidden="true"><span></span><span></span><span></span></div>
-            <div class="np-paused" aria-hidden="true"><i class="fa-solid fa-pause"></i></div>
           </div>
           <div class="np-meta">
             <div class="np-title" id="npTitle">—</div>
             <div class="np-artist" id="npArtist">—</div>
-            <div class="np-album-tip" id="npAlbumTip"></div>
           </div>
         </div>
 
-        <!-- Progress -->
+        <!-- Spotify Progress -->
         <div class="np-progress" id="npProgress" style="display:none;">
           <div class="np-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <div class="np-bar-fill" id="npBarFill" style="width:0%"></div>
@@ -424,16 +406,20 @@
           </div>
         </div>
 
-        <!-- Empty state -->
-        <div class="np-empty" id="npEmpty" style="display:none;">
-          <i class="fa-brands fa-spotify"></i>
-          <span>Not listening to Spotify</span>
+        <!-- Divider that appears on hover -->
+        <div class="card-divider"></div>
+
+        <!-- Hidden Activity Wrapper that expands on hover -->
+        <div id="activityWidget" class="activity-wrap" aria-live="polite">
+          <div class="activity-empty">
+            <i class="fa-solid fa-gamepad"></i>
+            <span>Connecting to Discord…</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Skills / Stack -->
   <section class="mb-16 fade-in" style="animation-delay: 0.3s;">
     <h2 class="text-xs uppercase tracking-widest mb-4" style="color: var(--muted);">Toolbox</h2>
     <div class="grid grid-cols-2 gap-4">
@@ -456,7 +442,6 @@
     </div>
   </section>
 
-  <!-- Contact -->
   <section class="text-center fade-in" style="animation-delay: 0.4s;">
     <h2 class="text-xs uppercase tracking-widest mb-6" style="color: var(--muted);">Connect</h2>
     <div class="flex justify-center gap-3">
@@ -473,7 +458,7 @@
 </footer>
 
 <script>
-  // ---------- Theme Toggle Logic ----------
+  // ---------- Theme Toggle ----------
   const root = document.documentElement;
   const themeToggle = document.getElementById('themeToggle');
   const knobIcon = document.getElementById('knobIcon');
@@ -497,24 +482,18 @@
   });
 
   /* =====================================================================
-     LANYARD NOW-PLAYING WIDGET
-     - WebSocket-first with HTTP polling fallback
-     - Local progress animation via requestAnimationFrame
-     - Reuses DOM nodes, supports theme, reduced motion
+     LANYARD WIDGET — Spotify + Discord Activities
      ===================================================================== */
   const LanyardWidget = (() => {
-    // ---------- CONFIG ----------
-    // Replace with your Discord user ID
     const DISCORD_ID = '1068541705596448788';
     const WS_URL = 'wss://api.lanyard.rest/socket';
     const HTTP_URL = `https://api.lanyard.rest/v1/users/${DISCORD_ID}`;
-    const POLL_INTERVAL_MS = 10000; // Fallback polling frequency
+    const POLL_INTERVAL_MS = 10000;
     const RECONNECT_BASE_MS = 2000;
     const RECONNECT_MAX_MS = 30000;
 
-    // ---------- DOM ----------
     const els = {
-      widget: document.getElementById('nowPlaying'),
+      widget: document.getElementById('statusWrapper'),
       bg: document.getElementById('npBg'),
       label: document.getElementById('npLabel'),
       status: document.getElementById('npStatus'),
@@ -523,28 +502,28 @@
       art: document.getElementById('npArt'),
       title: document.getElementById('npTitle'),
       artist: document.getElementById('npArtist'),
-      albumTip: document.getElementById('npAlbumTip'),
       progress: document.getElementById('npProgress'),
       barFill: document.getElementById('npBarFill'),
       barWrap: () => els.progress.querySelector('[role="progressbar"]'),
       current: document.getElementById('npCurrent'),
       total: document.getElementById('npTotal'),
-      empty: document.getElementById('npEmpty'),
+      activityWrap: document.getElementById('activityWidget'),
     };
 
-    // ---------- STATE ----------
     let ws = null;
     let heartbeatTimer = null;
     let reconnectTimer = null;
     let reconnectAttempts = 0;
     let pollTimer = null;
     let progressRaf = null;
+    let activityTickTimer = null;
     let usingWebSocket = false;
     let lastTrackId = null;
-    let currentSpotify = null; // { trackId, start, end, paused }
-    let manuallyPaused = false; // Detect pause state via timestamps
+    let currentSpotify = null;
+    let currentActivities = []; 
 
-    // ---------- UTILS ----------
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const formatTime = (ms) => {
       if (!ms || ms < 0) ms = 0;
       const total = Math.floor(ms / 1000);
@@ -553,11 +532,15 @@
       return `${m}:${s.toString().padStart(2, '0')}`;
     };
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const escapeHtml = (str) => {
+      if (str == null) return '';
+      return String(str).replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    };
 
     // ---------- DISCORD STATUS ----------
-    function updateDiscordStatus(discordStatus, activeOnDiscord) {
-      // Map Lanyard statuses: online, idle, dnd, offline
+    function updateDiscordStatus(discordStatus) {
       const statusMap = {
         online: { label: 'Online', cls: 'is-online' },
         idle:   { label: 'Idle',    cls: 'is-idle' },
@@ -565,36 +548,28 @@
         offline:{ label: 'Offline', cls: 'is-offline' },
       };
       const s = statusMap[discordStatus] || statusMap.offline;
-
-      // Reset classes
       els.status.classList.remove('is-online', 'is-idle', 'is-dnd', 'is-offline');
       els.status.classList.add(s.cls);
       els.statusText.textContent = s.label;
       els.status.setAttribute('aria-label', `Discord status: ${s.label}`);
     }
 
-    // ---------- SPOTIFY UPDATE ----------
+    // ---------- SPOTIFY ----------
     function applySpotifyData(spotify) {
       if (!spotify || !spotify.track_id) {
         showEmptyState();
         return;
       }
-
-      // If same track, don't re-render (avoid flicker)
       if (spotify.track_id === lastTrackId) {
-        // Update timestamps in case they shifted
         currentSpotify = {
           trackId: spotify.track_id,
           start: spotify.timestamps?.start || Date.now(),
           end: spotify.timestamps?.end || Date.now(),
+          trackUrl: `https://open.spotify.com/track/${spotify.track_id}`,
         };
         return;
       }
-
-      // New track: crossfade
-      crossfadeTrack(() => {
-        renderTrack(spotify);
-      });
+      crossfadeTrack(() => renderTrack(spotify));
       lastTrackId = spotify.track_id;
     }
 
@@ -606,16 +581,11 @@
         trackUrl: `https://open.spotify.com/track/${spotify.track_id}`,
       };
 
-      // Show body & progress, hide empty
       els.body.style.display = 'flex';
       els.progress.style.display = 'flex';
-      els.empty.style.display = 'none';
       els.widget.classList.add('is-playing');
-      els.widget.classList.remove('is-paused');
 
-      // Album art (lazy + fade-in on load)
       els.art.classList.remove('loaded');
-      // Detach old load handler
       els.art.onload = null;
       els.art.onerror = null;
       els.art.onload = () => els.art.classList.add('loaded');
@@ -623,25 +593,15 @@
       els.art.src = spotify.album_art_url;
       els.art.alt = `${spotify.album} cover`;
 
-      // Meta
       els.title.textContent = spotify.song || 'Unknown track';
       els.artist.textContent = spotify.artist || 'Unknown artist';
-      els.albumTip.textContent = spotify.album || '';
-
-      // Background tint
       els.bg.style.backgroundImage = `url("${spotify.album_art_url}")`;
 
-      // Dominant color extraction (best-effort, with graceful fallback)
       extractDominantColor(spotify.album_art_url).then((rgb) => {
-        if (rgb) {
-          els.widget.style.setProperty('--tint', rgb);
-        }
+        if (rgb) els.widget.style.setProperty('--tint', rgb);
       });
 
-      // Label
       els.label.textContent = 'Listening to Spotify';
-
-      // Start progress animation
       startProgress();
     }
 
@@ -649,21 +609,16 @@
       stopProgress();
       currentSpotify = null;
       lastTrackId = null;
-
       els.body.style.display = 'none';
       els.progress.style.display = 'none';
-      els.empty.style.display = 'flex';
-      els.widget.classList.remove('is-playing', 'is-paused');
+      els.widget.classList.remove('is-playing');
       els.bg.style.backgroundImage = '';
       els.label.textContent = 'Not listening to Spotify';
     }
 
     function crossfadeTrack(callback) {
       const fadeable = [els.body, els.progress];
-      if (reducedMotion) {
-        callback();
-        return;
-      }
+      if (reducedMotion) { callback(); return; }
       fadeable.forEach(el => el.classList.add('np-fade-out'));
       setTimeout(() => {
         callback();
@@ -671,45 +626,29 @@
       }, 220);
     }
 
-    // ---------- PROGRESS ANIMATION ----------
     function startProgress() {
       stopProgress();
       if (!currentSpotify) return;
-
       const tick = () => {
         if (!currentSpotify) return;
         const now = Date.now();
         const { start, end } = currentSpotify;
         const duration = end - start;
         let elapsed = now - start;
-
-        // If elapsed exceeds duration, the track likely ended / data stale.
-        // We hold at 100% and wait for next WS event.
-        if (elapsed >= duration && duration > 0) {
-          elapsed = duration;
-        }
-
+        if (elapsed >= duration && duration > 0) elapsed = duration;
         const pct = duration > 0 ? (elapsed / duration) * 100 : 0;
         els.barFill.style.width = `${pct}%`;
         els.current.textContent = formatTime(elapsed);
         els.total.textContent = formatTime(duration);
-
         const bar = els.barWrap();
         if (bar) {
           bar.setAttribute('aria-valuenow', Math.round(pct));
           bar.setAttribute('aria-label', `${formatTime(elapsed)} of ${formatTime(duration)}`);
         }
-
         progressRaf = requestAnimationFrame(tick);
       };
-
-      if (reducedMotion) {
-        // Update once per second instead of rAF for reduced motion users
-        tick();
-        progressRaf = setInterval(tick, 1000);
-      } else {
-        tick();
-      }
+      if (reducedMotion) { tick(); progressRaf = setInterval(tick, 1000); }
+      else { tick(); }
     }
 
     function stopProgress() {
@@ -721,14 +660,11 @@
     }
 
     // ---------- DOMINANT COLOR ----------
-    // Uses an off-screen canvas to sample the album art and extract
-    // the dominant color. Falls back gracefully on CORS or error.
     let colorCache = new Map();
     function extractDominantColor(url) {
       return new Promise((resolve) => {
         if (!url) return resolve(null);
         if (colorCache.has(url)) return resolve(colorCache.get(url));
-
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.referrerPolicy = 'no-referrer';
@@ -753,99 +689,236 @@
             const rgb = `${r}, ${g}, ${b}`;
             colorCache.set(url, rgb);
             resolve(rgb);
-          } catch (e) {
-            resolve(null);
-          }
+          } catch (e) { resolve(null); }
         };
         img.onerror = () => resolve(null);
         img.src = url;
       });
     }
 
-    // ---------- CLICK / KEYBOARD -> OPEN ON SPOTIFY ----------
     function openOnSpotify() {
       if (currentSpotify && currentSpotify.trackUrl) {
         window.open(currentSpotify.trackUrl, '_blank', 'noopener,noreferrer');
       }
     }
-    els.widget.addEventListener('click', openOnSpotify);
-    els.widget.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
+    els.widget.addEventListener('click', (e) => {
+      // Only trigger if clicking the status area, not the activity buttons
+      if (!e.target.closest('.activity-btn')) {
         openOnSpotify();
       }
     });
+    els.widget.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { 
+        e.preventDefault(); 
+        openOnSpotify(); 
+      }
+    });
+
+    // =================================================================
+    //  ACTIVITIES (GAMES / STREAMING / WATCHING...)
+    // =================================================================
+
+    const ACTIVITY_TYPES = {
+      0: { label: 'Playing',    icon: 'fa-gamepad' },
+      1: { label: 'Streaming',  icon: 'fa-tower-broadcast' },
+      2: { label: 'Listening',  icon: 'fa-music' },
+      3: { label: 'Watching',   icon: 'fa-eye' },
+      4: { label: 'Custom',     icon: 'fa-message' },
+      5: { label: 'Competing',  icon: 'fa-trophy' },
+    };
+
+    function resolveAssetUrl(applicationId, asset) {
+      if (!asset) return null;
+      if (asset.startsWith('mp:external/')) {
+        return 'https://media.discordapp.net/external/' + asset.slice('mp:external/'.length);
+      }
+      if (asset.startsWith('mp:')) {
+        return 'https://media.discordapp.net/' + asset.slice(3);
+      }
+      if (asset.startsWith('https://') || asset.startsWith('http://')) return asset;
+      if (asset.startsWith('spotify:')) {
+        return 'https://i.scdn.co/image/' + asset.slice('spotify:'.length);
+      }
+      if (applicationId) {
+        return `https://cdn.discordapp.com/app-assets/${applicationId}/${asset}.png`;
+      }
+      return null;
+    }
+
+    function formatElapsed(startMs, suffix = 'elapsed') {
+      const elapsed = Date.now() - startMs;
+      if (elapsed < 0) return `0:00 ${suffix}`;
+      const total = Math.floor(elapsed / 1000);
+      const h = Math.floor(total / 3600);
+      const m = Math.floor((total % 3600) / 60);
+      const s = total % 60;
+      if (h > 0) return `${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')} ${suffix}`;
+      return `${m}:${s.toString().padStart(2,'0')} ${suffix}`;
+    }
+
+    function renderActivityCard(activity) {
+      const typeInfo = ACTIVITY_TYPES[activity.type] || { label: 'Activity', icon: 'fa-circle' };
+      const largeImg = activity.assets?.large_image
+        ? resolveAssetUrl(activity.application_id, activity.assets.large_image)
+        : null;
+      const smallImg = activity.assets?.small_image
+        ? resolveAssetUrl(activity.application_id, activity.assets.small_image)
+        : null;
+
+      let imgBlock = '';
+      if (largeImg) {
+        imgBlock = `
+          <div class="activity-img-wrap">
+            <img class="activity-img" src="${largeImg}" alt="${escapeHtml(activity.assets?.large_text || activity.name || '')}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+            <div class="activity-img-placeholder" style="display:none;"><i class="fa-solid ${typeInfo.icon}"></i></div>
+            ${smallImg ? `<img class="activity-img-small" src="${smallImg}" alt="${escapeHtml(activity.assets?.small_text || '')}" loading="lazy" />` : ''}
+          </div>
+        `;
+      }
+
+      const name = escapeHtml(activity.name || 'Unknown Activity');
+      const details = activity.details ? `<div class="activity-detail">${escapeHtml(activity.details)}</div>` : '';
+      const state = activity.state ? `<div class="activity-state">${escapeHtml(activity.state)}</div>` : '';
+
+      let timeBlock = '';
+      const start = activity.timestamps?.start;
+      const end = activity.timestamps?.end;
+      if (start && !end) {
+        timeBlock = `<div class="activity-time" data-start="${start}">
+          <span style="width:6px; height:6px; border-radius:50%; background: var(--status-online); display:inline-block; margin-right: 4px;"></span>
+          <span>${formatElapsed(start)}</span>
+        </div>`;
+      } else if (start && end) {
+        const now = Date.now();
+        const total = end - start;
+        const elapsed = Math.min(Math.max(now - start, 0), total);
+        timeBlock = `<div class="activity-time" data-start="${start}" data-end="${end}">
+          <i class="fa-regular fa-clock" style="margin-right: 4px;"></i>
+          <span>${formatTime(elapsed)} / ${formatTime(total)}</span>
+        </div>`;
+      }
+
+      let buttonsBlock = '';
+      if (Array.isArray(activity.buttons) && activity.buttons.length > 0) {
+        buttonsBlock = `<div class="activity-buttons">${activity.buttons.map(b => {
+          let icon = 'fa-link';
+          let url = activity.url || '#';
+          if (b.toLowerCase().includes('youtube')) {
+            icon = 'fa-youtube';
+            url = activity.url || 'https://www.youtube.com';
+          }
+          return `<a class="activity-btn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer"><i class="fa-brands ${icon}"></i> ${escapeHtml(b)}</a>`;
+        }).join('')}</div>`;
+      }
+
+      return `
+        <div class="activity-item" data-activity-id="${escapeHtml(activity.id || '')}">
+          ${imgBlock}
+          <div class="activity-content" style="${largeImg ? '' : 'width: 100%;'}">
+            <div class="activity-type-badge"><i class="fa-solid ${typeInfo.icon}"></i> ${typeInfo.label}</div>
+            <div class="activity-name">${name}</div>
+            ${details}
+            ${state}
+            ${timeBlock}
+            ${buttonsBlock}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderActivities(activities) {
+      // Filter out Spotify (handled by its own widget) AND Custom Status (Type 4) completely
+      const filtered = (activities || []).filter(a => {
+        if (a.type === 2 && (a.name === 'Spotify' || a.name === 'spotify')) return false;
+        if (a.type === 4) return false; 
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        currentActivities = [];
+        els.activityWrap.innerHTML = `
+          <div class="activity-empty">
+            <i class="fa-solid fa-gamepad"></i>
+            <span>Not playing anything right now</span>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach(a => { html += renderActivityCard(a); });
+
+      els.activityWrap.innerHTML = html;
+
+      currentActivities = filtered
+        .filter(a => a.timestamps?.start)
+        .map(a => ({ id: a.id, start: a.timestamps.start, end: a.timestamps?.end || null }));
+    }
+
+    function startActivityTicker() {
+      if (activityTickTimer) return;
+      activityTickTimer = setInterval(() => {
+        if (!currentActivities.length) return;
+        currentActivities.forEach(act => {
+          const cards = els.activityWrap.querySelectorAll(`.activity-item[data-activity-id="${act.id}"] .activity-time span:last-child`);
+          cards.forEach(node => {
+            if (act.end) {
+              const now = Date.now();
+              const total = act.end - act.start;
+              const elapsed = Math.min(Math.max(now - act.start, 0), total);
+              node.textContent = `${formatTime(elapsed)} / ${formatTime(total)}`;
+            } else {
+              node.textContent = formatElapsed(act.start);
+            }
+          });
+        });
+      }, 1000);
+    }
+
+    function stopActivityTicker() {
+      if (activityTickTimer) { clearInterval(activityTickTimer); activityTickTimer = null; }
+    }
 
     // ---------- DATA HANDLER ----------
     function handlePresence(data) {
       if (!data) return;
-
-      // Update Discord status first (always)
-      updateDiscordStatus(data.discord_status, data.active_on_discord_web ?? false);
-
-      // Update Spotify
+      updateDiscordStatus(data.discord_status);
       if (data.listening_to_spotify && data.spotify) {
         applySpotifyData(data.spotify);
       } else {
         showEmptyState();
       }
+      renderActivities(data.activities);
+      startActivityTicker();
     }
 
     // ---------- WEBSOCKET ----------
     function connectWS() {
-      try {
-        ws = new WebSocket(WS_URL);
-      } catch (e) {
+      try { ws = new WebSocket(WS_URL); }
+      catch (e) {
         console.warn('[Lanyard] WebSocket init failed, falling back to polling.');
-        startPolling();
-        return;
+        startPolling(); return;
       }
 
       ws.onopen = () => {
         usingWebSocket = true;
         reconnectAttempts = 0;
-        // Stop polling if it was running
         if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
       };
 
       ws.onmessage = (event) => {
         try {
           const msg = JSON.parse(event.data);
-          switch (msg.op) {
-            case 1: { // HELLO
-              // Start heartbeat
-              if (heartbeatTimer) clearInterval(heartbeatTimer);
-              const interval = msg.d?.heartbeat_interval || 30000;
-              heartbeatTimer = setInterval(() => {
-                if (ws && ws.readyState === WebSocket.OPEN) {
-                  ws.send(JSON.stringify({ op: 3 }));
-                }
-              }, interval);
-
-              // Subscribe to user
-              ws.send(JSON.stringify({
-                op: 2,
-                d: { subscribe_to_id: DISCORD_ID }
-              }));
-              break;
-            }
-            case 0: { // INIT_STATE
-              handlePresence(msg.d);
-              break;
-            }
-            case 2: { // PRESENCE_UPDATE? Lanyard uses op 0 for all data, but be safe
-              // Fallback path (shouldn't typically fire)
-              break;
-            }
-            default:
-              // Other op codes (e.g. heartbeat ACK = op 11) - no-op
-              break;
-          }
-          // Lanyard actually sends all presence data under op 0
-          // whether init or update. Handle it uniformly:
-          if (msg.op === 0 && msg.t === 'INIT_STATE') {
-            handlePresence(msg.d);
-          } else if (msg.op === 0 && msg.t === 'PRESENCE_UPDATE') {
+          if (msg.op === 1) {
+            if (heartbeatTimer) clearInterval(heartbeatTimer);
+            const interval = msg.d?.heartbeat_interval || 30000;
+            heartbeatTimer = setInterval(() => {
+              if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ op: 3 }));
+              }
+            }, interval);
+            ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
+          } else if (msg.op === 0) {
             handlePresence(msg.d);
           }
         } catch (e) {
@@ -853,14 +926,10 @@
         }
       };
 
-      ws.onerror = () => {
-        // Let onclose handle reconnect
-      };
-
+      ws.onerror = () => {};
       ws.onclose = () => {
         usingWebSocket = false;
         if (heartbeatTimer) { clearInterval(heartbeatTimer); heartbeatTimer = null; }
-        // Fall back to polling immediately, then try WS again
         startPolling();
         scheduleReconnect();
       };
@@ -879,54 +948,42 @@
       }, delay);
     }
 
-    // ---------- HTTP POLLING (FALLBACK) ----------
+    // ---------- HTTP POLLING FALLBACK ----------
     async function fetchOnce() {
       try {
         const res = await fetch(HTTP_URL, { cache: 'no-store' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
-        if (json && json.success && json.data) {
-          handlePresence(json.data);
-        }
+        if (json && json.success && json.data) handlePresence(json.data);
       } catch (e) {
-        // Silently fail; widget shows last-known state.
         console.warn('[Lanyard] polling fetch failed:', e.message);
       }
     }
-
     function startPolling() {
       if (pollTimer) return;
       fetchOnce();
       pollTimer = setInterval(fetchOnce, POLL_INTERVAL_MS);
     }
-
-    function stopPolling() {
-      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
-    }
+    function stopPolling() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
 
     // ---------- LIFECYCLE ----------
     function init() {
-      // Try WebSocket first; if it fails, polling kicks in via onclose.
       connectWS();
-
-      // Pause rAF when tab hidden, resume when visible
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
           if (progressRaf && !reducedMotion) {
-            cancelAnimationFrame(progressRaf);
-            progressRaf = null;
+            cancelAnimationFrame(progressRaf); progressRaf = null;
           }
         } else if (currentSpotify && !progressRaf) {
           startProgress();
         }
       });
-
-      // Cleanup on unload
       window.addEventListener('beforeunload', () => {
         if (ws) ws.close();
         if (heartbeatTimer) clearInterval(heartbeatTimer);
         if (pollTimer) clearInterval(pollTimer);
         if (reconnectTimer) clearTimeout(reconnectTimer);
+        if (activityTickTimer) clearInterval(activityTickTimer);
         stopProgress();
       });
     }
@@ -934,7 +991,6 @@
     return { init };
   })();
 
-  // Boot
   document.addEventListener('DOMContentLoaded', LanyardWidget.init);
 </script>
 </body>
