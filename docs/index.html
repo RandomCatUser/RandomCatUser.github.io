@@ -18,10 +18,8 @@
         <meta property="og:description" content="Welcome to Dihan's Website" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://github.com/PaulleDemon" />
-        <!--Replace with the current website url-->
         <meta property="og:image" content="https://github.com/RandomCatUser/RandomCatUser.github.io/blob/main/docs/assets/images/favicon.png?raw=true" />
 
-        <!-- <link rel="stylesheet" href="../../tailwind-css/tailwind-runtime.css" /> -->
         <link rel="stylesheet" href="./css/tailwind-build.css" />
         <link rel="stylesheet" href="css/index.css" />
 
@@ -37,7 +35,6 @@
             referrerpolicy="no-referrer"
         />
 
-        <!-- GSAP & ScrollTrigger loaded in head with defer to fix hero animation errors -->
         <script
             defer
             src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"
@@ -88,7 +85,6 @@
                 visibility: hidden;
             }
 
-            /* From Uiverse.io by mahdisad19 */ 
             .loader {
                 --path: #d99058;
                 --dot: #29c966;
@@ -193,8 +189,6 @@
 
             /* ============================================================
                THEME SYSTEM — light (default) / dark
-               Applied via a `dark-theme` class on <body>, persisted to
-               localStorage under the key "site-theme".
                ============================================================ */
             :root {
                 --theme-bg: #ffffff;
@@ -244,74 +238,6 @@
 
             body.dark-theme #loader-overlay {
                 background-color: var(--theme-loader-bg);
-            }
-
-            body.dark-theme header,
-            body.dark-theme #collapsed-header-items,
-            body.dark-theme .collapsible-header,
-            body.dark-theme .animated-collapse {
-                background-color: transparent !important;
-                background: transparent !important;
-                box-shadow: none !important;
-            }
-
-            /* ===================== NAV BAR DARK MODE TEXT COLOR ===================== */
-            body.dark-theme .header-links,
-            body.dark-theme header .tw-text-black,
-            body.dark-theme #collapse-btn {
-                color: #ffffff !important; /* white color for dark mode nav */
-            }
-
-            body.dark-theme .header-links:hover {
-                color: #ffffff !important; 
-            }
-            /* ======================================================================= */
-
-            @media (max-width: 1023px) {
-                body.dark-theme #collapsed-header-items {
-                    background-color: var(--theme-card-bg) !important;
-                    border: 1px solid var(--theme-border);
-                    border-radius: 12px;
-                }
-            }
-
-            body.dark-theme .reveal-hero-text.tw-bg-green-200 {
-                background-color: var(--theme-accent) !important;
-                color: var(--theme-accent-text) !important;
-                box-shadow: 0 0 24px rgba(20, 184, 166, 0.35);
-            }
-
-            body.dark-theme .tw-bg-black {
-                background-color: #f5f5f5 !important;
-                color: #0a0e14 !important;
-            }
-            body.dark-theme .tw-bg-black .tw-bg-white,
-            body.dark-theme a.tw-bg-black .tw-bg-white {
-                background-color: #0a0e14 !important;
-                color: #f5f5f5 !important;
-            }
-            body.dark-theme .tw-text-white {
-                color: #0a0e14;
-            }
-
-            body.dark-theme a.tw-border-black.tw-bg-white {
-                background-color: transparent !important;
-                border-color: var(--theme-border) !important;
-                color: var(--theme-text) !important;
-            }
-            body.dark-theme a.tw-border-black.tw-bg-white:hover {
-                background-color: var(--theme-text) !important;
-                color: var(--theme-bg) !important;
-            }
-            body.dark-theme a.tw-border-black.tw-bg-white .tw-bg-black {
-                background-color: var(--theme-text) !important;
-                color: var(--theme-bg) !important;
-            }
-
-            body.dark-theme section h2,
-            body.dark-theme section h3,
-            body.dark-theme section h4 {
-                color: var(--theme-text);
             }
 
             body.dark-theme .tw-bg-\[\#f3f3f3b4\] {
@@ -372,30 +298,18 @@
             /* ---------- Settings launcher + panel ---------- */
             .theme-settings-wrap {
                 position: fixed;
-                top: 80px; /* Sits nicely below the 60px navbar */
+                top: 80px; 
                 left: 50%;
                 transform: translateX(-50%);
-                /* CRITICAL FIX: must be higher than header's z-index */
                 z-index: 10000000000;
-                pointer-events: none; /* Prevent blocking nav bar and buttons */
+                pointer-events: none; 
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 gap: 10px;
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
                 width: 100%;
-                max-width: 380px; /* Constrain width for a clean pop-up */
-            }
-
-            @media (max-width: 1023px) {
-                .theme-settings-wrap {
-                    top: 75px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    z-index: 999999998;
-                    padding: 0 16px;
-                    max-width: calc(100% - 32px);
-                }
+                max-width: 380px; 
             }
 
             .filter {
@@ -438,7 +352,6 @@
                 fill: #06120f;
             }
 
-            /* Compact variant used inline inside the nav bar */
             .theme-nav-btn {
                 width: 40px;
                 height: 40px;
@@ -455,7 +368,7 @@
                 gap: 6px;
                 padding: 20px;
                 border-radius: 20px;
-                background-color: rgba(255, 255, 255, 0.85); /* Liquid glass feel */
+                background-color: rgba(255, 255, 255, 0.85);
                 backdrop-filter: blur(16px);
                 -webkit-backdrop-filter: blur(16px);
                 border: 1px solid rgba(255, 255, 255, 0.5);
@@ -477,10 +390,9 @@
             .theme-settings-panel.open {
                 opacity: 1;
                 transform: translateY(0) scale(1);
-                pointer-events: auto; /* Re-enable pointer events only when open */
+                pointer-events: auto;
             }
 
-            /* ===================== DETAILED PANEL ELEMENTS ===================== */
             .panel-header {
                 display: flex;
                 justify-content: space-between;
@@ -542,7 +454,6 @@
                 padding: 4px 6px 6px 6px;
             }
 
-            /* ===================== LIQUID GLASS HOVER ROW ===================== */
             .theme-settings-row {
                 display: flex;
                 align-items: center;
@@ -622,9 +533,8 @@
                 margin-top: 3px;
                 line-height: 1.2;
             }
-            /* ================================================================== */
 
-            /* ---------- From Uiverse.io by RiccardoRapelli (dark/light switch) ---------- */
+            /* ---------- Switches ---------- */
             .switch {
                 position: relative;
                 display: inline-block;
@@ -675,20 +585,10 @@
                 -webkit-animation: rotate-center 0.6s ease-in-out both;
                 animation: rotate-center 0.6s ease-in-out both;
             }
-            .moon-dot {
-                opacity: 0;
-                transition: 0.4s;
-                fill: gray;
-            }
-            #theme-toggle-input:checked + .slider .sun-moon .moon-dot {
-                opacity: 1;
-            }
-            .slider.round {
-                border-radius: 34px;
-            }
-            .slider.round .sun-moon {
-                border-radius: 50%;
-            }
+            .moon-dot { opacity: 0; transition: 0.4s; fill: gray; }
+            #theme-toggle-input:checked + .slider .sun-moon .moon-dot { opacity: 1; }
+            .slider.round { border-radius: 34px; }
+            .slider.round .sun-moon { border-radius: 50%; }
             #moon-dot-1 { left: 10px; top: 3px; position: absolute; width: 6px; height: 6px; z-index: 4; }
             #moon-dot-2 { left: 2px; top: 10px; position: absolute; width: 10px; height: 10px; z-index: 4; }
             #moon-dot-3 { left: 16px; top: 18px; position: absolute; width: 3px; height: 3px; z-index: 4; }
@@ -732,10 +632,6 @@
                 100% { transform: translateX(26px) rotate(360deg); }
             }
 
-            /* ============================================================
-               QUIZ SWITCH STYLES (From Uiverse.io by RaspberryBee)
-               Prefixed with 'quiz-' to avoid conflicts with theme switch
-               ============================================================ */
             .quiz-switch {
               font-size: 17px;
               position: relative;
@@ -782,9 +678,7 @@
               transform: translateX(1.5em);
             }
 
-            /* ============================================================
-               QUIZ LIGHTBOX STYLES (UI IMPROVEMENTS)
-               ============================================================ */
+            /* Quiz Lightbox */
             .hd-lightbox-overlay {
                 position: fixed;
                 inset: 0;
@@ -817,7 +711,7 @@
                 transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
                 box-sizing: border-box;
-                overflow: hidden; /* Keeps image inside rounded corners */
+                overflow: hidden; 
             }
             body.dark-theme .hd-lightbox-card {
                 background: #161c2a;
@@ -826,7 +720,6 @@
             .hd-lightbox-overlay.active .hd-lightbox-card {
                 transform: translateY(0) scale(1);
             }
-            
             .hd-lightbox-image-container {
                 position: relative;
                 width: 100%;
@@ -841,7 +734,7 @@
                 transition: transform 5s ease-out; 
             }
             .hd-lightbox-overlay.active .hd-lightbox-image {
-                transform: scale(1.05); /* Subtle zoom effect */
+                transform: scale(1.05); 
             }
             .hd-lightbox-image-overlay {
                 position: absolute;
@@ -851,10 +744,7 @@
             body.dark-theme .hd-lightbox-image-overlay {
                 background: linear-gradient(to bottom, transparent 0%, #161c2a 100%);
             }
-
-            .hd-lightbox-body {
-                padding: 8px 28px 28px;
-            }
+            .hd-lightbox-body { padding: 8px 28px 28px; }
             .hd-lightbox-title {
                 font-size: 1rem;
                 font-weight: 700;
@@ -864,12 +754,8 @@
                 color: #6b7280;
                 transition: color 0.3s ease;
             }
-            .hd-lightbox-title.success {
-                color: #10b981;
-            }
-            .hd-lightbox-title.error {
-                color: #ef4444;
-            }
+            .hd-lightbox-title.success { color: #10b981; }
+            .hd-lightbox-title.error { color: #ef4444; }
             .hd-lightbox-content {
                 font-size: 1.25rem;
                 margin-bottom: 24px;
@@ -895,8 +781,6 @@
                 box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
                 opacity: 0.9;
             }
-
-            /* Quiz specific button styles */
             .hd-quiz-options {
                 display: flex;
                 flex-direction: column;
@@ -977,108 +861,174 @@
                 color: white;
             }
 
-            /* ================= MOBILE NAV FIX ================= */
-
+            /* ============================================================
+               GLOBAL SIDEBAR NAV (Always mobile style, removed desktop)
+               ============================================================ */
             header {
-                position: fixed;
+                position: fixed !important;
                 top: 0;
                 left: 0;
                 right: 0;
                 z-index: 999999999;
+                background-color: rgba(255, 255, 255, 0.82) !important;
+                backdrop-filter: blur(14px) saturate(1.6);
+                -webkit-backdrop-filter: blur(14px) saturate(1.6);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+                height: 60px;
             }
 
-            /* Nothing should cover the header */
-            section,
-            main,
-            .hero,
-            .tw-relative {
-                position: relative;
-                z-index: 1;
+            body.dark-theme header {
+                background-color: rgba(10, 14, 20, 0.82) !important;
+                border-bottom: 1px solid var(--theme-border);
             }
 
-            /* Mobile menu */
+            /* Hamburger Button - Always Visible */
+            #collapse-btn {
+                display: flex !important;
+                position: fixed !important;
+                right: 16px !important;
+                top: 8px !important;
+                width: 44px !important;
+                height: 44px !important;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000000002 !important;
+                font-size: 1.6rem;
+                color: var(--theme-text) !important;
+                background: none;
+                border: none;
+            }
+
+            body.dark-theme #collapse-btn {
+                color: #ffffff !important;
+            }
+
+            /* Sidebar Container - Always Mobile Style */
             #collapsed-header-items {
-                position: absolute;
-                top: 100%;
-                right: 0;
-                width: 100%;
-                background: var(--theme-card-bg, #fff);
-                opacity: 0;
-                visibility: hidden;
-                pointer-events: none;
-                transform: translateY(-10px);
-                transition: .25s;
-                z-index: 999999999;
+                position: fixed !important;
+                top: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 300px !important;
+                max-width: 85vw !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                background-color: var(--theme-bg) !important;
+                border-left: 1px solid var(--theme-border);
+                box-shadow: -10px 0 40px rgba(0, 0, 0, 0.12) !important;
+                transform: translateX(100%) !important;
+                opacity: 1 !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+                transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s !important;
+                overflow-y: auto !important;
+                padding: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                z-index: 1000000001 !important;
+                border-radius: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            body.dark-theme #collapsed-header-items {
+                background-color: var(--theme-bg) !important;
+                box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5) !important;
             }
 
             #collapsed-header-items.active,
-            #collapsed-header-items.show,
-            #collapsed-header-items.expanded {
+            #collapsed-header-items.expanded,
+            #collapsed-header-items.show {
+                transform: translateX(0) !important;
+                visibility: visible !important;
+                pointer-events: auto !important;
+            }
+
+            .sidebar-close-bar {
+                display: flex !important;
+                justify-content: flex-end;
+                padding: 16px 20px 8px;
+                flex-shrink: 0;
+            }
+
+            #collapsed-header-items > .nav-links-wrap {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 0 !important;
+                margin-top: 0 !important;
+                width: 100% !important;
+                place-items: stretch !important;
+            }
+
+            .header-links {
+                display: flex !important;
+                align-items: center;
+                width: 100% !important;
+                min-height: 56px !important;
+                padding: 16px 28px !important;
+                color: var(--theme-text) !important;
+                font-size: 16px !important;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                transition: background 0.2s, padding 0.2s !important;
+            }
+
+            .header-links:hover {
+                background: var(--theme-bg-soft) !important;
+                padding-left: 34px !important;
+            }
+
+            body.dark-theme .header-links {
+                color: #ffffff !important;
+                border-bottom-color: rgba(255, 255, 255, 0.06);
+            }
+
+            body.dark-theme .header-links:hover {
+                background: rgba(255, 255, 255, 0.05) !important;
+            }
+
+            .nav-bottom-actions {
+                margin-top: auto !important;
+                padding: 20px 24px !important;
+                flex-direction: column !important;
+                gap: 16px !important;
+                width: 100% !important;
+                border-top: 1px solid rgba(0, 0, 0, 0.06);
+            }
+
+            body.dark-theme .nav-bottom-actions {
+                border-top-color: rgba(255, 255, 255, 0.06);
+            }
+
+            /* Push main content down to account for 60px fixed header */
+            section {
+                position: relative;
+                z-index: 1;
+            }
+            section:first-of-type {
+                margin-top: 60px;
+            }
+
+            /* Backdrop overlay behind sidebar */
+            .nav-backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.35);
+                backdrop-filter: blur(2px);
+                -webkit-backdrop-filter: blur(2px);
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+                z-index: 999999998;
+            }
+            .nav-backdrop.active {
                 opacity: 1;
                 visibility: visible;
-                pointer-events: auto;
-                transform: none;
             }
 
-            /* Bigger touch targets */
-            .header-links {
-                display: flex;
-                align-items: center;
-                width: 100%;
-                min-height: 56px;
-                padding: 16px 22px;
-            }
-
-            /* Menu button */
-            #collapse-btn {
-                width: 52px;
-                height: 52px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 1000000000;
-            }
-
-            /* Theme button shouldn't float over menu */
-            .theme-settings-wrap {
-                z-index: 10000000000;
-                pointer-events: none; /* Prevent blocking clicks */
-            }
-
-            @media (max-width: 1023px) {
-                .theme-settings-wrap {
-                    top: 75px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    z-index: 999999998;
-                    padding: 0 16px;
-                    max-width: calc(100% - 32px);
-                }
-
-                /* Disable decorative overlays catching taps */
-                .reveal-hero-img,
-                .reveal-hero-text,
-                .loader,
-                #loader-overlay.hidden {
-                    pointer-events: none;
-                }
-
-                /* Make links easy to tap */
-                .header-links,
-                #collapsed-header-items a,
-                #collapsed-header-items button {
-                    pointer-events: auto;
-                }
-            }
-
-            /* Ensure the dynamic island music player container is always clickable */
+            /* Dynamic island pointer events */
             #sc-dynamic-island {
                 pointer-events: auto !important;
             }
 
-            /* Enable interaction for music player controls when expanded.
-               Scoped to .expanded so invisible buttons in collapsed state
-               don't intercept taps meant for the island's click-to-expand. */
             #sc-dynamic-island.expanded .sc-btn,
             #sc-dynamic-island.expanded .sc-btn i,
             #sc-dynamic-island.expanded .sc-btn span,
@@ -1091,8 +1041,6 @@
     </head>
     <body class="tw-flex tw-min-h-[100vh] tw-flex-col tw-bg-[#fff] tw-font-mono">
 
-        <!-- Apply saved theme immediately (before other content paints) to avoid a light/dark flash.
-             Default is always "light" when nothing has been saved yet. -->
         <script>
             (function () {
                 try {
@@ -1100,18 +1048,14 @@
                     if (savedTheme === "dark") {
                         document.body.classList.add("dark-theme");
                     }
-                } catch (e) {
-                    // localStorage unavailable (e.g. privacy mode) — silently fall back to light
-                }
+                } catch (e) {}
             })();
         </script>
 
         <!-- ===================== THEME SETTINGS PANEL ===================== -->
-        <!-- Opened via the circular theme button that lives in the nav bar. -->
         <div class="theme-settings-wrap">
             <div class="theme-settings-panel" id="theme-settings-panel">
                 
-                <!-- Panel Header -->
                 <div class="panel-header">
                     <h3 class="panel-title">
                         <i class="bi bi-sliders"></i>
@@ -1135,7 +1079,6 @@
                             <span class="theme-settings-desc">Switch between light and dark themes</span>
                         </div>
                     </div>
-                    <!-- From Uiverse.io by RiccardoRapelli -->
                     <label class="switch">
                         <input id="theme-toggle-input" type="checkbox" />
                         <div class="slider round">
@@ -1168,7 +1111,6 @@
                 <!-- Experience Section -->
                 <div class="panel-section-title">Experience</div>
 
-                <!-- ===================== QUIZ TOGGLE ROW ===================== -->
                 <div class="theme-settings-row">
                     <div class="row-content">
                         <i class="bi bi-patch-question row-icon"></i>
@@ -1177,26 +1119,40 @@
                             <span class="theme-settings-desc">Enable interactive quizzes on page load</span>
                         </div>
                     </div>
-                    <!-- From Uiverse.io by RaspberryBee -->
                     <label class="quiz-switch">
                       <input id="happy-days-toggle-input" type="checkbox">
                       <span class="quiz-slider"></span>
                     </label>
                 </div>
-                <!-- ================================================================= -->
+
+                <div class="panel-divider"></div>
+
+                <!-- Audio Section -->
+                <div class="panel-section-title">Audio</div>
+
+                <div class="theme-settings-row">
+                    <div class="row-content">
+                        <i class="bi bi-mic-fill row-icon"></i>
+                        <div class="row-text">
+                            <span class="theme-settings-label">Voice</span>
+                            <span class="theme-settings-desc">Enable songs with vocals in the music player</span>
+                        </div>
+                    </div>
+                    <label class="quiz-switch">
+                      <input id="voice-toggle-input" type="checkbox">
+                      <span class="quiz-slider"></span>
+                    </label>
+                </div>
             </div>
         </div>
-        <!-- =================== END THEME SETTINGS PANEL =================== -->
 
         <!-- ===================== QUIZ LIGHTBOX MODAL ===================== -->
         <div class="hd-lightbox-overlay" id="hd-lightbox">
             <div class="hd-lightbox-card">
-                <!-- Random Image Banner -->
                 <div class="hd-lightbox-image-container">
                     <img id="hd-quiz-image" class="hd-lightbox-image" src="" alt="Random Quiz Banner" />
                     <div class="hd-lightbox-image-overlay"></div>
                 </div>
-                
                 <div class="hd-lightbox-body">
                     <div class="hd-lightbox-title" id="hd-title">Quiz Time!</div>
                     <div class="hd-lightbox-content" id="hd-content">Loading info...</div>
@@ -1204,7 +1160,6 @@
                 </div>
             </div>
         </div>
-        <!-- ===================================================================== -->
 
         <!-- Loading Screen Overlay -->
         <div id="loader-overlay">
@@ -1213,13 +1168,11 @@
                     <circle r="32" cy="40" cx="40" id="test"></circle>
                 </svg>
             </div>
-
             <div class="loader triangle">
                 <svg viewBox="0 0 86 80">
                     <polygon points="43 8 79 72 7 72"></polygon>
                 </svg>
             </div>
-
             <div class="loader">
                 <svg viewBox="0 0 80 80">
                     <rect height="64" width="64" y="8" x="8"></rect>
@@ -1227,22 +1180,26 @@
             </div>
         </div>
 
-        <header
-            class="tw-absolute tw-top-0 tw-z-[9999999] tw-flex tw-h-[60px] tw-w-full tw-bg-opacity-0 tw-px-[5%] max-lg:tw-mr-auto max-lg:tw-px-4 lg:tw-justify-around"
-        >
-            <a
-                class="tw-h-[50px] tw-p-[40px] tw-text-2xl tw-font-medium"
-                href="#"
-            >
-                
-            </a>
-            <div
-                class="collapsible-header animated-collapse max-lg:tw-shadow-md"
-                id="collapsed-header-items"
-            >
-                <div
-                    class="tw-flex tw-h-full tw-w-max tw-gap-5 tw-text-base tw-text-black max-lg:tw-mt-[30px] max-lg:tw-flex-col max-lg:tw-place-items-end max-lg:tw-gap-5 lg:tw-mx-auto lg:tw-place-items-center"
-                >
+        <!-- Backdrop for sidebar -->
+        <div id="nav-backdrop" class="nav-backdrop"></div>
+
+        <!-- Header -->
+                <!-- Backdrop for sidebar -->
+        <div id="nav-backdrop" class="nav-backdrop"></div>
+
+        <!-- Header -->
+        <header class="tw-flex tw-items-center tw-px-4">
+            <a class="tw-text-xl tw-font-medium" href="#" style="color: var(--theme-text); text-decoration: none;"></a>
+            <button
+                class="bi bi-list"
+                onclick="toggleHeader(event)"
+                aria-label="menu"
+                id="collapse-btn"
+            ></button>
+            <div id="collapsed-header-items">
+                <div class="sidebar-close-bar">
+                </div>
+                <div class="nav-links-wrap tw-flex tw-h-full tw-w-max tw-gap-5 tw-text-base tw-text-black">
                     <a class="header-links" href="about.html"> About Me </a>
                     <a class="header-links" href="./docs/friends.html"> Friends </a>
                     <a class="header-links" href="https://randomcatuser.github.io/RandomThoughts-/"> Blog </a>
@@ -1250,24 +1207,17 @@
                     <a class="header-links" href="./guestbook/index.html"> Guest Book </a>
                     <a class="header-links" href="./docs/contact.html"> Contact me </a>
                 </div>
-                <div
-                    class="tw-mx-4 tw-flex tw-place-items-center tw-gap-[20px] tw-text-base max-md:tw-w-full max-md:tw-flex-col max-md:tw-place-content-center"
-                >
+                <div class="nav-bottom-actions tw-mx-4 tw-flex tw-place-items-center tw-gap-[20px] tw-text-base">
                     <a
                         href="#"
                         aria-label="signup"
                         class="tw-flex tw-h-[40px] tw-place-items-center tw-gap-2 tw-rounded-full tw-bg-black tw-p-1 tw-pl-4 tw-text-white"
                     >
                         <span>Get in touch</span>
-                        <div
-                            class="tw-flex tw-h-[30px] tw-w-[30px] tw-place-content-center tw-place-items-center tw-rounded-full tw-bg-white tw-font-semibold tw-text-black"
-                        >
+                        <div class="tw-flex tw-h-[30px] tw-w-[30px] tw-place-content-center tw-place-items-center tw-rounded-full tw-bg-white tw-font-semibold tw-text-black">
                             <i class="bi bi-arrow-up-right"></i>
                         </div>
                     </a>
-
-                    <!-- Theme toggle entry point living inside the nav bar itself.
-                         Opens the dark-mode panel. -->
                     <button
                         title="Dark mode settings"
                         class="filter theme-nav-btn"
@@ -1276,23 +1226,15 @@
                         aria-expanded="false"
                     >
                         <svg viewBox="0 0 512 512" height="1em">
-                            <path
-                                d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
-                            ></path>
+                            <path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"></path>
                         </svg>
                     </button>
                 </div>
             </div>
-            <button
-                class="bi bi-list tw-absolute tw-right-3 tw-top-3 tw-z-50 tw-text-3xl tw-text-black lg:tw-hidden"
-                onclick="toggleHeader(event)"
-                aria-label="menu"
-                id="collapse-btn"
-            ></button>
         </header>
 
         <section
-            class="tw-relative tw-flex tw-min-h-[100vh] tw-w-full tw-max-w-[100vw] tw-flex-col tw-overflow-hidden max-lg:tw-p-4 max-md:tw-mt-[60px]"
+            class="tw-relative tw-flex tw-min-h-[100vh] tw-w-full tw-max-w-[100vw] tw-flex-col tw-overflow-hidden max-lg:tw-p-4"
         >
             <div
                 class="tw-flex tw-h-full tw-min-h-[100vh] tw-w-full tw-place-content-center tw-gap-6 tw-p-[5%] max-xl:tw-place-items-center max-lg:tw-flex-col"
@@ -1307,7 +1249,6 @@
                             Dihan Ramanayaka
                         </span>
                         <br />
-                        <!-- Fixed broken </br> tag -->
                         <span class="reveal-hero-text">
                             Student designer <br> and developer
                         </span>
@@ -1370,22 +1311,13 @@
                     class="reveal-up tw-flex tw-h-fit tw-w-[450px] tw-break-inside-avoid tw-flex-col tw-gap-2 tw-rounded-lg tw-bg-[#f3f3f3b4] tw-p-4 tw-shadow-lg max-lg:tw-w-full max-lg:tw-max-w-[400px]"
                 >
                     <div class="tw-flex tw-place-items-center tw-gap-3">
-                        <div
-                            class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg"
-                        >
-                            <img
-                                src="./assets/images/home/portfilo-1.gif"
-                                class="tw-h-full tw-w-full tw-object-cover"
-                                alt="design"
-                            />
+                        <div class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg">
+                            <img src="./assets/images/home/portfilo-1.gif" class="tw-h-full tw-w-full tw-object-cover" alt="design" />
                         </div>
                     </div>
-                   
                     <div class="tw-flex tw-flex-col tw-gap-2">
                         <h3 class="tw-text-xl tw-font-medium">SweetVibe</h3>
-                        <p class="tw-text-gray-600">
-                            Music Player which runs on terminal 
-                        </p>
+                        <p class="tw-text-gray-600">Music Player which runs on terminal</p>
                         <a href="https://github.com/RandomCatUser/SweetVibe/" class="tw-mt-4">
                             <span>Learn more</span>
                             <i class="bi bi-arrow-right"></i>
@@ -1397,21 +1329,13 @@
                     class="reveal-up tw-flex tw-h-fit tw-w-[450px] tw-break-inside-avoid tw-flex-col tw-gap-2 tw-rounded-lg tw-bg-[#f3f3f3b4] tw-p-4 tw-shadow-lg max-lg:tw-w-full max-lg:tw-max-w-[400px]"
                 >
                     <div class="tw-flex tw-place-items-center tw-gap-3">
-                        <div
-                            class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg"
-                        >
-                            <img
-                                src="./assets/images/home/portfolio-6.gif"
-                                class="tw-h-full tw-w-full tw-object-cover"
-                                alt="design"
-                            />
+                        <div class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg">
+                            <img src="./assets/images/home/portfolio-6.gif" class="tw-h-full tw-w-full tw-object-cover" alt="design" />
                         </div>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-2">
                         <h3 class="tw-text-xl tw-font-medium">.oppsie</h3>
-                        <p class="tw-text-gray-600">
-                            Image Format & Converter App
-                        </p>
+                        <p class="tw-text-gray-600">Image Format & Converter App</p>
                         <a href="https://github.com/RandomCatUser/.oppsie" class="tw-mt-4">
                             <span>Learn more</span>
                             <i class="bi bi-arrow-right"></i>
@@ -1423,21 +1347,13 @@
                     class="reveal-up tw-flex tw-h-fit tw-w-[450px] tw-break-inside-avoid tw-flex-col tw-gap-2 tw-rounded-lg tw-bg-[#f3f3f3b4] tw-p-4 tw-shadow-lg max-lg:tw-w-full max-lg:tw-max-w-[400px]"
                 >
                     <div class="tw-flex tw-place-items-center tw-gap-3">
-                        <div
-                            class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg"
-                        >
-                            <img
-                                src="./assets/images/home/portfolio-2.gif"
-                                class="tw-h-full tw-w-full tw-object-cover"
-                                alt="design"
-                            />
+                        <div class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg">
+                            <img src="./assets/images/home/portfolio-2.gif" class="tw-h-full tw-w-full tw-object-cover" alt="design" />
                         </div>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-2">
                         <h3 class="tw-text-xl tw-font-medium">Cats Drive</h3>
-                        <p class="tw-text-gray-600">
-                            Python Based local sever to store your data
-                        </p>
+                        <p class="tw-text-gray-600">Python Based local sever to store your data</p>
                         <a href="https://github.com/RandomCatUser/CatsDrive" class="tw-mt-4">
                             <span>Learn more</span>
                             <i class="bi bi-arrow-right"></i>
@@ -1449,21 +1365,13 @@
                     class="reveal-up tw-flex tw-h-fit tw-w-[450px] tw-break-inside-avoid tw-flex-col tw-gap-2 tw-rounded-lg tw-bg-[#f3f3f3b4] tw-p-4 tw-shadow-lg max-lg:tw-w-full max-lg:tw-max-w-[400px]"
                 >
                     <div class="tw-flex tw-place-items-center tw-gap-3">
-                        <div
-                            class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg"
-                        >
-                            <img
-                                src="./assets/images/home/portfolio-3.gif"
-                                class="tw-h-full tw-w-full tw-object-cover"
-                                alt="design"
-                            />
+                        <div class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg">
+                            <img src="./assets/images/home/portfolio-3.gif" class="tw-h-full tw-w-full tw-object-cover" alt="design" />
                         </div>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-2">
                         <h3 class="tw-text-xl tw-font-medium">Fake News Detection</h3>
-                        <p class="tw-text-gray-600">
-                            Uses Machine Learning to detect fake news
-                        </p>
+                        <p class="tw-text-gray-600">Uses Machine Learning to detect fake news</p>
                         <a href="https://github.com/RandomCatUser/Fake-News-Detection" class="tw-mt-4">
                             <span>Learn more</span>
                             <i class="bi bi-arrow-right"></i>
@@ -1475,21 +1383,13 @@
                     class="reveal-up tw-flex tw-h-fit tw-w-[450px] tw-break-inside-avoid tw-flex-col tw-gap-2 tw-rounded-lg tw-bg-[#f3f3f3b4] tw-p-4 tw-shadow-lg max-lg:tw-w-full max-lg:tw-max-w-[400px]"
                 >
                     <div class="tw-flex tw-place-items-center tw-gap-3">
-                        <div
-                            class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg"
-                        >
-                            <img
-                                src="./assets/images/home/portfolio-4.gif"
-                                class="tw-h-full tw-w-full tw-object-cover"
-                                alt="design"
-                            />
+                        <div class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg">
+                            <img src="./assets/images/home/portfolio-4.gif" class="tw-h-full tw-w-full tw-object-cover" alt="design" />
                         </div>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-2">
                         <h3 class="tw-text-xl tw-font-medium">Heart Disease Prediction System</h3>
-                        <p class="tw-text-gray-600">
-                            Predict heart disease rate by machine learning
-                        </p>
+                        <p class="tw-text-gray-600">Predict heart disease rate by machine learning</p>
                         <a href="https://github.com/RandomCatUser/Heart-Disease-Prediction" class="tw-mt-4">
                             <span>Learn more</span>
                             <i class="bi bi-arrow-right"></i>
@@ -1501,29 +1401,18 @@
                     class="reveal-up tw-flex tw-h-fit tw-w-[450px] tw-break-inside-avoid tw-flex-col tw-gap-2 tw-rounded-lg tw-bg-[#f3f3f3b4] tw-p-4 tw-shadow-lg max-lg:tw-w-full max-lg:tw-max-w-[400px]"
                 >
                     <div class="tw-flex tw-place-items-center tw-gap-3">
-                        <div
-                            class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg"
-                        >
-                            <img
-                                src="./assets/images/home/portfilo-5.gif"
-                                class="tw-h-full tw-w-full tw-object-cover"
-                                alt="design"
-                            />
+                        <div class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg">
+                            <img src="./assets/images/home/portfilo-5.gif" class="tw-h-full tw-w-full tw-object-cover" alt="design" />
                         </div>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-2">
                         <h3 class="tw-text-xl tw-font-medium">Stock Direction Predictor</h3>
-                        <p class="tw-text-gray-600">
-                            Predicts stock direction by machine learning
-                        </p>
+                        <p class="tw-text-gray-600">Predicts stock direction by machine learning</p>
                         <a href="https://github.com/RandomCatUser/Stock-Direction-Predictor" class="tw-mt-4">
                             <span>Learn more</span>
                             <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
-                </div>
-
-
                 </div>
             </div>
         </section>
@@ -1537,9 +1426,7 @@
                 <div
                     class="reveal-up tw-flex tw-h-full tw-w-[50%] tw-place-content-center max-lg:tw-w-full lg:tw-sticky lg:tw-top-[20%]"
                 >
-                    <h3
-                        class="tw-text-center tw-text-6xl tw-font-medium max-lg:tw-text-3xl"
-                    >
+                    <h3 class="tw-text-center tw-text-6xl tw-font-medium max-lg:tw-text-3xl">
                         What my friends say
                     </h3>
                 </div>
@@ -1553,25 +1440,13 @@
                         role="button"
                         style="cursor: pointer;"
                     >
-                        <div
-                            class="tw-flex tw-w-full tw-place-items-center tw-gap-4 tw-p-2"
-                        >
-                            <div
-                                class="tw-flex tw-h-[60px] tw-w-[60px] tw-overflow-hidden tw-rounded-full"
-                                
-                            >
-                               <img
-                                    src="https://i.pinimg.com/736x/19/69/7e/19697e36c0b08680a24a668930f49d3b.jpg"
-                                    alt="image1"
-                                    class="tw-h-full tw-w-full tw-object-cover"
-                                />
+                        <div class="tw-flex tw-w-full tw-place-items-center tw-gap-4 tw-p-2">
+                            <div class="tw-flex tw-h-[60px] tw-w-[60px] tw-overflow-hidden tw-rounded-full">
+                               <img src="https://i.pinimg.com/736x/19/69/7e/19697e36c0b08680a24a668930f49d3b.jpg" alt="image1" class="tw-h-full tw-w-full tw-object-cover" />
                             </div>
-
                             <div>
                                 <p class="tw-text-xl tw-font-semibold">Su ZhyZai</p>
-                                <p class="tw-text-lg tw-text-gray-600">
-                                    Devoloper, Graphic Designer, and Video Editor
-                                </p>
+                                <p class="tw-text-lg tw-text-gray-600">Devoloper, Graphic Designer, and Video Editor</p>
                             </div>
                         </div>
                         <div class="tw-text-justify tw-text-gray-800">
@@ -1588,24 +1463,13 @@
                         role="button"
                         style="cursor: pointer;"
                     >
-                        <div
-                            class="tw-flex tw-w-full tw-place-items-center tw-gap-4 tw-p-2"
-                        >
-                            <div
-                                class="tw-flex tw-h-[60px] tw-w-[60px] tw-overflow-hidden tw-rounded-full"
-                            >
-                                <img
-                                    src="https://miwcmqwhudshgetmrmhf.supabase.co/storage/v1/object/public/gallery/profile.webp"
-                                    alt="Minnie"
-                                    class="tw-h-full tw-w-full tw-object-cover"
-                                />
+                        <div class="tw-flex tw-w-full tw-place-items-center tw-gap-4 tw-p-2">
+                            <div class="tw-flex tw-h-[60px] tw-w-[60px] tw-overflow-hidden tw-rounded-full">
+                                <img src="https://miwcmqwhudshgetmrmhf.supabase.co/storage/v1/object/public/gallery/profile.webp" alt="Minnie" class="tw-h-full tw-w-full tw-object-cover" />
                             </div>
-
                             <div>
                                 <p class="tw-text-xl tw-font-semibold">Minusha Dulwan</p>
-                                <p class="tw-text-lg tw-text-gray-600">
-                                    Devoloper, Designer, and Artist
-                                </p>
+                                <p class="tw-text-lg tw-text-gray-600">Devoloper, Designer, and Artist</p>
                             </div>
                         </div>
                         <div class="tw-text-justify tw-text-gray-800">
@@ -1618,199 +1482,93 @@
 
         <section
             class="tw-relative tw-flex tw-min-h-[80vh] tw-w-full tw-max-w-[100vw] tw-flex-col tw-place-content-center tw-place-items-center tw-overflow-hidden tw-p-6"
-            id=""
         >
-            <div
-                class="tw-mt-8 tw-flex tw-flex-col tw-place-items-center tw-gap-5"
-            >
-                <div
-                    class="reveal-up tw-mt-5 tw-flex tw-flex-col tw-gap-3 tw-text-center"
-                >
-                    <h2 class="tw-text-4xl tw-font-semibold">
-                        Work with an expert
-                    </h2>
+            <div class="tw-mt-8 tw-flex tw-flex-col tw-place-items-center tw-gap-5">
+                <div class="reveal-up tw-mt-5 tw-flex tw-flex-col tw-gap-3 tw-text-center">
+                    <h2 class="tw-text-4xl tw-font-semibold">Work with an expert</h2>
                 </div>
-                <div
-                    class="tw-mt-6 tw-flex tw-max-w-[60%] tw-flex-wrap tw-place-content-center tw-gap-2 max-lg:tw-flex-col"
-                >
-                    <div
-                        class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
-                    >
+                <div class="tw-mt-6 tw-flex tw-max-w-[60%] tw-flex-wrap tw-place-content-center tw-gap-2 max-lg:tw-flex-column">
+                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-boombox-fill tw-text-2xl"></i>
-                            <h3 class="tw-text-2xl tw-font-semibold">
-                                Frontend developer
-                            </h3>
+                            <h3 class="tw-text-2xl tw-font-semibold">Frontend developer</h3>
                         </div>
-                        <div class="tw-text-[#595959]">
-                            Crafting interactive, responsive, and visually engaging user interfaces for seamless digital experiences.
-                        </div>
+                        <div class="tw-text-[#595959]">Crafting interactive, responsive, and visually engaging user interfaces for seamless digital experiences.</div>
                     </div>
-                    <div
-                        class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
-                    >
+                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-0-circle-fill tw-text-2xl"></i>
-                            <h3 class="tw-text-2xl tw-font-semibold">
-                                ML & AI
-                            </h3>
+                            <h3 class="tw-text-2xl tw-font-semibold">ML & AI</h3>
                         </div>
-                        <div class="tw-text-[#595959]">
-                            Creating intelligent systems that learn, adapt, and enhance user experiences through smart automation.
-                        </div>
+                        <div class="tw-text-[#595959]">Creating intelligent systems that learn, adapt, and enhance user experiences through smart automation.</div>
                     </div>
-                    <div
-                        class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
-                    >
+                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-0-square-fill tw-text-2xl"></i>
-                            <h3 class="tw-text-2xl tw-font-semibold">
-                                Backend developer
-                            </h3>
+                            <h3 class="tw-text-2xl tw-font-semibold">Backend developer</h3>
                         </div>
-                        <div class="tw-text-[#595959]">
-                            Building reliable server-side logic and APIs that ensure smooth data flow and secure application performance.
-                        </div>
+                        <div class="tw-text-[#595959]">Building reliable server-side logic and APIs that ensure smooth data flow and secure application performance.</div>
                     </div>
-                    <div
-                        class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
-                    >
+                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-database-fill tw-text-2xl"></i>
-                            <h3 class="tw-text-2xl tw-font-semibold">
-                                Database
-                            </h3>
+                            <h3 class="tw-text-2xl tw-font-semibold">Database</h3>
                         </div>
-                        <div class="tw-text-[#595959]">
-                            Designing and managing structured data systems for efficiency, reliability, and scalability.
-                        </div>
+                        <div class="tw-text-[#595959]">Designing and managing structured data systems for efficiency, reliability, and scalability.</div>
                     </div>
-                    <div
-                        class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
-                    >
+                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-cake-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">Figma</h3>
                         </div>
-                        <div class="tw-text-[#595959]">
-                            Turning creative ideas into clean, modern designs with precision and collaboration.
-                        </div>
+                        <div class="tw-text-[#595959]">Turning creative ideas into clean, modern designs with precision and collaboration.</div>
                     </div>
-                    <div
-                        class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4"
-                    >
+                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-shield-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">OpenSource</h3>
                         </div>
-                        <div class="tw-text-[#595959]">
-                            Contributing to global projects, sharing knowledge, and supporting the developer community.
-                        </div>
+                        <div class="tw-text-[#595959]">Contributing to global projects, sharing knowledge, and supporting the developer community.</div>
                     </div>
                 </div>
 
-                <a
-                    href="404.html"
-                    aria-label="signup"
-                    class="reveal-up tw-flex tw-h-[40px] tw-place-items-center tw-gap-2 tw-rounded-full tw-bg-black tw-p-1 tw-pl-4 tw-text-white"
-                >
+                <a href="404.html" aria-label="signup" class="reveal-up tw-flex tw-h-[40px] tw-place-items-center tw-gap-2 tw-rounded-full tw-bg-black tw-p-1 tw-pl-4 tw-text-white">
                     <span>Get in touch</span>
-                    <div
-                        class="tw-flex tw-h-[30px] tw-w-[30px] tw-place-content-center tw-place-items-center tw-rounded-full tw-bg-white tw-font-semibold tw-text-black"
-                    >
+                    <div class="tw-flex tw-h-[30px] tw-w-[30px] tw-place-content-center tw-place-items-center tw-rounded-full tw-bg-white tw-font-semibold tw-text-black">
                         <i class="bi bi-arrow-up-right"></i>
                     </div>
                 </a>
             </div>
         </section>
 
-        <section
-            class="tw-mt-5 tw-flex tw-w-full tw-flex-col tw-place-items-center tw-p-[2%] max-lg:tw-p-3"
-        >
-            <h3
-                class="reveal-up tw-text-center tw-text-4xl tw-font-medium max-md:tw-text-2xl"
-            >
+        <section class="tw-mt-5 tw-flex tw-w-full tw-flex-col tw-place-items-center tw-p-[2%] max-lg:tw-p-3">
+            <h3 class="reveal-up tw-text-center tw-text-4xl tw-font-medium max-md:tw-text-2xl">
                 Read my articles for more insights ✨
             </h3>
-            <!-- pricing -->
-            <div
-                class="reveal-up tw-mt-10 tw-flex tw-flex-wrap tw-place-content-center tw-gap-10 max-lg:tw-flex-col"
-            >
-                <a
-                    href="https://randomcatuser.github.io/RandomThoughts-/posts/WhySrilankanEducationSystemSucks.html"
-                    class="tw-flex tw-h-[400px] tw-w-[350px] tw-flex-col tw-gap-2 tw-overflow-clip tw-rounded-lg tw-bg-[#edecec79] tw-p-4 tw-shadow-xl max-lg:tw-w-[300px]"
-                >
-                    <div
-                        class="tw-h-[200px] tw-w-full tw-overflow-hidden tw-rounded-md"
-                    >
-                        <img
-                            src="https://randomcatuser.github.io/RandomThoughts-/posts/assets/post2.avif"
-                            alt="article image"
-                            class="tw-h-full tw-w-full tw-object-cover"
-                            srcset=""
-                        />
+            <div class="reveal-up tw-mt-10 tw-flex tw-flex-wrap tw-place-content-center tw-gap-10 max-lg:tw-flex-col">
+                <a href="https://randomcatuser.github.io/RandomThoughts-/posts/WhySrilankanEducationSystemSucks.html" class="tw-flex tw-h-[400px] tw-w-[350px] tw-flex-col tw-gap-2 tw-overflow-clip tw-rounded-lg tw-bg-[#edecec79] tw-p-4 tw-shadow-xl max-lg:tw-w-[300px]">
+                    <div class="tw-h-[200px] tw-w-full tw-overflow-hidden tw-rounded-md">
+                        <img src="https://randomcatuser.github.io/RandomThoughts-/posts/assets/post2.avif" alt="article image" class="tw-h-full tw-w-full tw-object-cover" srcset="" />
                     </div>
-                    <h3 class="tw-text-2xl tw-font-semibold max-md:tw-text-xl">
-                        Why Education System In SriLanka Feels Broken
-                    </h3>
-                    <p class="tw-mt-2 tw-text-gray-600">
-                        I am so sad about students and education system
-                        in SriLanka.
-                    </p>
-                    <span>
-                        <span>Learn more</span>
-                        <i class="bi bi-arrow-right"></i>
-                    </span>
+                    <h3 class="tw-text-2xl tw-font-semibold max-md:tw-text-xl">Why Education System In SriLanka Feels Broken</h3>
+                    <p class="tw-mt-2 tw-text-gray-600">I am so sad about students and education system in SriLanka.</p>
+                    <span><span>Learn more</span><i class="bi bi-arrow-right"></i></span>
                 </a>
-                <a
-                    href="https://randomcatuser.github.io/RandomThoughts-/posts/yoeshi.html"
-                    class="tw-flex tw-h-[400px] tw-w-[350px] tw-flex-col tw-gap-2 tw-overflow-clip tw-rounded-lg tw-bg-[#edecec79] tw-p-4 tw-shadow-xl max-lg:tw-w-[300px]"
-                >
-                    <div
-                        class="tw-h-[200px] tw-w-full tw-overflow-hidden tw-rounded-md"
-                    >
-                        <img
-                            src="https://github.com/RandomCatUser/RandomThoughts-/blob/main/docs/posts/assets/yoeshi.png?raw=true&auto=format&fit=crop"
-                            alt="article image"
-                            class="tw-h-full tw-w-full tw-object-cover"
-                            srcset=""
-                        />
+                <a href="https://randomcatuser.github.io/RandomThoughts-/posts/yoeshi.html" class="tw-flex tw-h-[400px] tw-w-[350px] tw-flex-col tw-gap-2 tw-overflow-clip tw-rounded-lg tw-bg-[#edecec79] tw-p-4 tw-shadow-xl max-lg:tw-w-[300px]">
+                    <div class="tw-h-[200px] tw-w-full tw-overflow-hidden tw-rounded-md">
+                        <img src="https://github.com/RandomCatUser/RandomThoughts-/blob/main/docs/posts/assets/yoeshi.png?raw=true&auto=format&fit=crop" alt="article image" class="tw-h-full tw-w-full tw-object-cover" srcset="" />
                     </div>
-                    <h3 class="tw-text-2xl tw-font-semibold max-md:tw-text-xl">
-                        Reimagining the Web as an Operating System
-                    </h3>
-                    <p class="tw-mt-2 tw-text-gray-600">
-                        Creating a better web experience little by little 
-                    </p>
-                    <span>
-                        <span>Learn more</span>
-                        <i class="bi bi-arrow-right"></i>
-                    </span>
+                    <h3 class="tw-text-2xl tw-font-semibold max-md:tw-text-xl">Reimagining the Web as an Operating System</h3>
+                    <p class="tw-mt-2 tw-text-gray-600">Creating a better web experience little by little</p>
+                    <span><span>Learn more</span><i class="bi bi-arrow-right"></i></span>
                 </a>
-                <a
-                    href="https://randomcatuser.github.io/RandomThoughts-/posts/Itsjustcode.html"
-                    class="tw-flex tw-h-[400px] tw-w-[350px] tw-flex-col tw-gap-2 tw-overflow-clip tw-rounded-lg tw-bg-[#edecec79] tw-p-4 tw-shadow-xl max-lg:tw-w-[300px]"
-                >
-                    <div
-                        class="tw-h-[200px] tw-w-full tw-overflow-hidden tw-rounded-md"
-                    >
-                        <img
-                            src="https://static0.xdaimages.com/wordpress/wp-content/uploads/wm/2025/02/hyprland-screenshot-on-pc-hero.jpg?q=49&auto=format&fit=crop"
-                            alt="article image"
-                            class="tw-h-full tw-w-full tw-object-cover"
-                            srcset=""
-                        />
+                <a href="https://randomcatuser.github.io/RandomThoughts-/posts/Itsjustcode.html" class="tw-flex tw-h-[400px] tw-w-[350px] tw-flex-col tw-gap-2 tw-overflow-clip tw-rounded-lg tw-bg-[#edecec79] tw-p-4 tw-shadow-xl max-lg:tw-w-[300px]">
+                    <div class="tw-h-[200px] tw-w-full tw-overflow-hidden tw-rounded-md">
+                        <img src="https://static0.xdaimages.com/wordpress/wp-content/uploads/wm/2025/02/hyprland-screenshot-on-pc-hero.jpg?q=49&auto=format&fit=crop" alt="article image" class="tw-h-full tw-w-full tw-object-cover" srcset="" />
                     </div>
-                    <h3 class="tw-text-2xl tw-font-semibold max-md:tw-text-xl">
-                        It's Just Code 
-                    </h3>
-                    <p class="tw-mt-2 tw-text-gray-600">
-                        From niche hobbyist playground to the engine of the modern internet, here is why Linux is having a moment.
-                    </p>
-                    <span>
-                        <span>Learn more</span>
-                        <i class="bi bi-arrow-right"></i>
-                    </span>
+                    <h3 class="tw-text-2xl tw-font-semibold max-md:tw-text-xl">It's Just Code</h3>
+                    <p class="tw-mt-2 tw-text-gray-600">From niche hobbyist playground to the engine of the modern internet, here is why Linux is having a moment.</p>
+                    <span><span>Learn more</span><i class="bi bi-arrow-right"></i></span>
                 </a>
             </div>
         </section>
@@ -1833,34 +1591,25 @@
         </footer>
 
         <!-- LOCAL MUSIC DYNAMIC ISLAND WIDGET BLOCK -->
-        <!-- FontAwesome Icons for controls -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-        <!-- jsmediatags CDN to parse local file ID3 tags dynamically -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
 
         <style>
           :root {
-            /* Theme Design Tokens */
             --sc-bg: #000000;
             --sc-border: rgba(255, 255, 255, 0.12);
             --sc-accent-glow: rgba(0, 255, 204, 0.15);
             --sc-accent: #00ffcc;
             --sc-accent-grad: linear-gradient(90deg, #00ffcc, #ff5500);
             --sc-muted: #9ca3af;
-            
-            /* Dynamic Island Dimension Specs */
             --sc-w-collapsed: 120px;
             --sc-h-collapsed: 40px;
-            
             --sc-w-compact: 185px;
             --sc-h-compact: 40px;
-            
             --sc-w-expanded: 370px;
             --sc-h-expanded: 175px;
           }
 
-          /* Floating Widget Base Container */
           .sc-dynamic-island {
             position: fixed;
             bottom: 24px;
@@ -1874,8 +1623,6 @@
             cursor: pointer;
             user-select: none;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            
-            /* iOS Spring Physics transitions */
             transition: 
               width 480ms cubic-bezier(0.175, 0.885, 0.32, 1.12),
               height 480ms cubic-bezier(0.175, 0.885, 0.32, 1.12),
@@ -1883,14 +1630,12 @@
               box-shadow 400ms ease;
           }
 
-          /* State 1: Collapsed & Static */
           .sc-dynamic-island.collapsed {
             width: var(--sc-w-collapsed);
             height: var(--sc-h-collapsed);
             border-radius: 22px;
           }
 
-          /* State 2: Compact & Playing */
           .sc-dynamic-island.compact {
             width: var(--sc-w-compact);
             height: var(--sc-h-compact);
@@ -1898,7 +1643,6 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px var(--sc-accent-glow);
           }
 
-          /* State 3: Fully Expanded */
           .sc-dynamic-island.expanded {
             width: var(--sc-w-expanded);
             height: var(--sc-h-expanded);
@@ -1907,321 +1651,96 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 30px var(--sc-accent-glow);
           }
 
-          /* Inner Layout Frame */
-          .sc-view-wrapper {
-            width: 100%;
-            height: 100%;
-            position: relative;
-          }
+          .sc-view-wrapper { width: 100%; height: 100%; position: relative; }
 
-          /* --- Compact View UI Layout --- */
           .sc-compact-layout {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 14px;
-            opacity: 1;
-            pointer-events: none;
+            position: absolute; inset: 0; display: flex;
+            align-items: center; justify-content: space-between;
+            padding: 0 14px; opacity: 1; pointer-events: none;
             transition: opacity 250ms ease, transform 250ms ease;
           }
 
           .sc-dynamic-island.expanded .sc-compact-layout {
-            opacity: 0;
-            transform: scale(0.9);
-            pointer-events: none;
+            opacity: 0; transform: scale(0.9); pointer-events: none;
           }
 
-          /* Compact Circular Artwork Thumb */
           .sc-compact-art {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+            width: 24px; height: 24px; border-radius: 50%;
             background: linear-gradient(135deg, #111, #222);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            color: var(--sc-accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; color: var(--sc-accent);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            background-size: cover;
-            background-position: center;
+            background-size: cover; background-position: center;
             transition: transform 0.3s ease;
           }
 
-          .sc-compact-art.spinning {
-            animation: sc-vinyl-spin 10s linear infinite;
-          }
+          .sc-compact-art.spinning { animation: sc-vinyl-spin 10s linear infinite; }
 
-          /* Tiny Compact Active Equalizer Rods */
-          .sc-compact-eq {
-            display: flex;
-            gap: 3px;
-            align-items: flex-end;
-            height: 14px;
-          }
-
-          .sc-compact-eq span {
-            width: 2px;
-            background-color: var(--sc-accent);
-            height: 3px;
-            border-radius: 1px;
-            transition: height 0.15s ease;
-          }
-
-          .sc-compact-eq.active span {
-            animation: sc-eq-bounce 1s infinite ease-in-out;
-          }
-
+          .sc-compact-eq { display: flex; gap: 3px; align-items: flex-end; height: 14px; }
+          .sc-compact-eq span { width: 2px; background-color: var(--sc-accent); height: 3px; border-radius: 1px; transition: height 0.15s ease; }
+          .sc-compact-eq.active span { animation: sc-eq-bounce 1s infinite ease-in-out; }
           .sc-compact-eq.active span:nth-child(1) { animation-delay: 0.1s; }
           .sc-compact-eq.active span:nth-child(2) { animation-delay: 0.3s; }
           .sc-compact-eq.active span:nth-child(3) { animation-delay: 0.2s; }
 
-          /* --- Expanded View UI Layout --- */
           .sc-expanded-layout {
-            position: absolute;
-            inset: 0;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            opacity: 0;
-            transform: scale(0.92);
-            pointer-events: none;
+            position: absolute; inset: 0; padding: 16px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            opacity: 0; transform: scale(0.92); pointer-events: none;
             transition: opacity 300ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
           }
 
           .sc-dynamic-island.expanded .sc-expanded-layout {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto !important;
+            opacity: 1; transform: scale(1); pointer-events: auto !important;
           }
 
-          /* Metadata Track Header Row */
-          .sc-meta-header {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            min-width: 0;
-          }
+          .sc-meta-header { display: flex; gap: 12px; align-items: center; min-width: 0; }
 
           .sc-expanded-art {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 48px; height: 48px; border-radius: 12px;
             background: linear-gradient(135deg, #111, #222);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: var(--sc-accent);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            flex-shrink: 0;
-            background-size: cover;
-            background-position: center;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: var(--sc-accent);
+            border: 1px solid rgba(255, 255, 255, 0.1); flex-shrink: 0;
+            background-size: cover; background-position: center;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
           }
 
-          .sc-track-details {
-            flex-grow: 1;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-          }
+          .sc-track-details { flex-grow: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+          .sc-title-group { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+          .sc-track-title { font-size: 13.5px; font-weight: 700; color: #ffffff; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 175px; }
+          .sc-track-artist { font-size: 11px; color: var(--sc-muted); margin: 2px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+          .sc-wave-canvas { width: 60px; height: 18px; flex-shrink: 0; opacity: 0.85; }
 
-          .sc-title-group {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-          }
+          .sc-timeline-group { display: flex; flex-direction: column; gap: 3px; margin: 8px 0; }
+          .sc-timeline-bar-bg { width: 100%; height: 4px; background-color: rgba(255, 255, 255, 0.12); border-radius: 2px; position: relative; cursor: pointer; }
+          .sc-timeline-bar-bg:hover { height: 6px; border-radius: 3px; }
+          .sc-timeline-fill { height: 100%; width: 0%; background: var(--sc-accent-grad); border-radius: inherit; pointer-events: none; position: relative; }
+          .sc-timeline-handle { position: absolute; top: 50%; left: 0%; width: 10px; height: 10px; background-color: #ffffff; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; opacity: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.5); transition: opacity 150ms ease; }
+          .sc-timeline-bar-bg:hover .sc-timeline-handle { opacity: 1; }
+          .sc-time-labels { display: flex; justify-content: space-between; font-family: monospace; font-size: 9px; color: #6b7280; }
 
-          .sc-track-title {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: #ffffff;
-            margin: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 175px;
-          }
+          .sc-controls-row { display: flex; align-items: center; justify-content: space-between; }
+          .sc-branding { display: flex; align-items: center; gap: 4px; font-size: 8px; font-family: monospace; color: #4b5563; letter-spacing: 0.5px; }
+          .sc-branding i { color: var(--sc-accent); font-size: 11px; }
+          .sc-playback-group { display: flex; align-items: center; gap: 14px; }
 
-          .sc-track-artist {
-            font-size: 11px;
-            color: var(--sc-muted);
-            margin: 2px 0 0 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
+          .sc-btn { background: none; border: none; color: var(--sc-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 150ms ease, transform 100ms ease; padding: 4px; }
+          .sc-btn:hover { color: #ffffff; }
+          .sc-btn:active { transform: scale(0.9); }
+          .sc-btn-play { width: 32px; height: 32px; border-radius: 50%; background-color: #ffffff; color: #000000; font-size: 12px; }
+          .sc-btn-play:hover { background-color: #e5e7eb; color: #000000; transform: scale(1.05); }
+          .sc-btn-play:active { transform: scale(0.95); }
+          .sc-btn-lock { font-size: 10px; color: #4b5563; }
+          .sc-btn-lock.locked { color: var(--sc-accent); }
+          .sc-btn-repeat.active { color: var(--sc-accent); }
 
-          /* Fluid Wave Equalizer Canvas */
-          .sc-wave-canvas {
-            width: 60px;
-            height: 18px;
-            flex-shrink: 0;
-            opacity: 0.85;
-          }
-
-          /* Audio Track Progress / Seek Scrubber Group */
-          .sc-timeline-group {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            margin: 8px 0;
-          }
-
-          .sc-timeline-bar-bg {
-            width: 100%;
-            height: 4px;
-            background-color: rgba(255, 255, 255, 0.12);
-            border-radius: 2px;
-            position: relative;
-            cursor: pointer;
-          }
-
-          .sc-timeline-bar-bg:hover {
-            height: 6px;
-            border-radius: 3px;
-          }
-
-          .sc-timeline-fill {
-            height: 100%;
-            width: 0%;
-            background: var(--sc-accent-grad);
-            border-radius: inherit;
-            pointer-events: none;
-            position: relative;
-          }
-
-          .sc-timeline-handle {
-            position: absolute;
-            top: 50%;
-            left: 0%;
-            width: 10px;
-            height: 10px;
-            background-color: #ffffff;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            opacity: 0;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-            transition: opacity 150ms ease;
-          }
-
-          .sc-timeline-bar-bg:hover .sc-timeline-handle {
-            opacity: 1;
-          }
-
-          .sc-time-labels {
-            display: flex;
-            justify-content: space-between;
-            font-family: monospace;
-            font-size: 9px;
-            color: #6b7280;
-          }
-
-          /* Foot Controls Row */
-          .sc-controls-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-          }
-
-          .sc-branding {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 8px;
-            font-family: monospace;
-            color: #4b5563;
-            letter-spacing: 0.5px;
-          }
-
-          .sc-branding i {
-            color: var(--sc-accent);
-            font-size: 11px;
-          }
-
-          .sc-playback-group {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-          }
-
-          .sc-btn {
-            background: none;
-            border: none;
-            color: var(--sc-muted);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 150ms ease, transform 100ms ease;
-            padding: 4px;
-          }
-
-          .sc-btn:hover {
-            color: #ffffff;
-          }
-
-          .sc-btn:active {
-            transform: scale(0.9);
-          }
-
-          .sc-btn-play {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: #ffffff;
-            color: #000000;
-            font-size: 12px;
-          }
-
-          .sc-btn-play:hover {
-            background-color: #e5e7eb;
-            color: #000000;
-            transform: scale(1.05);
-          }
-
-          .sc-btn-play:active {
-            transform: scale(0.95);
-          }
-
-          /* Island Screen Sticky Lock Pin Button */
-          .sc-btn-lock {
-            font-size: 10px;
-            color: #4b5563;
-          }
-
-          .sc-btn-lock.locked {
-            color: var(--sc-accent);
-          }
-
-          .sc-btn-repeat.active {
-            color: var(--sc-accent);
-          }
-
-          /* Keyframe Animations */
-          @keyframes sc-vinyl-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-
-          @keyframes sc-eq-bounce {
-            0%, 100% { height: 3px; }
-            50% { height: 12px; }
-          }
+          @keyframes sc-vinyl-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+          @keyframes sc-eq-bounce { 0%, 100% { height: 3px; } 50% { height: 12px; } }
         </style>
 
-        <!-- FLOATING DYNAMIC ISLAND ELEMENT -->
         <div id="sc-dynamic-island" class="sc-dynamic-island collapsed">
           <div class="sc-view-wrapper">
-            
-            <!-- 1 & 2. Compact Layout View (Visible in Small states) -->
             <div class="sc-compact-layout">
               <div id="sc-compact-art" class="sc-compact-art">♪</div>
               <div id="sc-compact-eq" class="sc-compact-eq">
@@ -2229,10 +1748,7 @@
               </div>
             </div>
 
-            <!-- 3. Expanded Layout View (Visible in Large hover states) -->
             <div class="sc-expanded-layout">
-              
-              <!-- Metadata Row & Visualizer Canvas -->
               <div class="sc-meta-header">
                 <div id="sc-expanded-art" class="sc-expanded-art">♪</div>
                 <div class="sc-track-details">
@@ -2244,7 +1760,6 @@
                 </div>
               </div>
 
-              <!-- Scrubber Timeline -->
               <div class="sc-timeline-group">
                 <div id="sc-timeline-bar" class="sc-timeline-bar-bg">
                   <div id="sc-timeline-fill" class="sc-timeline-fill"></div>
@@ -2256,56 +1771,65 @@
                 </div>
               </div>
 
-              <!-- Control Center Elements -->
               <div class="sc-controls-row">
                 <div class="sc-branding">
                   <i class="fa-solid fa-compact-disc animate-spin-slow"></i>
                   <span>MUSIC LIBRARY</span>
                 </div>
-                
                 <div class="sc-playback-group">
                   <button id="sc-btn-prev" class="sc-btn" title="Previous Track"><i class="fa-solid fa-backward-step"></i></button>
                   <button id="sc-btn-play" class="sc-btn sc-btn-play" title="Play/Pause"><i id="sc-play-icon" class="fa-solid fa-play" style="margin-left: 2px;"></i></button>
                   <button id="sc-btn-next" class="sc-btn" title="Next Track"><i class="fa-solid fa-forward-step"></i></button>
                   <button id="sc-btn-repeat" class="sc-btn sc-btn-repeat" title="Toggle Repeat"><i class="fa-solid fa-repeat"></i></button>
                 </div>
-
                 <button id="sc-btn-lock" class="sc-btn sc-btn-lock" title="Keep Panel Expanded"><i class="fa-solid fa-thumbtack"></i></button>
               </div>
-
             </div>
-
           </div>
         </div>
 
         <script>
           (function() {
-            // Add or customize tracks here in index.html only.
-            // Each item can define: src, title, artist, artwork.
+            /* ============================================================
+               Music Tracks: 
+               - voice: false = instrumental (always plays)
+               - voice: true  = has vocals (only plays if Voice toggle ON)
+               ============================================================ */
             const localTracks = [
               {
                 src: 'assets/music/Music1.mp3',
                 title: '3:03 PM',
                 artist: 'しゃろう Sharou',
-                artwork: './assets/album-arts/music1.jpg'
+                artwork: './assets/album-arts/music1.jpg',
+                voice: false
               },
               {
                 src: 'assets/music/Fly a letter to the Wind.mp3',
                 title: 'Fly a letter to the Wind',
                 artist: 'JayM',
-                artwork: './assets/album-arts/Fly a letter to the Wind.webp'
+                artwork: './assets/album-arts/Fly a letter to the Wind.webp',
+                voice: false
               },
               {
                 src: 'assets/music/フリーBGM必ずそばにきみがいる(Not Only Me)かわいい配信用作業用.mp3',
                 title: '必ずそばに、きみがいる',
                 artist: 'さんうさぎ',
-                artwork: './assets/album-arts/フリーBGM必ずそばにきみがいる(Not Only Me)かわいい配信用作業用.webp'
+                artwork: './assets/album-arts/フリーBGM必ずそばにきみがいる(Not Only Me)かわいい配信用作業用.webp',
+                voice: false
               },
               {
                 src: 'assets/music/[음악팀] 꽃이 피면, When the flowers (AcousticHappy) [BGM무료음악브금].mp3',
                 title: 'When the Flowers',
                 artist: 'TeamMusicCreative, 당신의 드라마 O.S.T',
-                artwork: './assets/album-arts/[음악팀] 꽃이 피면, When the flowers (AcousticHappy) [BGM무료음악브금].webp'
+                artwork: './assets/album-arts/[음악팀] 꽃이 피면, When the flowers (AcousticHappy) [BGM무료음악브금].webp',
+                voice: false
+              },
+              {
+                src: 'assets/music/VocalSong.mp3',
+                title: 'Vocal Song',
+                artist: 'Various Artist',
+                artwork: './assets/album-arts/VocalSong.jpg',
+                voice: true
               }
             ];
 
@@ -2315,10 +1839,17 @@
             let stickyLock = false;
             let repeatEnabled = false;
 
-            // Standard HTML5 Audio instance :xd
+            /* Voice setting state (default OFF) */
+            const VOICE_KEY = "voice-enabled";
+            let voiceEnabled = false;
+            try {
+                voiceEnabled = localStorage.getItem(VOICE_KEY) === "true";
+            } catch (e) {
+                voiceEnabled = false;
+            }
+
             const audioPlayer = new Audio();
 
-            // Grab Core Layout 
             const island = document.getElementById('sc-dynamic-island');
             const compactArt = document.getElementById('sc-compact-art');
             const compactEq = document.getElementById('sc-compact-eq');
@@ -2341,15 +1872,25 @@
             const btnRepeat = document.getElementById('sc-btn-repeat');
             const btnLock = document.getElementById('sc-btn-lock');
 
-            function initPlayerEvents() {
-              // Audio Native Event listeners
-              audioPlayer.addEventListener('play', () => {
-                syncPlaybackUI(true);
-              });
+            /* Sync voice toggle UI with saved state */
+            const voiceToggle = document.getElementById('voice-toggle-input');
+            if (voiceToggle) {
+                voiceToggle.checked = voiceEnabled;
+                voiceToggle.addEventListener('change', function() {
+                    voiceEnabled = voiceToggle.checked;
+                    try {
+                        localStorage.setItem(VOICE_KEY, voiceEnabled);
+                    } catch (e) {}
+                    /* If voice just turned off and current track has vocals, skip */
+                    if (!voiceEnabled && localTracks[currentIdx] && localTracks[currentIdx].voice) {
+                        transitionToTrack(currentIdx + 1);
+                    }
+                });
+            }
 
-              audioPlayer.addEventListener('pause', () => {
-                syncPlaybackUI(false);
-              });
+            function initPlayerEvents() {
+              audioPlayer.addEventListener('play', () => { syncPlaybackUI(true); });
+              audioPlayer.addEventListener('pause', () => { syncPlaybackUI(false); });
 
               audioPlayer.addEventListener('timeupdate', () => {
                 if (!audioPlayer.duration) return;
@@ -2361,72 +1902,53 @@
               audioPlayer.addEventListener('ended', () => {
                 if (repeatEnabled) {
                   audioPlayer.currentTime = 0;
-                  audioPlayer.play().catch(err => {
-                    console.warn("Browser blocked autoplay gesture:", err);
-                  });
+                  audioPlayer.play().catch(err => { console.warn("Browser blocked autoplay gesture:", err); });
                 } else {
                   transitionToTrack(currentIdx + 1);
                 }
               });
 
               registerInteractionEvents();
-              loadTrack(currentIdx, false); // Initialize the metadata for first track
+
+              /* Find first allowed track on init */
+              let startIdx = 0;
+              if (!voiceEnabled) {
+                  while (localTracks[startIdx] && localTracks[startIdx].voice && startIdx < localTracks.length) {
+                      startIdx++;
+                  }
+                  if (startIdx >= localTracks.length) startIdx = 0;
+              }
+              loadTrack(startIdx, false);
             }
 
-            // Reads binary tag chunks from local files (ID3v2, MP4, FLAC, etc.)
             function extractMetadata(filePath, callback) {
-              if (typeof jsmediatags === 'undefined') {
-                fallbackMetadata(filePath, callback);
-                return;
-              }
-
-              // Construct absolute URL properly relative to the current document
+              if (typeof jsmediatags === 'undefined') { fallbackMetadata(filePath, callback); return; }
               const absoluteUrl = new URL(filePath, window.location.href).href;
-
               jsmediatags.read(absoluteUrl, {
                 onSuccess: function(tag) {
                   const tags = tag.tags;
                   let title = tags.title || getFilenameWithoutExtension(filePath);
                   let artist = tags.artist || "Local Artist";
                   let artwork = null;
-
-                  // Parse binary buffer artwork if embedded in mp3 file
                   if (tags.picture) {
                     const pic = tags.picture;
                     let base64String = "";
-                    for (let i = 0; i < pic.data.length; i++) {
-                      base64String += String.fromCharCode(pic.data[i]);
-                    }
+                    for (let i = 0; i < pic.data.length; i++) { base64String += String.fromCharCode(pic.data[i]); }
                     artwork = `data:${pic.format};base64,${window.btoa(base64String)}`;
                   }
-
                   callback({ title, artist, artwork });
                 },
-                onError: function(error) {
-                  console.warn("jsmediatags extraction failed, applying filename fallback: ", error);
-                  fallbackMetadata(filePath, callback);
-                }
+                onError: function(error) { fallbackMetadata(filePath, callback); }
               });
             }
 
-            // running direct on file:/// protocol
             function fallbackMetadata(filePath, callback) {
               const cleanName = getFilenameWithoutExtension(filePath);
-              // split string based on artist-song structures (e.g. "Chevy - Circles")
               const parts = cleanName.split(' - ');
               let artist = "Local Library";
               let title = cleanName;
-
-              if (parts.length > 1) {
-                artist = parts[0].replace(/-/g, ' ').toUpperCase();
-                title = parts.slice(1).join(' - ');
-              }
-
-              callback({
-                title: title,
-                artist: artist,
-                artwork: null
-              });
+              if (parts.length > 1) { artist = parts[0].replace(/-/g, ' ').toUpperCase(); title = parts.slice(1).join(' - '); }
+              callback({ title: title, artist: artist, artwork: null });
             }
 
             function getFilenameWithoutExtension(path) {
@@ -2441,7 +1963,6 @@
               audioPlayer.src = trackPath;
               audioPlayer.load();
 
-              // Clear layout elements while parsing
               expTitle.textContent = "Loading...";
               expArtist.textContent = "Parsing Tags...";
               compactArt.textContent = "♪";
@@ -2460,13 +1981,11 @@
               expArt.style.backgroundImage = `url('${artwork}')`;
               expArt.textContent = '';
 
-              // If the track metadata is not explicitly configured, try to extract it from the file tags.
               if (!track?.title || !track?.artist || !track?.artwork) {
                 extractMetadata(trackPath, function(data) {
                   const resolvedTitle = data.title || title;
                   const resolvedArtist = data.artist || artist;
                   const resolvedArtwork = data.artwork || artwork;
-
                   expTitle.textContent = resolvedTitle;
                   expArtist.textContent = resolvedArtist;
                   compactArt.style.backgroundImage = `url('${resolvedArtwork}')`;
@@ -2475,69 +1994,35 @@
               }
 
               if (triggerPlay) {
-                audioPlayer.play().catch(err => {
-                  console.warn("Browser blocked autoplay gesture:", err);
-                });
+                audioPlayer.play().catch(err => { console.warn("Browser blocked autoplay gesture:", err); });
               }
             }
 
             function registerInteractionEvents() {
-              // Hover Actions (Desktop)
-              island.addEventListener('mouseenter', () => {
-                expandIslandState();
-              });
+              island.addEventListener('mouseenter', () => { expandIslandState(); });
+              island.addEventListener('mouseleave', () => { if (!stickyLock) { collapseIslandState(); } });
 
-              island.addEventListener('mouseleave', () => {
-                if (!stickyLock) {
-                  collapseIslandState();
-                }
-              });
-
-              // Panel Sticky/Lock Feature
               btnLock.addEventListener('click', (e) => {
                 e.stopPropagation();
                 stickyLock = !stickyLock;
                 btnLock.classList.toggle('locked', stickyLock);
-                if (!stickyLock) {
-                  collapseIslandState();
-                }
+                if (!stickyLock) { collapseIslandState(); }
               });
 
-              // Media Player Controls binding
-              btnPlay.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleAudioPlayback();
-              });
+              btnPlay.addEventListener('click', (e) => { e.stopPropagation(); toggleAudioPlayback(); });
+              btnPrev.addEventListener('click', (e) => { e.stopPropagation(); transitionToTrack(currentIdx - 1); });
+              btnNext.addEventListener('click', (e) => { e.stopPropagation(); transitionToTrack(currentIdx + 1); });
+              btnRepeat.addEventListener('click', (e) => { e.stopPropagation(); repeatEnabled = !repeatEnabled; btnRepeat.classList.toggle('active', repeatEnabled); });
 
-              btnPrev.addEventListener('click', (e) => {
-                e.stopPropagation();
-                transitionToTrack(currentIdx - 1);
-              });
-
-              btnNext.addEventListener('click', (e) => {
-                e.stopPropagation();
-                transitionToTrack(currentIdx + 1);
-              });
-
-              btnRepeat.addEventListener('click', (e) => {
-                e.stopPropagation();
-                repeatEnabled = !repeatEnabled;
-                btnRepeat.classList.toggle('active', repeatEnabled);
-              });
-
-              // Manual seek timeline positioning
               timelineBar.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (!audioPlayer.duration) return;
-
                 const bounds = timelineBar.getBoundingClientRect();
                 const touchX = e.clientX - bounds.left;
                 const progressPercent = Math.max(0, Math.min(1, touchX / bounds.width));
-
                 audioPlayer.currentTime = audioPlayer.duration * progressPercent;
               });
 
-              // Touch Interface Tap-to-Expand Switch (Mobile Devices)
               island.addEventListener('click', (e) => {
                 const isInteractiveNode = e.target.closest('button') || e.target.closest('#sc-timeline-bar');
                 if (!isInteractiveNode) {
@@ -2556,44 +2041,44 @@
 
             function syncPlaybackUI(isPlaying) {
               playingState = isPlaying;
-
               if (isPlaying) {
                 btnPlayIcon.className = "fa-solid fa-pause";
                 compactArt.classList.add('spinning');
                 compactEq.classList.add('active');
-                
-                if (!islandExpanded) {
-                  island.className = "sc-dynamic-island compact";
-                }
+                if (!islandExpanded) { island.className = "sc-dynamic-island compact"; }
               } else {
                 btnPlayIcon.className = "fa-solid fa-play";
                 btnPlayIcon.style.marginLeft = "2px";
                 compactArt.classList.remove('spinning');
                 compactEq.classList.remove('active');
-
-                if (!islandExpanded) {
-                  island.className = "sc-dynamic-island collapsed";
-                }
+                if (!islandExpanded) { island.className = "sc-dynamic-island collapsed"; }
               }
             }
 
             function toggleAudioPlayback() {
-              if (audioPlayer.paused) {
-                audioPlayer.play().catch(e => console.log(e));
-              } else {
-                audioPlayer.pause();
-              }
+              if (audioPlayer.paused) { audioPlayer.play().catch(e => console.log(e)); }
+              else { audioPlayer.pause(); }
             }
 
+            /* Skips vocal tracks when voice is off */
             function transitionToTrack(targetIdx) {
               if (targetIdx < 0) targetIdx = localTracks.length - 1;
               if (targetIdx >= localTracks.length) targetIdx = 0;
+
+              /* Skip tracks with voice:true when voice is disabled */
+              if (!voiceEnabled) {
+                let attempts = 0;
+                while (localTracks[targetIdx] && localTracks[targetIdx].voice && attempts < localTracks.length) {
+                  targetIdx++;
+                  if (targetIdx >= localTracks.length) targetIdx = 0;
+                  attempts++;
+                }
+              }
 
               currentIdx = targetIdx;
               loadTrack(currentIdx, true);
             }
 
-            // Micro helpers to format timing parameters
             function processMsToLabel(ms) {
               if (isNaN(ms) || ms < 0) return "0:00";
               const totalSecs = Math.floor(ms / 1000);
@@ -2606,44 +2091,29 @@
               const percentValue = (relPosition * 100).toFixed(2);
               timelineFill.style.width = `${percentValue}%`;
               timelineHandle.style.left = `${percentValue}%`;
-
               labelCurr.textContent = processMsToLabel(currPosition);
-
               if (audioPlayer.duration) {
                 const trackDur = audioPlayer.duration * 1000;
                 const remMs = trackDur - currPosition;
                 labelRem.textContent = `-${processMsToLabel(remMs)}`;
-              } else {
-                labelRem.textContent = "-0:00";
-              }
+              } else { labelRem.textContent = "-0:00"; }
             }
 
-            // Dynamic Island Switch states
-            function expandIslandState() {
-              islandExpanded = true;
-              island.className = "sc-dynamic-island expanded";
-            }
-
+            function expandIslandState() { islandExpanded = true; island.className = "sc-dynamic-island expanded"; }
             function collapseIslandState() {
               islandExpanded = false;
-              if (playingState) {
-                island.className = "sc-dynamic-island compact";
-              } else {
-                island.className = "sc-dynamic-island collapsed";
-              }
+              if (playingState) { island.className = "sc-dynamic-island compact"; }
+              else { island.className = "sc-dynamic-island collapsed"; }
             }
 
             function drawRealTimeAudioWaves() {
               if (!canvasCtx) return;
               canvasCtx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
-
               const columnBars = 14;
               const barWidth = 4;
               const barGap = 3;
               const horizontalOffset = (waveCanvas.width - (columnBars * (barWidth + barGap))) / 2;
-
               canvasCtx.fillStyle = '#00ffcc';
-
               for (let i = 0; i < columnBars; i++) {
                 let blockHeight = 4;
                 if (playingState) {
@@ -2652,38 +2122,28 @@
                 } else {
                   blockHeight = 4 + Math.sin(Date.now() * 0.0015 + i * 0.8) * 1.5;
                 }
-
                 const positionX = horizontalOffset + i * (barWidth + barGap);
                 const positionY = (waveCanvas.height - blockHeight) / 2;
-
                 canvasCtx.beginPath();
                 canvasCtx.roundRect(positionX, positionY, barWidth, blockHeight, 1.5);
                 canvasCtx.fill();
               }
-
               requestAnimationFrame(drawRealTimeAudioWaves);
             }
 
-            // Initialize the widget fully on window load
             window.addEventListener('load', () => {
               initPlayerEvents();
               drawRealTimeAudioWaves();
-              // Activate repeat button visually
               btnRepeat.classList.add('active');
             });
-
           })();
         </script>
 
-        <!-- Script to handle hiding the loader once everything (including hero images) is loaded -->
         <script>
             window.addEventListener('load', function() {
                 const loaderOverlay = document.getElementById('loader-overlay');
                 if (loaderOverlay) {
-                    // Small timeout just to ensure smooth transition rendering
-                    setTimeout(() => {
-                        loaderOverlay.classList.add('hidden');
-                    }, 300);
+                    setTimeout(() => { loaderOverlay.classList.add('hidden'); }, 300);
                 }
             });
         </script>
@@ -2699,40 +2159,23 @@
                 const panelCloseBtn = document.getElementById("panel-close-btn");
 
                 function getSavedTheme() {
-                    try {
-                        return localStorage.getItem(THEME_KEY) || "light";
-                    } catch (e) {
-                        return "light";
-                    }
+                    try { return localStorage.getItem(THEME_KEY) || "light"; }
+                    catch (e) { return "light"; }
                 }
 
                 function saveTheme(theme) {
-                    try {
-                        localStorage.setItem(THEME_KEY, theme);
-                    } catch (e) {
-                        // ignore write failures (private mode, storage disabled, etc.)
-                    }
+                    try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
                 }
 
                 function applyTheme(theme, animate) {
-                    if (theme === "dark") {
-                        body.classList.add("dark-theme");
-                        themeInput.checked = true;
-                    } else {
-                        body.classList.remove("dark-theme");
-                        themeInput.checked = false;
-                    }
+                    if (theme === "dark") { body.classList.add("dark-theme"); themeInput.checked = true; }
+                    else { body.classList.remove("dark-theme"); themeInput.checked = false; }
                     if (!animate) {
-                        // Avoid the whole page cross-fading on first paint
                         body.classList.add("theme-no-transition");
-                        requestAnimationFrame(() => {
-                            body.classList.remove("theme-no-transition");
-                        });
+                        requestAnimationFrame(() => { body.classList.remove("theme-no-transition"); });
                     }
                 }
 
-                // Sync the switch UI with whatever theme was applied by the early
-                // inline script (default: light).
                 applyTheme(getSavedTheme(), false);
 
                 themeInput.addEventListener("change", function () {
@@ -2753,48 +2196,33 @@
 
                 navThemeBtn.addEventListener("click", function (e) {
                     e.stopPropagation();
-                    if (settingsPanel.classList.contains("open")) {
-                        closePanel();
-                    } else {
+                    if (settingsPanel.classList.contains("open")) { closePanel(); }
+                    else {
                         openPanel();
-                        
-                        // If on mobile, close the hamburger menu to prevent overlap
-                        if (window.innerWidth < 1024) {
-                            const headerItems = document.getElementById('collapsed-header-items');
-                            const collapseBtn = document.getElementById('collapse-btn');
-                            if (headerItems && headerItems.classList.contains('active')) {
-                                headerItems.classList.remove('active', 'expanded', 'show');
-                                if (collapseBtn) {
-                                    collapseBtn.classList.remove('bi-x');
-                                    collapseBtn.classList.add('bi-list');
-                                }
-                            }
+                        /* Close sidebar if it is open */
+                        const headerItems = document.getElementById('collapsed-header-items');
+                        const collapseBtn = document.getElementById('collapse-btn');
+                        const backdrop = document.getElementById('nav-backdrop');
+                        if (headerItems && headerItems.classList.contains('active')) {
+                            headerItems.classList.remove('active', 'expanded', 'show');
+                            if (collapseBtn) { collapseBtn.classList.remove('bi-x'); collapseBtn.classList.add('bi-list'); }
+                            if (backdrop) backdrop.classList.remove('active');
                         }
                     }
                 });
 
                 if (panelCloseBtn) {
-                    panelCloseBtn.addEventListener("click", function (e) {
-                        e.stopPropagation();
-                        closePanel();
-                    });
+                    panelCloseBtn.addEventListener("click", function (e) { e.stopPropagation(); closePanel(); });
                 }
 
                 document.addEventListener("click", function (e) {
-                    if (
-                        settingsPanel.classList.contains("open") &&
-                        !settingsPanel.contains(e.target) &&
-                        !navThemeBtn.contains(e.target)
-                    ) {
+                    if (settingsPanel.classList.contains("open") && !settingsPanel.contains(e.target) && !navThemeBtn.contains(e.target)) {
                         closePanel();
                     }
                 });
 
-                document.addEventListener("keydown", function (e) {
-                    if (e.key === "Escape") closePanel();
-                });
+                document.addEventListener("keydown", function (e) { if (e.key === "Escape") closePanel(); });
 
-                // ===================== LIQUID GLASS CURSOR LOGIC =====================
                 const glassRows = document.querySelectorAll('.theme-settings-row');
                 glassRows.forEach(row => {
                     row.addEventListener('mousemove', (e) => {
@@ -2805,14 +2233,13 @@
                         row.style.setProperty('--mouse-y', `${y}px`);
                     });
                 });
-                // ==================================================================================
             })();
         </script>
 
         <!-- ===================== QUIZ LOGIC ===================== -->
         <script>
             (function () {
-                const HD_KEY = "happy-days-enabled"; // Keeping key same to respect previous user states
+                const HD_KEY = "happy-days-enabled";
                 const hdToggle = document.getElementById("happy-days-toggle-input");
                 const hdLightbox = document.getElementById("hd-lightbox");
                 const hdTitle = document.getElementById("hd-title");
@@ -2820,117 +2247,64 @@
                 const hdCloseBtn = document.getElementById("hd-close-btn");
                 const hdQuizImage = document.getElementById("hd-quiz-image");
 
-                // 1. Initialize default state (disabled by default)
-                try {
-                    const isEnabled = localStorage.getItem(HD_KEY) === "true";
-                    hdToggle.checked = isEnabled;
-                } catch (e) {
-                    hdToggle.checked = false;
-                }
+                try { const isEnabled = localStorage.getItem(HD_KEY) === "true"; hdToggle.checked = isEnabled; }
+                catch (e) { hdToggle.checked = false; }
 
-                // 2. Save state on toggle
                 hdToggle.addEventListener("change", function () {
-                    try {
-                        localStorage.setItem(HD_KEY, hdToggle.checked);
-                    } catch (e) {}
+                    try { localStorage.setItem(HD_KEY, hdToggle.checked); } catch (e) {}
                 });
 
-                // 3. Handle closing the lightbox
-                hdCloseBtn.addEventListener("click", function () {
-                    hdLightbox.classList.remove("active");
-                });
+                hdCloseBtn.addEventListener("click", function () { hdLightbox.classList.remove("active"); });
 
-                // 4. Fetch Quiz from Open Trivia DB & Random Image from Picsum
                 async function fetchQuizInfo() {
                     try {
-                        // Reset states
                         hdTitle.textContent = "Quiz Time!";
                         hdTitle.classList.remove("success", "error");
                         hdCloseBtn.textContent = "Close";
-                        
-                        // Fetch random image from Picsum
                         const imageUrl = `https://picsum.photos/seed/${Math.floor(Math.random() * 10000)}/500/200`;
                         hdQuizImage.src = imageUrl;
-
-                        // Using Open Trivia Database API (No key required)
                         const response = await fetch('https://opentdb.com/api.php?amount=1&type=multiple');
                         if (!response.ok) throw new Error("Network response was not ok");
                         const data = await response.json();
-                        
                         if (data.results && data.results.length > 0) {
                             const quizData = data.results[0];
-                            
-                            // Decode HTML entities returned by the API (e.g., &quot; &#039;)
-                            function decodeHTML(html) {
-                                var txt = document.createElement("textarea");
-                                txt.innerHTML = html;
-                                return txt.value;
-                            }
-
+                            function decodeHTML(html) { var txt = document.createElement("textarea"); txt.innerHTML = html; return txt.value; }
                             const question = decodeHTML(quizData.question);
                             const correctAnswer = decodeHTML(quizData.correct_answer);
                             const incorrectAnswers = quizData.incorrect_answers.map(decodeHTML);
-                            
-                            // Combine and shuffle answers
                             let answers = [correctAnswer, ...incorrectAnswers];
                             answers.sort(() => Math.random() - 0.5);
-
-                            // Update modal content
                             hdTitle.textContent = "Select the correct answer";
-                            
-                            // Create HTML for quiz options with A, B, C, D letters
                             const letters = ['A', 'B', 'C', 'D'];
-                            const optionsHTML = answers.map((ans, i) => 
+                            const optionsHTML = answers.map((ans, i) =>
                                 `<button class="hd-quiz-option" data-answer="${ans.replace(/"/g, '&quot;')}">
                                     <span class="hd-quiz-option-letter">${letters[i]}</span>
                                     <span class="hd-quiz-option-text">${ans}</span>
                                 </button>`
                             ).join('');
-                            
                             hdContent.innerHTML = `
                                 <div style="margin-bottom: 24px; font-size: 1.25rem; font-weight: 700; line-height: 1.4;">${question}</div>
-                                <div class="hd-quiz-options" id="quiz-options-container">
-                                    ${optionsHTML}
-                                </div>
+                                <div class="hd-quiz-options" id="quiz-options-container">${optionsHTML}</div>
                             `;
                             hdLightbox.classList.add("active");
-                            
-                            // Handle answer selection
                             const optionsContainer = document.getElementById('quiz-options-container');
                             optionsContainer.addEventListener('click', function(e) {
-                                // Find the closest button ancestor if clicking on inner elements
                                 const clickedBtn = e.target.closest('.hd-quiz-option');
                                 if (clickedBtn) {
                                     const selected = clickedBtn.getAttribute('data-answer');
                                     const allBtns = this.querySelectorAll('.hd-quiz-option');
-                                    
                                     allBtns.forEach(btn => {
-                                        btn.style.pointerEvents = 'none'; // Disable further clicks
-                                        btn.classList.remove('correct', 'incorrect'); // Clear any existing state
-                                        
-                                        if (btn.getAttribute('data-answer') === correctAnswer) {
-                                            btn.classList.add('correct');
-                                        } else if (btn.getAttribute('data-answer') === selected) {
-                                            btn.classList.add('incorrect');
-                                        }
+                                        btn.style.pointerEvents = 'none';
+                                        btn.classList.remove('correct', 'incorrect');
+                                        if (btn.getAttribute('data-answer') === correctAnswer) { btn.classList.add('correct'); }
+                                        else if (btn.getAttribute('data-answer') === selected) { btn.classList.add('incorrect'); }
                                     });
-
-                                    // Update title to show result
-                                    if (selected === correctAnswer) {
-                                        hdTitle.textContent = "Correct! 🎉";
-                                        hdTitle.classList.add('success');
-                                    } else {
-                                        hdTitle.textContent = "Oops! Wrong 😢";
-                                        hdTitle.classList.add('error');
-                                    }
-                                    
+                                    if (selected === correctAnswer) { hdTitle.textContent = "Correct! 🎉"; hdTitle.classList.add('success'); }
+                                    else { hdTitle.textContent = "Oops! Wrong 😢"; hdTitle.classList.add('error'); }
                                     hdCloseBtn.textContent = "Done";
                                 }
                             });
-
-                        } else {
-                            showLightbox("Quiz Time!", "Couldn't load a question right now. Try again later!");
-                        }
+                        } else { showLightbox("Quiz Time!", "Couldn't load a question right now. Try again later!"); }
                     } catch (error) {
                         console.error("Failed to fetch quiz info:", error);
                         showLightbox("Quiz Time!", "Failed to load the quiz. Make sure you are connected to the internet.");
@@ -2943,33 +2317,25 @@
                     hdLightbox.classList.add("active");
                 }
 
-                // 5. Trigger on load if enabled
                 window.addEventListener('load', function() {
                     try {
                         const isEnabled = localStorage.getItem(HD_KEY) === "true";
-                        if (isEnabled) {
-                            // Small delay to let the site loader fade out smoothly first
-                            setTimeout(() => {
-                                fetchQuizInfo();
-                            }, 1200);
-                        }
+                        if (isEnabled) { setTimeout(() => { fetchQuizInfo(); }, 1200); }
                     } catch (e) {}
                 });
             })();
         </script>
-        <!-- ============================================================= -->
         
-        <!-- ===================== MOBILE NAV TOGGLE FALLBACK ===================== -->
+        <!-- ===================== MOBILE NAV TOGGLE + BACKDROP ===================== -->
         <script>
-        /* If ./index.js already defines toggleHeader(), the deferred script
-           overwrites this silently — no conflict. This only activates when
-           the external file is missing or doesn't define the function.      */
         (function () {
+            /* toggleHeader — opens/closes sidebar + backdrop */
             if (typeof window.toggleHeader === 'function') return;
 
             window.toggleHeader = function () {
                 var headerItems = document.getElementById('collapsed-header-items');
                 var btn = document.getElementById('collapse-btn');
+                var backdrop = document.getElementById('nav-backdrop');
                 if (!headerItems) return;
 
                 var isVisible =
@@ -2980,29 +2346,42 @@
                 if (isVisible) {
                     headerItems.classList.remove('active', 'expanded', 'show');
                     if (btn) { btn.classList.remove('bi-x'); btn.classList.add('bi-list'); }
+                    if (backdrop) backdrop.classList.remove('active');
                 } else {
                     headerItems.classList.add('active', 'expanded', 'show');
                     if (btn) { btn.classList.remove('bi-list'); btn.classList.add('bi-x'); }
+                    if (backdrop) backdrop.classList.add('active');
                 }
             };
         })();
 
-        /* ===================== CLOSE MENU ON LINK TAP (MOBILE) =============== */
+        /* Close sidebar on link tap */
         (function () {
             var links = document.querySelectorAll('#collapsed-header-items .header-links');
             links.forEach(function (link) {
                 link.addEventListener('click', function () {
                     var headerItems = document.getElementById('collapsed-header-items');
                     var btn = document.getElementById('collapse-btn');
-                    if (headerItems) {
-                        headerItems.classList.remove('active', 'expanded', 'show');
-                    }
-                    if (btn) {
-                        btn.classList.remove('bi-x');
-                        btn.classList.add('bi-list');
-                    }
+                    var backdrop = document.getElementById('nav-backdrop');
+                    if (headerItems) { headerItems.classList.remove('active', 'expanded', 'show'); }
+                    if (btn) { btn.classList.remove('bi-x'); btn.classList.add('bi-list'); }
+                    if (backdrop) backdrop.classList.remove('active');
                 });
             });
+        })();
+
+        /* Click backdrop to close sidebar */
+        (function () {
+            var backdrop = document.getElementById('nav-backdrop');
+            if (backdrop) {
+                backdrop.addEventListener('click', function () {
+                    var headerItems = document.getElementById('collapsed-header-items');
+                    var btn = document.getElementById('collapse-btn');
+                    if (headerItems) { headerItems.classList.remove('active', 'expanded', 'show'); }
+                    if (btn) { btn.classList.remove('bi-x'); btn.classList.add('bi-list'); }
+                    backdrop.classList.remove('active');
+                });
+            }
         })();
         </script>
     </body>
