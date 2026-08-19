@@ -69,7 +69,7 @@
             "shizz...(｡- .•)": {
                 emoji: "🎶",
                 img: "https://cdn.discordapp.com/avatars/1100263587756384316/4ca8a07bab89274c7b8528a5a99d831a.png?size=1024",
-                banner: "https://i.pinimg.com/originals/4b/fd/1a/4bfd1a7f0d9ae87669996a03074e9e8b.gif=-",
+                banner: "https://i.pinimg.com/originals/4b/fd/1a/4bfd1a7f0d9ae87669996a03074e9e8b.gif",
                 bestFriend: false,
                 quote: "Your way to become a master ♫",
                 about: "Shizz is a intresting person who likes to do most intresting stuff.",
