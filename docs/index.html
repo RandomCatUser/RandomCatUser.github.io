@@ -682,12 +682,14 @@
             .hd-lightbox-overlay {
                 position: fixed;
                 inset: 0;
+                width: 100vw;
+                height: 100vh;
                 background: rgba(0, 0, 0, 0.8);
                 backdrop-filter: blur(8px);
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                z-index: 1000000; 
+                z-index: 1000000000 !important;
                 opacity: 0;
                 visibility: hidden;
                 transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -708,10 +710,10 @@
                 width: 100%;
                 text-align: center;
                 transform: translateY(20px) scale(0.95);
-                transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
                 box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
                 box-sizing: border-box;
-                overflow: hidden; 
+                overflow: hidden;
             }
             body.dark-theme .hd-lightbox-card {
                 background: #161c2a;
@@ -726,6 +728,8 @@
                 height: 180px;
                 overflow: hidden;
                 background-color: #f3f3f3;
+                border-top-left-radius: 24px;
+                border-top-right-radius: 24px;
             }
             .hd-lightbox-image {
                 width: 100%;
@@ -744,7 +748,7 @@
             body.dark-theme .hd-lightbox-image-overlay {
                 background: linear-gradient(to bottom, transparent 0%, #161c2a 100%);
             }
-            .hd-lightbox-body { padding: 8px 28px 28px; }
+            .hd-lightbox-body { padding: 24px 32px 32px; }
             .hd-lightbox-title {
                 font-size: 1rem;
                 font-weight: 700;
@@ -767,18 +771,19 @@
                 color: var(--theme-bg, #fff);
                 border: none;
                 padding: 14px 24px;
-                border-radius: 12px;
+                border-radius: 16px;
                 cursor: pointer;
-                font-weight: 600;
-                transition: all 0.2s;
+                font-weight: 700;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
                 width: 100%;
                 font-size: 1rem;
-                letter-spacing: 0.5px;
+                letter-spacing: 0.05em;
                 text-transform: uppercase;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             }
             .hd-lightbox-close:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
                 opacity: 0.9;
             }
             .hd-quiz-options {
@@ -861,15 +866,13 @@
                 color: white;
             }
 
-            /* ============================================================
-               GLOBAL SIDEBAR NAV (Always mobile style, removed desktop)
-               ============================================================ */
+            /* GLOBAL SIDEBAR NAV (Always mobile style, removed desktop) */
             header {
                 position: fixed !important;
                 top: 0;
                 left: 0;
                 right: 0;
-                z-index: 999999999;
+                z-index: 1200;
                 background-color: rgba(255, 255, 255, 0.82) !important;
                 backdrop-filter: blur(14px) saturate(1.6);
                 -webkit-backdrop-filter: blur(14px) saturate(1.6);
@@ -1064,7 +1067,7 @@
             })();
         </script>
 
-        <!-- ===================== THEME SETTINGS PANEL ===================== -->
+        <!-- THEME SETTINGS PANEL -->
         <div class="theme-settings-wrap">
             <div class="theme-settings-panel" id="theme-settings-panel">
                 
@@ -1158,7 +1161,7 @@
             </div>
         </div>
 
-        <!-- ===================== QUIZ LIGHTBOX MODAL ===================== -->
+        <!--  QUIZ LIGHTBOX MODAL  -->
         <div class="hd-lightbox-overlay" id="hd-lightbox">
             <div class="hd-lightbox-card">
                 <div class="hd-lightbox-image-container">
@@ -1500,43 +1503,43 @@
                 <div class="reveal-up tw-mt-5 tw-flex tw-flex-col tw-gap-3 tw-text-center">
                     <h2 class="tw-text-4xl tw-font-semibold">Work with an expert</h2>
                 </div>
-                <div class="tw-mt-6 tw-flex tw-max-w-[60%] tw-flex-wrap tw-place-content-center tw-gap-2 max-lg:tw-flex-column">
-                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
+                <div class="tw-mt-6 tw-flex tw-w-full tw-max-w-[100%] tw-flex-wrap tw-place-content-center tw-gap-2 max-lg:tw-flex-col">
+                    <div class="reveal-up tw-flex tw-min-h-[150px] tw-w-[350px] tw-max-w-full tw-flex-col tw-gap-2 tw-p-4 max-lg:tw-w-full">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-boombox-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">Frontend developer</h3>
                         </div>
                         <div class="tw-text-[#595959]">Crafting interactive, responsive, and visually engaging user interfaces for seamless digital experiences.</div>
                     </div>
-                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
+                    <div class="reveal-up tw-flex tw-min-h-[150px] tw-w-[350px] tw-max-w-full tw-flex-col tw-gap-2 tw-p-4 max-lg:tw-w-full">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-0-circle-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">ML & AI</h3>
                         </div>
                         <div class="tw-text-[#595959]">Creating intelligent systems that learn, adapt, and enhance user experiences through smart automation.</div>
                     </div>
-                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
+                    <div class="reveal-up tw-flex tw-min-h-[150px] tw-w-[350px] tw-max-w-full tw-flex-col tw-gap-2 tw-p-4 max-lg:tw-w-full">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-0-square-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">Backend developer</h3>
                         </div>
                         <div class="tw-text-[#595959]">Building reliable server-side logic and APIs that ensure smooth data flow and secure application performance.</div>
                     </div>
-                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
+                    <div class="reveal-up tw-flex tw-min-h-[150px] tw-w-[350px] tw-max-w-full tw-flex-col tw-gap-2 tw-p-4 max-lg:tw-w-full">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-database-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">Database</h3>
                         </div>
                         <div class="tw-text-[#595959]">Designing and managing structured data systems for efficiency, reliability, and scalability.</div>
                     </div>
-                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
+                    <div class="reveal-up tw-flex tw-min-h-[150px] tw-w-[350px] tw-max-w-full tw-flex-col tw-gap-2 tw-p-4 max-lg:tw-w-full">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-cake-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">Figma</h3>
                         </div>
                         <div class="tw-text-[#595959]">Turning creative ideas into clean, modern designs with precision and collaboration.</div>
                     </div>
-                    <div class="reveal-up tw-flex tw-h-[150px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4">
+                    <div class="reveal-up tw-flex tw-min-h-[150px] tw-w-[350px] tw-max-w-full tw-flex-col tw-gap-2 tw-p-4 max-lg:tw-w-full">
                         <div class="tw-flex tw-gap-1">
                             <i class="bi bi-shield-fill tw-text-2xl"></i>
                             <h3 class="tw-text-2xl tw-font-semibold">OpenSource</h3>
