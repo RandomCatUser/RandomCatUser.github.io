@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    
+
     <!-- Early theme script to prevent FOUC -->
     <script>
         (function() {
@@ -114,7 +114,7 @@
 
             <!-- Main Content -->
             <main class="docs-content" data-aos="fade-up" data-aos-duration="800">
-                
+
                 <!-- Mobile Dropdown -->
                 <select class="mobile-nav-select" id="mobile-nav">
                     <option value="#apache-license">Apache 2.0 License</option>
@@ -206,19 +206,20 @@
                         <p class="mb-4">This website is designed with privacy in mind. We do not use tracking cookies, third-party analytics, or collect personal data without your explicit consent.</p>
                         <h4 class="docs-subheading">Local Storage Usage:</h4>
                         <p class="mb-4">We use your browser's built-in <code>localStorage</code> feature solely to remember your Light/Dark mode theme preference. This data is stored entirely on your device and is never transmitted to any server.</p>
-                        
+
                         <h4 class="docs-subheading">User-Submitted Data (Guestbook & Contact):</h4>
                         <p class="mb-4">We have recently introduced interactive features that allow you to share data voluntarily. If you choose to use the <strong>Guestbook</strong> or <strong>Contact Form</strong>, the following applies:</p>
                         <ul class="list-disc pl-5 mb-4 space-y-1">
                             <li><strong>Guestbook:</strong> Your name/alias and message will be collected and stored in our database to be displayed publicly on the site for other visitors to see.</li>
                             <li><strong>Contact Form:</strong> Your name, email, and message will be collected and sent directly to the site administrator. This information is kept private and is used solely to respond to your inquiry.</li>
                         </ul>
-                        
+
                         <h4 class="docs-subheading">Managing Your Data:</h4>
                         <p>If you wish to have your guestbook entry or contact submission removed, please use the contact form or reach out via GitHub, and I will promptly delete the data from our servers.</p>
                     </div>
                 </section>
 
+                <!-- Section: Tools & Technologies (JSON-driven) -->
                 <section id="tools-used" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-yellow-100">
@@ -228,16 +229,7 @@
                     </h2>
                     <div class="docs-text">
                         <p class="mb-4">This project was built from scratch using modern, lightweight, and highly efficient tools.</p>
-                        <ul class="list-disc pl-5 mb-4 space-y-2">
-                            <li><strong>HTML5 & CSS3:</strong> The foundational structure and custom styling, utilizing modern features like CSS variables and backdrop filters.</li>
-                            <li><strong>Tailwind CSS:</strong> The primary utility-first CSS framework used for rapid UI development and responsive design.</li>
-                            <li><strong>Vanilla JavaScript:</strong> All interactivity (theme switching, modals, accordions, particle effects) is written in pure JS with no heavy libraries.</li>
-                            <li><strong>VS Code:</strong> The code editor used for development, paired with GitHub Copilot for suggestions.</li>
-                            <li><strong>Git & GitHub:</strong> Version control and source code hosting.</li>
-                            <li><strong>GitHub Pages:</strong> Free and seamless static site hosting directly from the repository.</li>
-                            <li><strong>Figma:</strong> Used for prototyping layouts, picking color palettes, and testing dark/light mode contrasts.</li>
-                            <li><strong>Chrome DevTools:</strong> Essential for debugging layout issues, testing mobile responsiveness, and profiling animations.</li>
-                        </ul>
+                        <ul class="list-disc pl-5 mb-4 space-y-2" id="tools-list"><!-- Rendered by JS --></ul>
                     </div>
                 </section>
 
@@ -272,6 +264,7 @@
                     </div>
                 </section>
 
+                <!-- Section: Assets & UI Attributions (JSON-driven) -->
                 <section id="assets-ui" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-blue-100">
@@ -281,32 +274,12 @@
                     </h2>
                     <div class="docs-text">
                         <p class="mb-4">This project utilizes several amazing third-party libraries and resources. We extend our gratitude to the creators and maintainers of these valuable tools.</p>
-                        <ul class="list-disc pl-5 mb-4 space-y-3">
-                            <li>
-                                <strong>Uiverse.io:</strong> The beautiful animated sun/moon theme toggle switch was adapted from RiccardoRapelli's design.
-                                <br><a href="https://uiverse.io/" target="_blank" rel="noopener noreferrer" class="text-orange-600 hover:underline font-medium">Uiverse.io Website</a>
-                            </li>
-                            <li>
-                                <strong>Google Fonts (Space Grotesk & Quicksand):</strong> Licensed under the Open Font License.
-                                <br><a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer" class="text-orange-600 hover:underline font-medium">Google Fonts</a>
-                            </li>
-                            <li>
-                                <strong>Heroicons:</strong> Beautiful hand-crafted SVG icons. &copy; 2020 Refactoring UI Inc. Licensed under the MIT License.
-                                <br><a href="https://heroicons.com/" target="_blank" rel="noopener noreferrer" class="text-orange-600 hover:underline font-medium">Heroicons Website</a>
-                            </li>
-                            <li>
-                                <strong>AOS (Animate On Scroll):</strong> &copy; 2016 Michał Sajnóg. Licensed under the MIT License.
-                                <br><a href="https://michalsnik.github.io/aos/" target="_blank" rel="noopener noreferrer" class="text-orange-600 hover:underline font-medium">AOS GitHub</a>
-                            </li>
-                            <li>
-                                <strong>Image Assets:</strong> Profile images and banners are sourced from friends, Unsplash, and Pinterest. Earth favicon from favicon.io.
-                            </li>
-                        </ul>
+                        <ul class="list-disc pl-5 mb-4 space-y-3" id="attributions-list"><!-- Rendered by JS --></ul>
                         <p class="text-xs text-gray-500">All other original content within this repository is &copy; RandomCatUser, and is licensed under the Apache 2.0 License.</p>
                     </div>
                 </section>
 
-                <!-- NEW SECTION: Music Credits & Copyrights -->
+                <!-- Section: Music Credits & Copyrights (JSON-driven) -->
                 <section id="music-credits" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-violet-100">
@@ -316,83 +289,9 @@
                     </h2>
                     <div class="docs-text">
                         <p class="mb-4">The background music featured on this website is created by talented independent artists who generously share their work for free use. All tracks are used under their respective free-use licenses for non-commercial, personal portfolio purposes. <strong>Click the album artwork next to each track to listen to the original source.</strong></p>
-                        
+
                         <h4 class="docs-subheading">Featured Tracks:</h4>
-                        <div class="space-y-3 mb-4">
-                            
-                            <!-- Track 1 -->
-                            <div class="music-credit-card">
-                                <a href="https://www.youtube.com/results?search_query=しゃろう+3:03+PM" target="_blank" rel="noopener noreferrer" class="music-credit-artwork-link" title="Click to find the original track">
-                                    <img src="./assets/album-arts/music1.jpg" alt="3:03 PM Album Art" class="music-credit-artwork">
-                                </a>
-                                <div class="music-credit-info">
-                                    <div class="music-credit-title">"3:03 PM"</div>
-                                    <div class="music-credit-artist">by しゃろう (Sharou)</div>
-                                    <div class="music-credit-note">All rights to this track belong to the artist. Used on this site for non-commercial purposes under free-use provisions.</div>
-                                </div>
-                            </div>
-
-                            <!-- Track 2 -->
-                            <div class="music-credit-card">
-                                <a href="https://www.youtube.com/results?search_query=JayM+Fly+a+letter+to+the+Wind" target="_blank" rel="noopener noreferrer" class="music-credit-artwork-link" title="Click to find the original track">
-                                    <img src="./assets/album-arts/Fly a letter to the Wind.webp" alt="Fly a letter to the Wind Album Art" class="music-credit-artwork">
-                                </a>
-                                <div class="music-credit-info">
-                                    <div class="music-credit-title">"Fly a letter to the Wind"</div>
-                                    <div class="music-credit-artist">by JayM</div>
-                                    <div class="music-credit-note">All rights to this track belong to the artist. Used on this site for non-commercial purposes under free-use provisions.</div>
-                                </div>
-                            </div>
-
-                            <!-- Track 3 -->
-                            <div class="music-credit-card">
-                                <a href="https://www.youtube.com/results?search_query=さんうさぎ+必ずそばにきみがいる" target="_blank" rel="noopener noreferrer" class="music-credit-artwork-link" title="Click to find the original track">
-                                    <img src="./assets/album-arts/フリーBGM必ずそばにきみがいる(Not Only Me)かわいい配信用作業用.webp" alt="必ずそばに、きみがいる Album Art" class="music-credit-artwork">
-                                </a>
-                                <div class="music-credit-info">
-                                    <div class="music-credit-title">"必ずそばに、きみがいる (Not Only Me)"</div>
-                                    <div class="music-credit-artist">by さんうさぎ (San Usagi)</div>
-                                    <div class="music-credit-note">フリーBGM (Free BGM) distributed for streaming and work-use. All rights to this track belong to the artist.</div>
-                                </div>
-                            </div>
-
-                            <!-- Track 4 -->
-                            <div class="music-credit-card">
-                                <a href="https://www.youtube.com/results?search_query=꽃이+피면+When+the+flowers+AcousticHappy" target="_blank" rel="noopener noreferrer" class="music-credit-artwork-link" title="Click to find the original track">
-                                    <img src="./assets/album-arts/[음악팀] 꽃이 피면, When the flowers (AcousticHappy) [BGM무료음악브금].webp" alt="When the Flowers Album Art" class="music-credit-artwork">
-                                </a>
-                                <div class="music-credit-info">
-                                    <div class="music-credit-title">"꽃이 피면, When the Flowers (Acoustic Happy)"</div>
-                                    <div class="music-credit-artist">by TeamMusicCreative / 당신의 드라마 O.S.T</div>
-                                    <div class="music-credit-note">BGM무료음악 (Free BGM). All rights to this track belong to the creators. Used on this site for non-commercial purposes.</div>
-                                </div>
-                            </div>
-
-                              <div class="music-credit-card">
-                                <a href="https://www.youtube.com/results?search_query=Stella_Jang_Colours" target="_blank" rel="noopener noreferrer" class="music-credit-artwork-link" title="Click to find the original track">
-                                    <img src="./assets/album-arts/스텔라장(Stella Jang) - Colors.webp" alt="Colours Album Art" class="music-credit-artwork">
-                                </a>
-                                <div class="music-credit-info">
-                                    <div class="music-credit-title">"Colours"</div>
-                                    <div class="music-credit-artist">by Stella Jang</div>
-                                    <div class="music-credit-note">Stella Jang. All rights to this track belong to the creators. Used on this site for non-commercial purposes.</div>
-                                </div>
-                            </div>
-
-                             </div>
-
-                              <div class="music-credit-card">
-                                <a href="https://www.youtube.com/results?search_query=Mosi+Mosi?" target="_blank" rel="noopener noreferrer" class="music-credit-artwork-link" title="Click to find the original track">
-                                    <img src="./assets/album-arts/楽音 (Sasane) - Mosi Mosi.webp" alt="Mosi Mosi? Album Art" class="music-credit-artwork">
-                                </a>
-                                <div class="music-credit-info">
-                                    <div class="music-credit-title">"Mosi Mosi?"</div>
-                                    <div class="music-credit-artist">by 楽音 (Sasane)</div>
-                                    <div class="music-credit-note">/楽音 (Sasane). All rights to this track belong to the creators. Used on this site for non-commercial purposes.</div>
-                                </div>
-                            </div>
-
-                        </div>
+                        <div class="space-y-3 mb-4" id="music-tracks-container"><!-- Rendered by JS --></div>
 
                         <div class="copyright-notice-box">
                             <p class="text-sm" style="color: #475569;"><strong style="color: #1e293b;">⚠️ Copyright Notice:</strong> The music tracks featured on this website are the intellectual property of their respective creators and artists listed above. They are used here solely for non-commercial, personal portfolio purposes under free-use provisions. No copyright infringement is intended. All music is credited to its original creators, and we claim no ownership over any of the tracks. If you are a rights holder and believe any content is used inappropriately, or if you would like your track removed, please <a href="#contact" class="text-orange-600 hover:underline font-medium">contact me</a> and I will address it promptly.</p>
@@ -402,7 +301,7 @@
                     </div>
                 </section>
 
-                <!-- NEW SECTION: Guestbook & Public Data -->
+                <!-- Section: Guestbook & Public Data -->
                 <section id="guestbook-data" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-teal-100">
@@ -412,17 +311,18 @@
                     </h2>
                     <div class="docs-text">
                         <p class="mb-4">To make this universe more interactive, a <strong>Guestbook</strong> feature has been added! This allows visitors to leave a friendly message, feedback, or just say hi.</p>
-                        
+
                         <h4 class="docs-subheading">What Data is Shared?</h4>
                         <p class="mb-4">When you submit an entry to the guestbook, the name (or alias) you provide and your message are collected and stored securely in our database. This information is then rendered publicly on the guestbook page for anyone visiting the site to see.</p>
-                        
+
                         <h4 class="docs-subheading">Moderation & Privacy:</h4>
                         <p class="mb-4">To ensure a safe and welcoming environment, guestbook entries are subject to moderation. We reserve the right to remove any content that is spam, offensive, or violates our Terms of Service. <strong>Please avoid sharing sensitive personal information</strong> (like passwords, addresses, or phone numbers) in the guestbook, as the data is publicly visible.</p>
-                        
+
                         <p class="text-xs text-gray-500">By submitting a guestbook entry, you acknowledge that your provided name and message will be publicly displayed.</p>
                     </div>
                 </section>
 
+                <!-- Section: Special Thanks (JSON-driven) -->
                 <section id="special-thanks" class="docs-section">
                     <h2 class="docs-heading">
                         <div class="docs-icon-box bg-pink-100">
@@ -432,13 +332,7 @@
                     </h2>
                     <div class="docs-text">
                         <p class="mb-4">A massive thank you to everyone who contributed to this project, provided feedback, or let me feature them in my digital universe.</p>
-                        <ul class="list-disc pl-5 mb-4 space-y-2">
-                            <li><strong>The "Universe" Crew:</strong> Su ZhyZai, Minnie, Chaniru, Minku, Frank, and Yenuja. Thank you for letting me use your profiles, banners, and quotes!</li>
-                            <li><strong>Music Artists:</strong> しゃろう (Sharou), JayM, さんうさぎ (San Usagi), and TeamMusicCreative. Thank you for creating such beautiful music and sharing it freely!</li>
-                            <li><strong>The Open Source Community:</strong> For building and maintaining the incredible tools that make web development accessible and fun.</li>
-                            <li><strong>Unsplash & Pinterest Creators:</strong> For providing high-quality, free-to-use imagery that makes the site look professional.</li>
-                            <li><strong>You:</strong> Thank you for visiting my universe, reading the credits, and especially if you signed the guestbook!</li>
-                        </ul>
+                        <ul class="list-disc pl-5 mb-4 space-y-2" id="special-thanks-list"><!-- Rendered by JS --></ul>
                     </div>
                 </section>
 
@@ -494,5 +388,8 @@
     <!-- AOS JS CDN -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="script.js"></script>
+
+    <!-- JSON-DRIVEN DATA & RENDERERS                               -->
+    <script src="data.js"></script>
 </body>
 </html>
