@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>About Me &lt;3</title>
+<title>About Me <3</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,7 +24,6 @@
     --status-offline: #747F8D;
 
     --spotify: #1DB954;
-    --discord: #5865F2;
 
     --tint: 17, 17, 16;
   }
@@ -44,30 +43,8 @@
     background: var(--bg);
     color: var(--fg);
     transition: background-color 0.3s ease, color 0.3s ease;
-    overflow-x: hidden;
   }
   .serif { font-family: 'Instrument Serif', serif; font-weight: 400; }
-
-  /* ===== Background Orbs ===== */
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(80px);
-    z-index: -1;
-    opacity: 0.4;
-    pointer-events: none;
-    animation: float 15s ease-in-out infinite;
-  }
-  .orb-1 { width: 400px; height: 400px; background: var(--spotify); top: -100px; left: -100px; }
-  .orb-2 { width: 500px; height: 500px; background: var(--discord); bottom: -150px; right: -150px; animation-delay: -5s; opacity: 0.3; }
-  [data-theme="dark"] .orb { opacity: 0.15; }
-  [data-theme="dark"] .orb-2 { opacity: 0.12; }
-
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -30px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.9); }
-  }
 
   .back-btn {
     position: relative; display: inline-flex; align-items: center; gap: 0.5rem;
@@ -76,14 +53,14 @@
     border: 1px solid var(--border);
     font-weight: 500; font-size: 0.9rem;
     cursor: pointer; overflow: hidden; isolation: isolate;
-    transition: color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: color 0.3s ease, border-color 0.3s ease;
   }
   .back-btn::before {
     content: ''; position: absolute; inset: 0; z-index: -1;
     background: var(--fg); transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .back-btn:hover { color: var(--bg); border-color: var(--fg); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .back-btn:hover { color: var(--bg); border-color: var(--fg); }
   .back-btn:hover::before { transform: translateY(0); }
   .back-btn i { transition: transform 0.3s ease; }
   .back-btn:hover i { transform: translateX(-4px); }
@@ -105,99 +82,22 @@
   [data-theme="dark"] .theme-toggle .knob { transform: translateX(26px); }
   .theme-toggle i { font-size: 10px; color: var(--muted); }
 
-  /* ===== Cards & Spotlight Effect ===== */
   .card {
-    position: relative;
     background: var(--card); border: 1px solid var(--border);
     border-radius: 16px; padding: 1.5rem;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
-    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
   }
-  .card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(250px circle at var(--mx, 50%) var(--my, 50%), rgba(var(--tint), 0.08), transparent 40%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-  .card:hover { 
-    transform: translateY(-4px); 
-    border-color: rgba(var(--tint), 0.4);
-    box-shadow: 0 10px 30px -10px rgba(var(--tint), 0.2);
-  }
-  .card:hover::before { opacity: 1; }
+  .card:hover { transform: translateY(-2px); border-color: var(--fg); }
 
   .social-link {
-    position: relative;
     width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
     border-radius: 12px; border: 1px solid var(--border); color: var(--fg);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, color 0.2s ease, box-shadow 0.3s ease;
-    overflow: hidden;
+    transition: background 0.2s ease, color 0.2s ease;
   }
-  .social-link::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(100px circle at var(--mx, 50%) var(--my, 50%), rgba(var(--tint), 0.1), transparent 50%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-  .social-link:hover { 
-    background: var(--fg); 
-    color: var(--bg); 
-    transform: translateY(-4px) rotate(-8deg);
-    box-shadow: 0 8px 15px -5px rgba(var(--tint), 0.3);
-  }
-  .social-link:hover::before { opacity: 1; }
-
-  /* ===== Avatar Ring ===== */
-  .avatar-wrap {
-    position: relative;
-    width: 96px; height: 96px;
-    margin: 0 auto 1.5rem auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .avatar-wrap::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--spotify), var(--discord), var(--status-idle), var(--spotify));
-    animation: spin 8s linear infinite;
-    z-index: 0;
-  }
-  .avatar-wrap img {
-    position: relative;
-    z-index: 1;
-    border: 4px solid var(--bg);
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ===== Gradient Text Animation ===== */
-  .gradient-text {
-    background: linear-gradient(90deg, var(--fg) 0%, var(--muted) 50%, var(--fg) 100%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shine 6s linear infinite;
-  }
-  @keyframes shine {
-    to { background-position: 200% center; }
-  }
+  .social-link:hover { background: var(--fg); color: var(--bg); }
 
   .fade-in { opacity: 0; transform: translateY(10px); animation: fadeIn 0.8s ease forwards; }
   @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
-
-  /* Staggered Social Links Animation */
-  .social-link:nth-child(1) { animation: fadeIn 0.5s 0.5s ease backwards; }
-  .social-link:nth-child(2) { animation: fadeIn 0.5s 0.6s ease backwards; }
-  .social-link:nth-child(3) { animation: fadeIn 0.5s 0.7s ease backwards; }
 
   /* ===== UNIFIED STATUS & ACTIVITY CARD ===== */
   .unified-card {
@@ -430,16 +330,12 @@
   .activity-empty i { font-size: 1.3rem; opacity: 0.4; }
 
   @media (prefers-reduced-motion: reduce) {
-    .np-eq span, .np-status.is-online .dot, .avatar-wrap::before, .orb { animation: none !important; }
+    .np-eq span, .np-status.is-online .dot { animation: none !important; }
     * { transition-duration: 0.01ms !important; }
   }
 </style>
 </head>
 <body>
-
-<!-- Background Aesthetic Orbs -->
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
 
 <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 md:p-8">
   <button class="back-btn fade-in" onclick="window.location.href='https://randomcatuser.github.io'" aria-label="Back to home">
@@ -459,10 +355,8 @@
 <main class="max-w-2xl mx-auto px-6 py-32 md:py-40">
 
   <section class="flex flex-col items-center text-center mb-20 fade-in" style="animation-delay: 0.1s;">
-    <div class="avatar-wrap">
-      <img src="https://github.com/RandomCatUser/RandomCatUser/blob/main/workflows/MyProfile.webp?raw=true" alt="Avatar" class="w-24 h-24 rounded-full object-cover" />
-    </div>
-    <h1 class="serif text-5xl md:text-6xl mb-3 leading-tight gradient-text">Dihan Ramanayaka</h1>
+    <img src="https://github.com/RandomCatUser/RandomCatUser/blob/main/workflows/MyProfile.webp?raw=true" alt="Avatar" class="w-24 h-24 rounded-full object-cover mb-6 border" style="border-color: var(--border);" />
+    <h1 class="serif text-5xl md:text-6xl mb-3 leading-tight">Dihan Ramanayaka</h1>
     <p class="text-base md:text-lg" style="color: var(--muted);">Lord Whiskers 𖹭 | RandomCatUser</p>
   </section>
 
@@ -529,19 +423,19 @@
   <section class="mb-16 fade-in" style="animation-delay: 0.3s;">
     <h2 class="text-xs uppercase tracking-widest mb-4" style="color: var(--muted);">Toolbox</h2>
     <div class="grid grid-cols-2 gap-4">
-      <div class="card spotlight">
+      <div class="card">
         <h3 class="font-medium mb-1">Frontend</h3>
         <p class="text-sm" style="color: var(--muted);">HTML, CSS, JavaScript, React</p>
       </div>
-      <div class="card spotlight">
+      <div class="card">
         <h3 class="font-medium mb-1">Design</h3>
         <p class="text-sm" style="color: var(--muted);">Figma, UI/UX, Prototyping</p>
       </div>
-      <div class="card spotlight">
+      <div class="card">
         <h3 class="font-medium mb-1">Backend</h3>
         <p class="text-sm" style="color: var(--muted);">Node.js, Python, APIs</p>
       </div>
-      <div class="card spotlight">
+      <div class="card">
         <h3 class="font-medium mb-1">Tools</h3>
         <p class="text-sm" style="color: var(--muted);">Git, VS Code, Terminal</p>
       </div>
@@ -551,9 +445,9 @@
   <section class="text-center fade-in" style="animation-delay: 0.4s;">
     <h2 class="text-xs uppercase tracking-widest mb-6" style="color: var(--muted);">Connect</h2>
     <div class="flex justify-center gap-3">
-      <a href="https://github.com/randomcatuser" target="_blank" rel="noopener" class="social-link spotlight" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-      <a href="https://discord.gg/1068541705596448788" class="social-link spotlight" aria-label="Discord"><i class="fa-brands fa-discord" aria-hidden="true"></i></a>
-      <a href="mailto:" class="social-link spotlight" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+      <a href="https://github.com/randomcatuser" target="_blank" rel="noopener" class="social-link" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+      <a href="https://discord.gg/1068541705596448788" class="social-link" aria-label="Discord"><i class="fa-brands fa-discord" aria-hidden="true"></i></a>
+      <a href="mailto:" class="social-link" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
     </div>
   </section>
 
@@ -564,19 +458,6 @@
 </footer>
 
 <script src="./about.js"></script>
-
-<!-- Script for Mouse-Tracking Spotlight -->
-<script>
-  document.querySelectorAll('.spotlight').forEach(el => {
-    el.addEventListener('mousemove', e => {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      el.style.setProperty('--mx', `${x}px`);
-      el.style.setProperty('--my', `${y}px`);
-    });
-  });
-</script>
 
 </body>
 </html>
