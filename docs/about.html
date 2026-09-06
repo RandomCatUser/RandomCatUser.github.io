@@ -65,7 +65,6 @@
   }
   .serif { font-family: 'Instrument Serif', serif; font-weight: 400; }
 
-  /* ===== Background Orbs ===== */
   .orb {
     position: fixed;
     border-radius: 50%;
@@ -105,7 +104,6 @@
   .back-btn i { transition: transform 0.3s ease; }
   .back-btn:hover i { transform: translateX(-4px); }
 
-  /* ===== Settings Gear Button ===== */
   .nav-settings-btn {
     display: flex; align-items: center; justify-content: center;
     width: 44px; height: 44px; border-radius: 12px;
@@ -124,7 +122,6 @@
   .nav-settings-btn i { position: relative; transition: transform 0.4s ease; }
   .nav-settings-btn:hover i { transform: rotate(60deg); }
 
-  /* ===== Settings Panel ===== */
   .theme-settings-wrap {
     position: fixed; top: 92px; right: 24px;
     z-index: 10000000000; pointer-events: none;
@@ -172,7 +169,6 @@
   .theme-settings-label { font-size: 14px; font-weight: 600; color: var(--fg); }
   .theme-settings-desc { font-size: 12px; color: var(--muted); }
 
-  /* ===== Dark / Light Switch (same as index) ===== */
   .switch { position: relative; display: inline-block; width: 60px; height: 34px; flex-shrink: 0; }
   .switch #theme-toggle-input { opacity: 0; width: 0; height: 0; }
   .slider {
@@ -238,7 +234,6 @@
     100% { transform: translateX(26px) rotate(360deg); }
   }
 
-  /* ===== Cards & Spotlight Effect ===== */
   .card {
     position: relative;
     background: var(--card); border: 1px solid var(--border);
@@ -286,7 +281,6 @@
   }
   .social-link:hover::before { opacity: 1; }
 
-  /* ===== Avatar Ring ===== */
   .avatar-wrap {
     position: relative;
     width: 96px; height: 96px;
@@ -311,7 +305,6 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ===== Gradient Text Animation ===== */
   .gradient-text {
     background: linear-gradient(90deg, var(--fg) 0%, var(--muted) 50%, var(--fg) 100%);
     background-size: 200% auto;
@@ -332,7 +325,6 @@
   .social-link:nth-child(2) { animation: fadeIn 0.5s 0.6s ease backwards; }
   .social-link:nth-child(3) { animation: fadeIn 0.5s 0.7s ease backwards; }
 
-  /* ===== UNIFIED STATUS & ACTIVITY CARD ===== */
   .unified-card {
     position: relative;
     background: var(--card);
@@ -492,7 +484,6 @@
     .card-divider { height: 1px; margin: 1.5rem 0; opacity: 1; }
   }
 
-  /* ===== ACTIVITY ITEMS ===== */
   .activity-item {
     display: flex; gap: 1rem; align-items: flex-start;
   }

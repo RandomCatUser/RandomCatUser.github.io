@@ -191,11 +191,6 @@
                 100% { stroke-dashoffset: 275; }
             }
 
-            /* ============================================================
-               THEME SYSTEM — light (default) / dark
-               Applied via a `dark-theme` class on <body>, persisted to
-               localStorage under the key "site-theme".
-               ============================================================ */
             :root {
                 --theme-bg: #ffffff;
                 --theme-bg-soft: #f3f3f3b4;
@@ -255,7 +250,6 @@
                 box-shadow: none !important;
             }
 
-            /* ===================== NAV BAR DARK MODE TEXT COLOR ===================== */
             body.dark-theme .header-links,
             body.dark-theme header .tw-text-black,
             body.dark-theme #collapse-btn {
@@ -265,7 +259,6 @@
             body.dark-theme .header-links:hover {
                 color: #ffffff !important; 
             }
-            /* ======================================================================= */
 
             @media (max-width: 1023px) {
                 body.dark-theme #collapsed-header-items {
@@ -480,7 +473,6 @@
                 pointer-events: auto; /* Re-enable pointer events only when open */
             }
 
-            /* ===================== DETAILED PANEL ELEMENTS ===================== */
             .panel-header {
                 display: flex;
                 justify-content: space-between;
@@ -542,7 +534,6 @@
                 padding: 4px 6px 6px 6px;
             }
 
-            /* ===================== LIQUID GLASS HOVER ROW ===================== */
             .theme-settings-row {
                 display: flex;
                 align-items: center;
@@ -622,9 +613,8 @@
                 margin-top: 3px;
                 line-height: 1.2;
             }
-            /* ================================================================== */
 
-            /* ---------- From Uiverse.io by RiccardoRapelli (dark/light switch) ---------- */
+            /* From Uiverse.io by RiccardoRapelli (dark/light switch) */
             .switch {
                 position: relative;
                 display: inline-block;
@@ -732,10 +722,6 @@
                 100% { transform: translateX(26px) rotate(360deg); }
             }
 
-            /* ============================================================
-               QUIZ SWITCH STYLES (From Uiverse.io by RaspberryBee)
-               Prefixed with 'quiz-' to avoid conflicts with theme switch
-               ============================================================ */
             .quiz-switch {
               font-size: 17px;
               position: relative;
@@ -782,9 +768,6 @@
               transform: translateX(1.5em);
             }
 
-            /* ============================================================
-               QUIZ LIGHTBOX STYLES (UI IMPROVEMENTS)
-               ============================================================ */
             .hd-lightbox-overlay {
                 position: fixed;
                 inset: 0;
@@ -976,8 +959,6 @@
                 background: #ef4444;
                 color: white;
             }
-
-            /* ================= MOBILE NAV FIX ================= */
 
             header {
                 position: fixed;
@@ -3015,7 +2996,6 @@
             };
         })();
 
-        /* ===================== CLOSE MENU ON LINK TAP (MOBILE) =============== */
         (function () {
             var links = document.querySelectorAll('#collapsed-header-items .header-links');
             links.forEach(function (link) {

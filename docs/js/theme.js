@@ -1,14 +1,3 @@
-/* ============================================================
-   UNIFIED THEME SYSTEM — shared by every page on the site.
-   ------------------------------------------------------------
-   - Uses a single localStorage key: 'theme'
-   - Applies the theme in all the mechanisms the site uses:
-       <html data-theme="dark">            (about, contact, guestbook, MingShi, friends, credits)
-       <html class="dark">                 (catsearch, loveletters — Tailwind dark: variants)
-       <body class="dark-theme">           (index)
-   - Syncs live across open tabs via the 'storage' event.
-   ============================================================ */
-
 (function () {
   var THEME_KEY = "theme";
 

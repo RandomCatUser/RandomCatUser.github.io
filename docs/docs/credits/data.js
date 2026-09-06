@@ -109,10 +109,6 @@
         }
     ];
 
-    /* ============================================================
-     *  RENDERERS — turn data into HTML
-     * ============================================================ */
-
     // Small escape helper to prevent broken HTML from stray quotes
     function esc(str) {
         return String(str)
