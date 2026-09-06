@@ -11,10 +11,12 @@
     <!-- ===== EARLY THEME INIT (prevents flash of wrong theme) ===== -->
     <script>
         (function() {
-            var savedTheme = localStorage.getItem('theme') || 'light';
-            if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
+            var savedTheme = localStorage.getItem('theme');
+            if (savedTheme !== 'dark' && savedTheme !== 'light') {
+                savedTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
             }
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.documentElement.classList.toggle('dark', savedTheme === 'dark');
         })();
     </script>
 
@@ -574,6 +576,7 @@
         </div>
     </div>
 
+    <script src="../js/theme.js"></script>
     <script src="./friends.js"></script>
 </body>
 </html>

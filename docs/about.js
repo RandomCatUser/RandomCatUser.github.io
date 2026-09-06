@@ -1,25 +1,42 @@
-// ---------- Theme Toggle ----------
-  const root = document.documentElement;
-  const themeToggle = document.getElementById('themeToggle');
-  const knobIcon = document.getElementById('knobIcon');
+// ---------- Theme Settings Panel ----------
+(function () {
+  const settingsPanel = document.getElementById('theme-settings-panel');
+  const themeInput = document.getElementById('theme-toggle-input');
+  const navThemeBtn = document.getElementById('theme-settings-btn-nav');
+  const panelCloseBtn = document.getElementById('panel-close-btn');
 
-  function applyTheme(theme) {
-    root.setAttribute('data-theme', theme);
-    knobIcon.className = theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
-    themeToggle.setAttribute('aria-pressed', theme === 'dark');
-    try { localStorage.setItem('rc-theme', theme); } catch (e) {}
+  if (window.ThemeManager) {
+    window.ThemeManager.bindToggle(themeInput);
   }
-  let savedTheme = 'light';
-  try { savedTheme = localStorage.getItem('rc-theme') || 'light'; } catch (e) {}
-  applyTheme(savedTheme);
-  function toggleTheme() {
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
+
+  function openPanel() {
+    settingsPanel.classList.add('open');
+    navThemeBtn.setAttribute('aria-expanded', 'true');
   }
-  themeToggle.addEventListener('click', toggleTheme);
-  themeToggle.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTheme(); }
+
+  function closePanel() {
+    settingsPanel.classList.remove('open');
+    navThemeBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  navThemeBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (settingsPanel.classList.contains('open')) { closePanel(); }
+    else { openPanel(); }
   });
+
+  if (panelCloseBtn) {
+    panelCloseBtn.addEventListener('click', function (e) { e.stopPropagation(); closePanel(); });
+  }
+
+  document.addEventListener('click', function (e) {
+    if (settingsPanel.classList.contains('open') && !settingsPanel.contains(e.target) && !navThemeBtn.contains(e.target)) {
+      closePanel();
+    }
+  });
+
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePanel(); });
+})();
 
   /* LANYARD WIDGET — Spotify + Discord Activities */
   const LanyardWidget = (() => {

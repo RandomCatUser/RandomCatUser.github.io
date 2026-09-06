@@ -257,20 +257,10 @@
             var settingsBtn = document.getElementById('settings-btn');
             var settingsDropdown = document.getElementById('settings-dropdown');
 
-            // Sync checkbox state with stored theme (default: light)
-            var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-            themeToggle.checked = (currentTheme === 'dark');
-
-            // Toggle theme on switch change
-            themeToggle.addEventListener('change', function() {
-                if (this.checked) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                    localStorage.setItem('theme', 'light');
-                }
-            });
+            // Bind theme toggle to the unified manager
+            if (window.ThemeManager) {
+                window.ThemeManager.bindToggle(themeToggle);
+            }
 
             // Toggle settings dropdown
             settingsBtn.addEventListener('click', function(e) {

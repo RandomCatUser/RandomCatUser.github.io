@@ -28,23 +28,10 @@ let activeEmojiTarget = null;
 // =============================
 // THEME LOGIC
 // =============================
-const root = document.documentElement;
 const themeToggle = document.getElementById('themeToggle');
 
-function applyTheme(theme) {
-    root.setAttribute('data-theme', theme);
-    if (themeToggle) themeToggle.checked = (theme === 'dark');
-    try { localStorage.setItem('gb-theme', theme); } catch (e) {}
-}
-
-let savedTheme = 'dark';
-try { savedTheme = localStorage.getItem('gb-theme') || 'dark'; } catch (e) {}
-applyTheme(savedTheme);
-
-if (themeToggle) {
-    themeToggle.addEventListener('change', () => {
-        applyTheme(themeToggle.checked ? 'dark' : 'light');
-    });
+if (window.ThemeManager) {
+    window.ThemeManager.bindToggle(themeToggle);
 }
 
 // =============================

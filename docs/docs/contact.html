@@ -4,6 +4,16 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Contact <3</title>
+<script>
+    (function () {
+        var t; try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (t !== 'dark' && t !== 'light') {
+            t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', t);
+        document.documentElement.classList.toggle('dark', t === 'dark');
+    })();
+</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -221,32 +231,24 @@
   :D
 </footer>
 
+<script src="../js/theme.js"></script>
 <script>
   // ---------- Theme Toggle Logic ----------
-  const root = document.documentElement;
   const themeToggle = document.getElementById('themeToggle');
   const knobIcon = document.getElementById('knobIcon');
 
-  function applyTheme(theme) {
-    root.setAttribute('data-theme', theme);
-    knobIcon.className = theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
-    themeToggle.setAttribute('aria-pressed', theme === 'dark');
-    try { localStorage.setItem('rc-theme', theme); } catch (e) {}
+  function syncIcon(detail) {
+    const dark = detail ? detail === 'dark' : (window.ThemeManager ? window.ThemeManager.isDark() : false);
+    if (knobIcon) { knobIcon.className = dark ? 'fa-solid fa-moon' : 'fa-solid fa-sun'; }
+    if (themeToggle) { themeToggle.setAttribute('aria-pressed', dark ? 'true' : 'false'); }
   }
 
-  let savedTheme = 'light';
-  try { savedTheme = localStorage.getItem('rc-theme') || 'light'; } catch (e) {}
-  applyTheme(savedTheme);
+  document.addEventListener('themechange', (e) => { syncIcon(e.detail); });
 
-  function toggleTheme() {
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
+  if (window.ThemeManager) {
+    window.ThemeManager.bindToggle(themeToggle);
+    syncIcon();
   }
-  
-  themeToggle.addEventListener('click', toggleTheme);
-  themeToggle.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTheme(); }
-  });
 
   // ---------- Contact Form Logic ----------
   const form = document.getElementById('contactForm');

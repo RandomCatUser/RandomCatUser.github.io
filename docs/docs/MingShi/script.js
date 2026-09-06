@@ -52,26 +52,27 @@ window.addEventListener('load', () => {
 });
 
 // ===== THEME TOGGLE =====
-function initTheme() {
-  const savedTheme = localStorage.getItem('mingshi_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-  updateThemeIcon(savedTheme);
-}
-
 function updateThemeIcon(theme) {
   const icon = document.querySelector('#btn-theme i');
+  if (!icon) return;
   if (theme === 'dark') icon.className = 'fa-solid fa-sun';
   else icon.className = 'fa-solid fa-moon';
 }
 
-document.getElementById('btn-theme').addEventListener('click', () => {
-  const currentTheme = document.documentElement.getAttribute('data-theme');
-  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', newTheme);
-  localStorage.setItem('mingshi_theme', newTheme);
-  updateThemeIcon(newTheme);
-  render(); 
-});
+function initTheme() {
+  if (!window.ThemeManager) return;
+  window.ThemeManager.bindToggle(document.getElementById('btn-theme'));
+  updateThemeIcon(window.ThemeManager.getTheme());
+  document.addEventListener('themechange', (e) => updateThemeIcon(e.detail));
+}
+
+const btnTheme = document.getElementById('btn-theme');
+if (btnTheme) {
+  btnTheme.addEventListener('click', () => {
+    // render() picks up the new data-theme colors
+    render();
+  });
+}
 
 // ===== CANVAS SETUP =====
 function resizeCanvas() {

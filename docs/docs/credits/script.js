@@ -13,18 +13,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('theme-toggle');
     const settingsBtn = document.getElementById('settings-btn');
     const settingsDropdown = document.getElementById('settings-dropdown');
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-    themeToggle.checked = (currentTheme === 'dark');
 
-    themeToggle.addEventListener('change', function() {
-        if (this.checked) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
-        }
-    });
+    // Bind theme toggle to the unified manager
+    if (window.ThemeManager) {
+        window.ThemeManager.bindToggle(themeToggle);
+    }
 
     settingsBtn.addEventListener('click', function(e) {
         e.stopPropagation();
