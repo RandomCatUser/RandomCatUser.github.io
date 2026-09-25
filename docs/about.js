@@ -40,7 +40,7 @@
 
   /* LANYARD WIDGET — Spotify + Discord Activities */
   const LanyardWidget = (() => {
-    const DISCORD_ID = '1068541705596448788';
+    const DISCORD_ID = '1233068654552420484';
     const WS_URL = 'wss://api.lanyard.rest/socket';
     const HTTP_URL = `https://api.lanyard.rest/v1/users/${DISCORD_ID}`;
     const POLL_INTERVAL_MS = 10000;

@@ -289,7 +289,6 @@
             display: flex;
             align-items: center;
         }
-        .home-wrapper { left: 20px; }
         .settings-wrapper { right: 20px; }
 
         .filter {
@@ -461,6 +460,8 @@
         }
         [data-theme="dark"] .settings-label { color: #e4e4e7 !important; }
     </style>
+    <link rel="stylesheet" href="../css/site.css?v=3" />
+    <link rel="stylesheet" href="../css/friends.css?v=3" />
 </head>
 <body class="min-h-screen p-4 md:p-10 flex flex-col items-center justify-start">
 
@@ -483,14 +484,17 @@
         </div>
     </div>
 
-    <!-- ===== BACK TO HOME BUTTON ===== -->
-    <div class="nav-wrapper home-wrapper">
-        <a href="https://randomcatuser.github.io/" title="Back to Home" class="filter">
-            <svg viewBox="0 0 576 512" height="1em">
-                <path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 1 22 8L564.8 231.5c8 7 12 15 11 24z"/>
-            </svg>
-        </a>
-    </div>
+    <header class="top" style="width:100%">
+      <div class="me">
+        <h1>Dihan</h1>
+        <p>he/him :: student :: developer</p>
+      </div>
+      <nav class="main">
+        <a href="https://randomcatuser.github.io/">[ Home ]</a>
+        <a href="../about.html">[ About ]</a>
+        <a href="https://randomcatuser.github.io/RandomThoughts-/">[ Blog ]</a>
+      </nav>
+    </header>
 
     <!-- ===== SETTINGS BUTTON + DROPDOWN ===== -->
     <div class="nav-wrapper settings-wrapper">
@@ -533,12 +537,15 @@
     </div>
 
     <div class="max-w-5xl w-full flex flex-col items-center py-6 md:py-10">
-        <div class="w-full flex justify-center py-8 px-4 text-center">
+        <section class="box" style="width:100%">
+            <div class="tab">:: Universe ::</div>
+        <div class="w-full flex justify-center py-4 px-4 text-center">
             <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-gray-800">
                 These are my <br class="md:hidden" />
                 <span class="bg-orange-100 px-6 py-2 rounded-2xl text-orange-900 border-2 border-orange-200 inline-block mt-2 md:mt-0 transition-transform hover:scale-105 duration-300">universe</span>
             </h1>
         </div>
+        </section>
 
         <div id="friends-wrapper" class="w-full flex flex-wrap justify-center items-center gap-6 md:gap-10 py-6"></div>
     </div>
@@ -564,7 +571,9 @@
         </div>
     </div>
 
-    <script src="../js/theme.js"></script>
+    <script src="../js/theme.js?v=3"></script>
     <script src="./friends.js"></script>
+    <script src="../js/clock-cursor.js?v=3"></script>
+    <script src="../js/clock-init.js?v=3"></script>
 </body>
 </html>

@@ -65,63 +65,6 @@
   }
   .serif { font-family: 'Instrument Serif', serif; font-weight: 400; }
 
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(80px);
-    z-index: -1;
-    opacity: 0.4;
-    pointer-events: none;
-    animation: float 15s ease-in-out infinite;
-  }
-  .orb-1 { width: 400px; height: 400px; background: var(--spotify); top: -100px; left: -100px; }
-  .orb-2 { width: 500px; height: 500px; background: var(--discord); bottom: -150px; right: -150px; animation-delay: -5s; opacity: 0.3; }
-  [data-theme="dark"] .orb { opacity: 0.15; }
-  [data-theme="dark"] .orb-2 { opacity: 0.12; }
-
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -30px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.9); }
-  }
-
-  .back-btn {
-    position: relative; display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.6rem 1.2rem; border-radius: 8px;
-    background: transparent; color: var(--fg);
-    border: 1px solid var(--border);
-    font-weight: 500; font-size: 0.9rem;
-    cursor: pointer; overflow: hidden; isolation: isolate;
-    transition: color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  .back-btn::before {
-    content: ''; position: absolute; inset: 0; z-index: -1;
-    background: var(--fg); transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .back-btn:hover { color: var(--bg); border-color: var(--fg); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-  .back-btn:hover::before { transform: translateY(0); }
-  .back-btn i { transition: transform 0.3s ease; }
-  .back-btn:hover i { transform: translateX(-4px); }
-
-  .nav-settings-btn {
-    display: flex; align-items: center; justify-content: center;
-    width: 44px; height: 44px; border-radius: 12px;
-    background: var(--bg); border: 1px solid var(--border);
-    color: var(--fg); cursor: pointer; font-size: 16px;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
-    position: relative; overflow: hidden;
-  }
-  .nav-settings-btn::before {
-    content: ''; position: absolute; inset: 0;
-    background: var(--fg); transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .nav-settings-btn:hover { color: var(--bg); border-color: var(--fg); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-  .nav-settings-btn:hover::before { transform: translateY(0); }
-  .nav-settings-btn i { position: relative; transition: transform 0.4s ease; }
-  .nav-settings-btn:hover i { transform: rotate(60deg); }
-
   .theme-settings-wrap {
     position: fixed; top: 92px; right: 24px;
     z-index: 10000000000; pointer-events: none;
@@ -558,22 +501,23 @@
     * { transition-duration: 0.01ms !important; }
   }
 </style>
+<link rel="stylesheet" href="css/site.css?v=3" />
+<link rel="stylesheet" href="css/about.css?v=3" />
 </head>
 <body>
 
-<!-- Background Aesthetic Orbs -->
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
-
-<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 md:p-8">
-  <button class="back-btn fade-in" onclick="window.location.href='https://randomcatuser.github.io'" aria-label="Back to home">
-    <i class="fa-solid fa-arrow-left"></i>
-    <span>Back</span>
-  </button>
-
-  <button class="nav-settings-btn fade-in" id="theme-settings-btn-nav" title="Settings" aria-label="Theme settings" aria-expanded="false">
-    <i class="fa-solid fa-sliders"></i>
-  </button>
+<div class="wrap">
+<header class="top">
+  <div class="me">
+    <h1>Dihan</h1>
+    <p>he/him :: student :: developer</p>
+  </div>
+  <nav class="main">
+    <a href="https://randomcatuser.github.io/">[ Home ]</a>
+    <a href="about.html">[ About ]</a>
+    <a href="https://randomcatuser.github.io/RandomThoughts-/">[ Blog ]</a>
+    <button class="tbtn" id="theme-settings-btn-nav" title="Settings" aria-label="Theme settings" aria-expanded="false">[ settings ]</button>
+  </nav>
 </header>
 
 <!-- Settings Panel -->
@@ -622,19 +566,30 @@
   </div>
 </div>
 
-<main class="max-w-2xl mx-auto px-6 py-32 md:py-40">
+<main>
 
-  <section class="flex flex-col items-center text-center mb-20 fade-in" style="animation-delay: 0.1s;">
+  <div class="cols">
+    <div>
+  <section class="box flex flex-col items-center text-center fade-in" style="animation-delay: 0.1s;">
+    <div class="tab">:: Me ::</div>
     <div class="avatar-wrap">
       <img src="https://github.com/RandomCatUser/RandomCatUser/blob/main/workflows/MyProfile.webp?raw=true" alt="Avatar" class="w-24 h-24 rounded-full object-cover" />
     </div>
-    <h1 class="serif text-5xl md:text-6xl mb-3 leading-tight gradient-text">Dihan Ramanayaka</h1>
-    <p class="text-base md:text-lg" style="color: var(--muted);">Lord Whiskers 𖹭 | RandomCatUser</p>
+    <h1 class="serif text-3xl mb-3 leading-tight gradient-text">Dihan Ramanayaka</h1>
+    <p class="text-base md:text-lg" style="color: var(--muted);">Lord Whiskers | RandomCatUser</p>
+    <div class="rows" style="width:100%;text-align:left;margin-top:10px">
+      <div><b>role</b><span class="sep">-</span><span class="d">Student designer + developer</span></div>
+      <div><b>from</b><span class="sep">-</span><span class="d">Colombo, Sri Lanka</span></div>
+      <div><b>likes</b><span class="sep">-</span><span class="d">Python, cats, lo-fi, open source</span></div>
+      <div><b>focus</b><span class="sep">-</span><span class="d">Web, ML, open source</span></div>
+    </div>
   </section>
+    </div>
+    <div>
 
   <!-- ===== UNIFIED STATUS & ACTIVITY CARD ===== -->
-  <section class="mb-16 fade-in" style="animation-delay: 0.2s;" aria-labelledby="np-heading">
-    <h2 id="np-heading" class="text-xs uppercase tracking-widest mb-4" style="color: var(--muted);">Status</h2>
+  <section class="box mb-16 fade-in" style="animation-delay: 0.2s;" aria-labelledby="np-heading">
+    <div class="tab">:: Status ::</div>
     
     <div id="statusWrapper" class="unified-card" role="button" tabindex="0" aria-label="Status and Activity Widget">
       <!-- Blurred Tints -->
@@ -692,8 +647,8 @@
     </div>
   </section>
 
-  <section class="mb-16 fade-in" style="animation-delay: 0.3s;">
-    <h2 class="text-xs uppercase tracking-widest mb-4" style="color: var(--muted);">Toolbox</h2>
+  <section class="box mb-16 fade-in" style="animation-delay: 0.3s;">
+    <div class="tab">:: Toolbox ::</div>
     <div class="grid grid-cols-2 gap-4">
       <div class="card spotlight">
         <h3 class="font-medium mb-1">Frontend</h3>
@@ -713,24 +668,49 @@
       </div>
     </div>
   </section>
-
-  <section class="text-center fade-in" style="animation-delay: 0.4s;">
-    <h2 class="text-xs uppercase tracking-widest mb-6" style="color: var(--muted);">Connect</h2>
+    </div>
+    <div>
+  <section class="box text-center fade-in" style="animation-delay: 0.4s;">
+    <div class="tab">:: Connect ::</div>
     <div class="flex justify-center gap-3">
       <a href="https://github.com/randomcatuser" target="_blank" rel="noopener" class="social-link spotlight" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
       <a href="https://discord.gg/1068541705596448788" class="social-link spotlight" aria-label="Discord"><i class="fa-brands fa-discord" aria-hidden="true"></i></a>
       <a href="mailto:" class="social-link spotlight" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
     </div>
+    <div style="margin-top:12px;font-size:13px">
+      <a href="https://github.com/randomcatuser">Github</a> · <a href="https://discord.gg/1068541705596448788">Discord</a> · <a href="mailto:">Email</a>
+    </div>
   </section>
+      <section class="box">
+        <div class="tab">:: Music ::</div>
+        <div class="mus">
+          <img id="mArt" src="./assets/album-arts/music1.jpg" alt="album art" loading="lazy" />
+          <div class="mt"><b id="mTitle">3:03 PM</b><br /><span class="d" id="mArtist">sharou</span></div>
+        </div>
+        <div class="mbar" id="mBar"><div id="mFill"></div></div>
+        <div class="mtime"><span id="mCur">0:00</span><span id="mDur">0:00</span></div>
+        <div class="mctl">
+          <button id="mPrev" type="button" aria-label="previous">◀◀</button>
+          <button id="mPlay" type="button" aria-label="play">▶</button>
+          <button id="mNext" type="button" aria-label="next">▶▶</button>
+        </div>
+        <audio id="player" preload="metadata"></audio>
+      </section>
+    </div>
+  </div>
 
 </main>
+</div>
 
-<footer class="text-center pb-10 text-sm" style="color: var(--muted);">
+<footer class="site-foot text-center pb-10 text-sm" style="color: var(--muted);">
   :D
 </footer>
 
-<script src="./js/theme.js"></script>
+<script src="./js/theme.js?v=3"></script>
 <script src="./about.js"></script>
+<script src="js/player.js?v=3"></script>
+<script src="js/clock-cursor.js?v=3"></script>
+<script src="js/clock-init.js?v=3"></script>
 
 <!-- Script for Mouse-Tracking Spotlight -->
 <script>
