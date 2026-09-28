@@ -41,7 +41,7 @@
             },
             "Minku": {
                 emoji: "😂",
-                img: "https://cdn.discordapp.com/avatars/1342023233901432893/73a82a6cdc90db54bc08de694469323e.png?size=1024",
+                img: "https://cdn.discordapp.com/avatars/1342023233901432893/47b94351df0e59ac4d28b754254412a0.png?size=1024",
                 banner: "https://wallpapers-clan.com/wp-content/uploads/2025/04/pokemon-mew-pink-petal-flight-desktop-wallpaper-cover.jpg",
                 bestFriend: false,
                 quote: "Call me a lazy programmer",
