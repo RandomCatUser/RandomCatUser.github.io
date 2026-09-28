@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoeshi OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://w.soundcloud.com/player/api.js"></script>
+    <style>
+        :root {
+            --bg-dark: #1a1b26;
+            --glass-bg: rgba(26, 27, 38, 0.7);
+            --accent: #7aa2f7;
+            --scrollbar-track: rgba(255,255,255,0.08);
+            --scrollbar-thumb: rgba(122, 162, 247, 0.55);
+            --glass-opacity: 0.7;
+        }
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: #1a1b26; 
+            font-family: 'Inter', sans-serif; 
+            color: #c0caf5;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: background 0.5s ease;
+            cursor: url("assets/cursor/cursor.svg") 16 16, auto;
+        }
+
+        .glass-window,
+        .glass-window .console-output,
+        .glass-window .settings-tab-content {
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+        }
+
+        .glass-window ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .glass-window ::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+            border-radius: 999px;
+        }
+
+        .glass-window ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 999px;
+            border: 2px solid rgba(26, 27, 38, 0.7);
+        }
+
+        .glass-window ::-webkit-scrollbar-thumb:hover {
+            background: rgba(122, 162, 247, 0.75);
+        }
+
+        .window-resize-handle {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            right: 10px;
+            bottom: 10px;
+            cursor: se-resize;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.14);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+            z-index: 20;
+        }
+
+        .window-resize-handle::before {
+            content: '';
+            position: absolute;
+            right: 4px;
+            bottom: 4px;
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid rgba(255,255,255,0.7);
+            border-bottom: 2px solid rgba(255,255,255,0.7);
+            border-radius: 2px;
+        }
+
+        .glass-window {
+            position: absolute;
+            background: rgba(26, 27, 38, var(--glass-opacity));
+            backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            width: 600px;
+            height: 500px;
+            z-index: 10;
+            overflow: hidden;
+            min-width: 250px;
+            min-height: 200px;
+            resize: both;
+        }
+
+        @media (min-width: 768px) {
+            .glass-window { position: absolute; }
+        }
+
+        @media (max-width: 767px) {
+            .glass-window {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                border-radius: 0 !important;
+                resize: none;
+                box-shadow: none;
+            }
+        }
+
+        .window-header {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
+            user-select: none;
+            cursor: grab;
+        }
+        .window-header:active { cursor: grabbing; }
+
+        .dock {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(26, 27, 38, 0.6);
+            backdrop-filter: blur(16px);
+            padding: 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+        .dock-item {
+            position: relative;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 22px;
+            cursor: url("assets/cursor/pointinghand.svg") 16 0, pointer;
+        }
+        /* macOS-like Console styles */
+        .console-output { background: linear-gradient(180deg, rgba(10,11,12,0.85), rgba(18,19,20,0.85)); color: #d1d5db; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; padding: 12px; border-radius: 10px; height: 260px; overflow:auto; border: 1px solid rgba(255,255,255,0.03); box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); }
+        .console-line { white-space: pre-wrap; margin: 6px 0; font-size: 13px; opacity: 0; animation: consoleLineIn 180ms ease-out forwards; }
+        .console-input-wrap { display:flex; gap:8px; align-items:center; }
+        .console-prompt { color: #9ca3af; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; font-size: 13px; }
+        .console-input { flex:1; box-sizing: border-box; padding: 8px 10px; background: transparent; border: none; outline: none; color: #e5e7eb; border-radius: 6px; font-family: inherit; font-size: 13px; }
+        .console-suggestions { position: absolute; bottom: 58px; left: 24px; background: rgba(20,21,22,0.95); border: 1px solid rgba(255,255,255,0.04); padding: 6px; border-radius: 6px; color: #cbd5e1; font-size: 13px; max-width: 420px; z-index: 50; }
+        .console-suggestions div { padding:4px 8px; cursor:pointer; }
+        .console-suggestions div:hover { background: rgba(255,255,255,0.03); }
+        @keyframes consoleLineIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bootGlow {
+            0% { filter: hue-rotate(0deg); transform: translateY(0) scale(0.98); opacity: 0.35; }
+            50% { filter: hue-rotate(35deg); transform: translateY(-2px) scale(1.02); opacity: 0.55; }
+            100% { filter: hue-rotate(0deg); transform: translateY(0) scale(0.98); opacity: 0.35; }
+        }
+        @keyframes bootScan {
+            0% { transform: translateX(-40%) skewX(-20deg); opacity: 0; }
+            20% { opacity: 1; }
+            60% { opacity: 0.9; }
+            100% { transform: translateX(40%) skewX(-20deg); opacity: 0; }
+        }
+
+        .console-link { color:#7dd3fc; text-decoration:underline; cursor:pointer; }
+        .progress-line { padding: 6px 0; }
+        .progress-line div { line-height: 1.4; }
+        .dock-item:hover { transform: translateY(-4px) scale(1.05); background: var(--accent); color: white; }
+        .dock-indicator {
+            position: absolute;
+            bottom: 4px;
+            width: 6px;
+            height: 6px;
+            background: #7aa2f7;
+            border-radius: 50%;
+            display: none;
+            box-shadow: 0 0 8px #7aa2f7;
+        }
+        /* Background fader used to crossfade between wallpapers */
+        #bg-fader {
+            position: fixed;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: opacity 600ms ease;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        /* Window open animation */
+        @keyframes windowOpen {
+            0% { transform: scale(0.96) translateY(6px); opacity: 0; }
+            60% { transform: scale(1.02) translateY(-4px); opacity: 1; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .window-open { animation: windowOpen 320ms cubic-bezier(.2,.9,.3,1) both; }
+
+        @keyframes windowMinimize {
+            to { transform: scale(0.7) translateY(24px); opacity: 0; }
+        }
+        @keyframes windowRestore {
+            from { transform: scale(0.7) translateY(24px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .glass-window.minimizing { animation: windowMinimize 220ms ease forwards; }
+        .glass-window.restoring { animation: windowRestore 260ms ease forwards; }
+
+        /* Dock bounce on load */
+        @keyframes dockBounce { 0% { transform: translateY(8px); } 50% { transform: translateY(-4px);} 100% { transform: translateY(0);} }
+        .dock-item.initial-bounce { animation: dockBounce 700ms ease; }
+
+        /* Context menu */
+        #context-menu { position: fixed; min-width: 180px; background: #0b0b0c; color: #e5e7eb; border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 6px 0; box-shadow: 0 8px 30px rgba(0,0,0,0.6); z-index: 99999; display: none; }
+        #context-menu.visible { display: block; }
+        #context-menu .item { padding: 8px 12px; cursor: pointer; font-size: 13px; }
+        #context-menu .item:hover { background: rgba(255,255,255,0.03); }
+    </style>
+</head>
+<body class="w-screen h-screen">
+
+    <div id="boot-screen" class="fixed inset-0 bg-[#1a1b26] z-[9999] flex flex-col items-center justify-center transition-opacity duration-800">
+        <div class="relative">
+            <div class="absolute -inset-3 blur-2xl opacity-40 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 animate-[bootGlow_2s_ease-in-out_infinite] pointer-events-none" style="border-radius:9999px;"></div>
+        </div>
+        <div class="w-72 h-2.5 bg-white/10 rounded-full overflow-hidden" aria-label="Boot progress">
+            <div class="h-full bg-white/90" id="boot-bar" style="width:0%"></div>
+        </div>
+        <div class="hidden" id="boot-step">Initializing…</div>
+    </div>
+    <style>@keyframes loading { 0% { width: 0%; } 50% { width: 100%; } 100% { width: 0%; } }</style>
+
+    <div id="windows-layer"></div>
+    <div id="context-menu" aria-hidden="true">
+        <div class="item" data-action="refresh">Refresh</div>
+        <div class="item" data-action="console">Open Console</div>
+        <div class="item" data-action="music">Open Music</div>
+        <div class="item" data-action="browser">Open Browser</div>
+        <div class="item" data-action="theme">Toggle Theme</div>
+        <div class="item" data-action="inspect">Inspect Element</div>
+    </div>
+
+    <div class="dock">
+        <div class="dock-item" id="dock-home" onclick="openWindow('Dihan Home', 'https://dihanramanayaka.github.io/hello/', 'home')" title="Home">
+
+
+
+            <i class="ph-fill ph-house"></i>
+            <div class="dock-indicator"></div>
+        </div>
+        <div class="dock-item" id="dock-blog" onclick="openWindow('Dihan Blog', 'https://randomcatuser.github.io/RandomThoughts-/', 'blog')" title="Blog">
+
+            <i class="ph-fill ph-newspaper"></i>
+            <div class="dock-indicator"></div>
+        </div>
+        <div class="dock-item" id="dock-game" onclick="openGame()" title="Pong">
+            <i class="ph-fill ph-game-controller"></i>
+            <div class="dock-indicator"></div>
+        </div>
+        <div class="dock-item" id="dock-calc" onclick="launchCalculator()" title="Calculator">
+            <i class="ph-fill ph-calculator"></i>
+            <div class="dock-indicator"></div>
+        </div>
+        <div class="dock-item" id="dock-browser" onclick="openBrowser()" title="Browser">
+            <i class="ph-fill ph-globe"></i>
+            <div class="dock-indicator"></div>
+        </div>
+        <div class="dock-item" id="dock-music" onclick="openMusicApp()" title="Music">
+            <i class="ph-fill ph-music-notes"></i>
+            <div class="dock-indicator"></div>
+        </div>
+        <div class="dock-item" id="dock-console" onclick="openConsole()" title="Console">
+
+            <i class="ph-fill ph-terminal"></i>
+            <div class="dock-indicator"></div>
+        </div>
+        <div class="w-px h-10 bg-white/10 mx-1"></div>
+        <div class="dock-item" id="dock-notepad" onclick="openNotepadApp()" title="Notepad">
+            <i class="ph-fill ph-note"></i>
+            <div class="dock-indicator"></div>
+        </div>
+        <div class="dock-item" id="dock-settings" onclick="openSettings()" title="Settings">
+
+            <i class="ph-fill ph-gear"></i>
+            <div class="dock-indicator"></div>
+        </div>
+        <div class="dock-item hover:!bg-red-500" onclick="shutdown()" title="Shutdown">
+            <i class="ph-fill ph-power"></i>
+        </div>
+        <div class="hidden md:flex items-center px-4 text-xs font-mono opacity-60" id="clock">00:00</div>
+    </div>
+
+    <div id="shutdown-screen" class="hidden fixed inset-0 bg-black z-[999] flex flex-col items-center justify-center">
+        <i class="ph ph-circle-notch text-5xl animate-spin text-blue-400 mb-4" aria-hidden="true"></i>
+        <div class="text-sm tracking-widest uppercase opacity-70">Shutting down Yoeshi OS...</div>
+    </div>
+
+
+
+    <script>
+        let zIndexCounter = 10;
+        const wallpapers = [
+            'https://wallpapercave.com/wp/wp15674007.gif?auto=format&fit=crop&q=80&w=100',
+            'https://github.com/DihanRamanayaka/hello/blob/main/docs/assets/portfolio-2.gif?raw=trueauto=format&fit=crop&q=80&w=100',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2Yj5i9M6n58KMmcbziuo3kG2cBw1RnLQH9Qon1-c0YA&s=10&fit=crop&q=80&w=100',
+            'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/61d414169310563.644a50ec85a90.gif?auto=format&fit=crop&q=80&w=100',
+            'https://i.pinimg.com/originals/b8/2f/28/b82f28a7e9c8fcb3868d3d94652c107c.gif?auto=format&fit=crop&q=80&w=1000',
+            'https://giffiles.alphacoders.com/162/162646.gif?auto=format&fit=crop&q=80&w=1000',
+            'https://cdn.lospec.com/gallery/cat-in-cloudy-sky-105969.gif?auto=format&fit=crop&q=80&w=1000',
+            'https://i.pinimg.com/originals/fb/6a/15/fb6a151e275aca9be3cbcacf4c67cc2d.gif?auto=format&fit=crop&q=80&w=1000',
+            'https://i.pinimg.com/originals/5a/c0/4e/5ac04e87c1d5e9a011ab60a2beddb28d.gif?auto=format&fit=crop&q=80&w=1000'
+
+        ];
+
+        // Set default background to the first wallpaper
+        document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('${wallpapers[0]}')`;
+
+        window.onload = () => {
+            const bootBar = document.getElementById('boot-bar');
+            const bootStep = document.getElementById('boot-step');
+            let pct = 0;
+            const steps = [
+                'Initializing…',
+                'Loading modules…',
+                'Starting scheduler…',
+                'Mounting filesystem…',
+                'Finalizing UI…',
+                'Ready.'
+            ];
+
+            const tick = () => {
+                pct += 6 + Math.random() * 3;
+                const clamped = Math.min(100, pct);
+                if (bootBar) bootBar.style.width = clamped + '%';
+                if (bootStep) {
+                    const idx = Math.min(steps.length - 1, Math.floor((clamped / 100) * steps.length));
+                    bootStep.textContent = steps[idx];
+                }
+                if (clamped < 100) {
+                    requestAnimationFrame(() => setTimeout(tick, 70));
+                } else {
+                    setTimeout(() => {
+                        document.getElementById('boot-screen').style.opacity = '0';
+                        setTimeout(() => document.getElementById('boot-screen').remove(), 700);
+                    }, 220);
+                }
+            };
+            tick();
+        };
+
+
+        function updateDock(appType) {
+            const hasWindows = document.querySelector(`.app-${appType}`) !== null;
+            const indicator = document.querySelector(`#dock-${appType} .dock-indicator`);
+            if (indicator) indicator.style.display = hasWindows ? 'block' : 'none';
+        }
+
+        function closeWindow(id, appType) {
+            const el = document.getElementById(id);
+            if(el) {
+                el.remove();
+                updateDock(appType);
+            }
+        }
+
+        function restoreWindow(appType) {
+            const minimized = document.querySelector(`.app-${appType}[data-minimized="true"]`);
+            if (!minimized) return false;
+            minimized.dataset.minimized = 'false';
+            minimized.style.display = '';
+            minimized.classList.remove('minimizing');
+            minimized.classList.add('restoring');
+            minimized.style.animation = 'windowRestore 260ms ease forwards';
+            bringToFront(minimized.id);
+            setTimeout(() => {
+                minimized.classList.remove('restoring');
+                minimized.style.animation = '';
+            }, 300);
+            return true;
+        }
+
+        function minimizeWindow(id, appType) {
+            const el = document.getElementById(id);
+            if (!el || el.dataset.minimized === 'true') return;
+            el.dataset.minimized = 'true';
+            el.classList.add('minimizing');
+            el.style.animation = 'windowMinimize 220ms ease forwards';
+            setTimeout(() => {
+                el.style.display = 'none';
+                el.classList.remove('minimizing');
+                el.style.animation = '';
+            }, 220);
+            updateDock(appType);
+        }
+
+        function openWindow(title, url, appType) {
+            if (restoreWindow(appType)) return;
+            const id = 'win-' + Math.random().toString(36).substr(2, 9);
+            const div = document.createElement('div');
+            div.className = `glass-window app-${appType} window-open`;
+            div.id = id;
+            div.style.left = '100px';
+            div.style.top = '100px';
+            div.style.zIndex = ++zIndexCounter;
+            
+            div.innerHTML = `
+                <div class="window-header" onmousedown="bringToFront('${id}'); startDrag(event, '${id}')">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-400" onclick="closeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500 cursor-pointer hover:bg-yellow-400" onclick="minimizeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="text-xs font-bold opacity-40 uppercase tracking-widest ml-4">${title}</span>
+                </div>
+                <iframe src="${url}" class="w-full flex-grow border-none bg-white/5"></iframe>
+            `;
+            document.getElementById('windows-layer').appendChild(div);
+            updateDock(appType);
+        }
+
+            // --- In-app Browser ---
+            window.browserStates = window.browserStates || {};
+
+            function openBrowser() {
+                if (restoreWindow('browser')) return;
+                const id = 'browser-' + Math.random().toString(36).substr(2, 9);
+                const appType = 'browser';
+                const div = document.createElement('div');
+                div.className = `glass-window app-${appType} window-open`;
+                div.id = id;
+                div.style.left = '150px';
+                div.style.top = '120px';
+                div.style.zIndex = ++zIndexCounter;
+
+                const startUrl = 'https://example.com';
+                div.innerHTML = `
+                    <div class="window-header" onmousedown="bringToFront('${id}'); startDrag(event, '${id}')">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-400" onclick="closeWindow('${id}', '${appType}')"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500 cursor-pointer hover:bg-yellow-400" onclick="minimizeWindow('${id}', '${appType}')"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <span class="text-xs font-bold opacity-40 uppercase tracking-widest ml-4">Browser</span>
+                    </div>
+                    <div class="flex flex-col h-full relative">
+                    <div id="frame-warning-${id}" class="absolute inset-0 flex items-center justify-center bg-black/60 text-white p-4 hidden z-10">
+                        <div class="text-center">
+                            <div class="mb-3">This site prevents embedding in an iframe.</div>
+                            <div class="flex gap-2 justify-center">
+                                <button onclick="document.getElementById('frame-warning-${id}').classList.add('hidden')" class="px-3 py-1 bg-white/10 rounded">Dismiss</button>
+                                <button onclick="openInExternalId('${id}')" class="px-3 py-1 bg-blue-500 rounded text-white">Open in new tab</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-2 flex gap-2 items-center bg-white/5">
+                            <button class="px-2 py-1 bg-white/10 rounded" onclick="browserBack('${id}')">◀</button>
+                            <button class="px-2 py-1 bg-white/10 rounded" onclick="browserForward('${id}')">▶</button>
+                            <button class="px-2 py-1 bg-white/10 rounded" onclick="browserReload('${id}')">⟳</button>
+                            <input id="addr-${id}" type="text" value="${startUrl}" class="flex-grow bg-transparent border border-white/10 rounded px-2 py-1 text-sm text-white/80">
+                            <button class="px-3 py-1 bg-blue-500 text-white rounded" onclick="browserGo('${id}')">Go</button>
+                        </div>
+                        <iframe id="iframe-${id}" src="${startUrl}" class="w-full flex-grow border-none bg-white/5"></iframe>
+                    </div>
+                `;
+
+                document.getElementById('windows-layer').appendChild(div);
+                window.browserStates[id] = { history: [startUrl], index: 0 };
+                updateDock(appType);
+            }
+
+            function browserGo(id) {
+                const input = document.getElementById(`addr-${id}`);
+                if (!input) return;
+                let url = input.value.trim();
+                if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+                const iframe = document.getElementById(`iframe-${id}`);
+                if (!iframe) return;
+                const state = window.browserStates[id] || { history: [], index: -1 };
+                state.history = state.history.slice(0, state.index + 1);
+                state.history.push(url);
+                state.index = state.history.length - 1;
+                window.browserStates[id] = state;
+                // hide any previous warning, set dataset for fallback
+                const overlay = document.getElementById(`frame-warning-${id}`);
+                if (overlay) { overlay.classList.add('hidden'); overlay.dataset.url = url; }
+                iframe.src = url;
+
+                // detection: if iframe load is blocked by X-Frame-Options/CSP, accessing its document will throw.
+                const detectBlocked = () => {
+                    try {
+                        // try same-origin access; will throw for cross-origin if blocked
+                        const doc = iframe.contentDocument || iframe.contentWindow.document;
+                        // If document exists and has content (not about:blank), assume success
+                        if (doc && doc.readyState) {
+                            // loaded okay
+                            return false;
+                        }
+                    } catch (e) {
+                        return true;
+                    }
+                    return false;
+                };
+
+                // run detection shortly after navigation and also on load
+                setTimeout(() => { if (detectBlocked()) { if (overlay) overlay.classList.remove('hidden'); } }, 700);
+                iframe.onload = () => { if (detectBlocked()) { if (overlay) overlay.classList.remove('hidden'); } else { if (overlay) overlay.classList.add('hidden'); } };
+            }
+
+            function openInExternalId(id) {
+                const overlay = document.getElementById(`frame-warning-${id}`);
+                if (!overlay) return;
+                const url = overlay.dataset.url || (window.browserStates[id] && window.browserStates[id].history[window.browserStates[id].index]);
+                if (url) window.open(url, '_blank', 'noopener');
+            }
+
+            function browserBack(id) {
+                const state = window.browserStates[id];
+                if (!state || state.index <= 0) return;
+                state.index--;
+                const url = state.history[state.index];
+                const iframe = document.getElementById(`iframe-${id}`);
+                if (iframe) iframe.src = url;
+                const input = document.getElementById(`addr-${id}`);
+                if (input) input.value = url;
+            }
+
+            function browserForward(id) {
+                const state = window.browserStates[id];
+                if (!state || state.index >= state.history.length - 1) return;
+                state.index++;
+                const url = state.history[state.index];
+                const iframe = document.getElementById(`iframe-${id}`);
+                if (iframe) iframe.src = url;
+                const input = document.getElementById(`addr-${id}`);
+                if (input) input.value = url;
+            }
+
+            function browserReload(id) {
+                const iframe = document.getElementById(`iframe-${id}`);
+                if (iframe) iframe.src = iframe.src;
+            }
+
+            // --- Music App (SoundCloud widget) ---
+            function openMusicApp() {
+
+            if (restoreWindow('music')) return;
+            const id = 'music-' + Math.random().toString(36).substr(2, 9);
+            const appType = 'music';
+
+            const safeCssId = id.replace(/[^a-zA-Z0-9_-]/g, '');
+
+                const div = document.createElement('div');
+                div.className = `glass-window app-${appType} window-open`;
+                div.id = id;
+                div.style.left = '220px';
+                div.style.top = '140px';
+                div.style.zIndex = ++zIndexCounter;
+                div.style.width = '520px';
+                div.style.height = '420px';
+
+                const tracks = [
+                    'https://soundcloud.com/chevyha/circles',
+                    'https://soundcloud.com/chevyha/fallin-twice',
+                    'https://soundcloud.com/notkimmyt/i-love-you-3000-cover',
+                    'https://soundcloud.com/notkimmyt/sets/someone-else',
+                    'https://soundcloud.com/notkimmyt/be-mine',
+                    'https://soundcloud.com/notkimmyt/talk-2-me-feat-reap'
+                ];
+
+                div.innerHTML = `
+                    <div class="window-header" onmousedown="bringToFront('${id}'); startDrag(event, '${id}')">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-400" onclick="closeWindow('${id}', '${appType}')"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500 cursor-pointer hover:bg-yellow-400" onclick="minimizeWindow('${id}', '${appType}')"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <span class="text-xs font-bold opacity-40 uppercase tracking-widest ml-4">Music</span>
+                    </div>
+
+                    <div class="p-4 flex flex-col h-full gap-3">
+                        <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent">
+                            <div class="absolute -top-20 -left-20 w-44 h-44 rounded-full bg-blue-500/25 blur-2xl"></div>
+                            <div class="absolute -bottom-24 -right-24 w-56 h-56 rounded-full bg-cyan-400/20 blur-2xl"></div>
+
+                            <div class="relative flex items-center gap-3 p-3">
+                                <div class="w-14 h-14 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center">
+                                    <i class="ph-fill ph-music-notes text-2xl text-blue-200"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-xs opacity-70 font-mono">Now playing</div>
+                                    <div id="music-title-${id}" class="text-sm font-bold truncate">-</div>
+                                    <div id="music-subtitle-${id}" class="text-xs opacity-60 truncate">SoundCloud</div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button id="music-prev-${id}" class="px-3 py-1 bg-white/10 hover:bg-white/20 rounded-full transition">⟨</button>
+                                    <button id="music-play-${id}" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full font-semibold shadow-sm shadow-cyan-400/20">Play</button>
+                                    <button id="music-next-${id}" class="px-3 py-1 bg-white/10 hover:bg-white/20 rounded-full transition">⟩</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="flex-1">
+                                    <div class="w-full h-3 bg-white/10 rounded overflow-hidden">
+                                        <div id="music-progress-${id}" style="width:0%" class="h-full bg-gradient-to-r from-blue-500 to-cyan-400"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <input id="music-volume-${id}" type="range" min="0" max="100" value="80" class="w-44">
+                                <div class="text-xs opacity-70 font-mono whitespace-nowrap">Vol</div>
+                                <div class="flex-1"></div>
+                                <button class="px-2 py-1 bg-white/10 hover:bg-white/20 rounded text-xs" id="music-mute-${id}">Mute</button>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <input id="music-search-${id}" type="text" placeholder="Search SoundCloud or paste URL" class="flex-grow bg-transparent border border-white/10 rounded-xl px-3 py-2 text-sm text-white/80">
+                            <button class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-400 text-white rounded-xl font-semibold" onclick="musicSearch('${id}')">Search</button>
+                        </div>
+
+                        <div id="music-results-${id}" class="overflow-auto bg-black/20 rounded-xl p-2" style="max-height:120px"></div>
+
+                        <div class="flex-1 rounded-xl overflow-hidden border border-white/10 bg-black/10">
+                            <iframe id="music-iframe-${id}" width="100%" height="100%" scrolling="no" frameborder="no" src=""></iframe>
+                        </div>
+                    </div>
+                `;
+
+
+                document.getElementById('windows-layer').appendChild(div);
+
+                const iframe = document.getElementById(`music-iframe-${id}`);
+                let index = 0;
+                const loadTrackUrl = (url, autoplay = false) => {
+                    const src = 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(url) + '&auto_play=' + (autoplay ? 'true' : 'false') + '&hide_related=true&show_comments=false&visual=true';
+                    iframe.src = src;
+                    document.getElementById(`music-title-${id}`).innerText = (url.split('/').slice(-1)[0] || url);
+                };
+
+                // load initial track
+                loadTrackUrl(tracks[index], false);
+
+                // search implementation: uses AllOrigins proxy to fetch SoundCloud search page HTML and parse track links
+                window.musicSearch = async function(mid) {
+                    const q = document.getElementById(`music-search-${mid}`).value.trim();
+                    const resultsEl = document.getElementById(`music-results-${mid}`);
+                    resultsEl.innerHTML = 'Searching...';
+                    if (!q) { resultsEl.innerHTML = 'Enter keywords or paste a SoundCloud URL.'; return; }
+                    // if looks like a URL, load directly
+                    if (/^https?:\/\//i.test(q) || /^\//.test(q)) {
+                    const url = /^https?:\/\//i.test(q) ? q : 'https://soundcloud.com' + q;
+                    loadTrackUrl(url, true);
+                    // do not display the raw loaded URL feedback
+                    resultsEl.innerHTML = '';
+                    return;
+                    }
+
+                    try {
+                        const searchUrl = 'https://soundcloud.com/search/sounds?q=' + encodeURIComponent(q);
+                        const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(searchUrl);
+                        const res = await fetch(proxy);
+                        if (!res.ok) throw new Error('Search failed');
+                        const text = await res.text();
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(text, 'text/html');
+                        // find anchors that look like track permalinks
+                        const anchors = Array.from(doc.querySelectorAll('a')).filter(a => {
+                            const h = a.getAttribute('href') || '';
+                            return /^\/[a-zA-Z0-9\-_.]+\/[a-zA-Z0-9\-_.]+$/.test(h) && !h.includes('/sets/');
+                        });
+                        const seen = new Set();
+                        const tracksFound = anchors.map(a => ({ href: a.getAttribute('href'), title: (a.textContent || '').trim() })).filter(t => {
+                            if (!t.href) return false; if (seen.has(t.href)) return false; seen.add(t.href); return true;
+                        }).slice(0, 10);
+                        if (tracksFound.length === 0) { resultsEl.innerHTML = `<div class="p-2">No results; <a href='${searchUrl}' target='_blank' rel='noopener'>open on SoundCloud</a></div>`; return; }
+                        resultsEl.innerHTML = tracksFound.map(t => `<div class="p-2 border-b border-white/10 cursor-pointer hover:bg-white/5" data-href="${t.href}">${t.title || t.href}</div>`).join('');
+                        // attach click handlers
+                        Array.from(resultsEl.children).forEach(ch => ch.addEventListener('click', () => {
+                            const href = ch.dataset.href; const url = 'https://soundcloud.com' + href; loadTrackUrl(url, true);
+                        }));
+                    } catch (e) {
+                        resultsEl.innerHTML = `Search failed; <a href="https://soundcloud.com/search/sounds?q=${encodeURIComponent(q)}" target="_blank" rel="noopener">open on SoundCloud</a>`;
+                    }
+                };
+
+                // bind widget events after a short delay to ensure script loaded
+                setTimeout(() => {
+                    const w = SC.Widget(iframe);
+                    w.bind(SC.Widget.Events.READY, () => {
+                        const volEl = document.getElementById(`music-volume-${id}`);
+                        w.setVolume(parseInt(volEl.value, 10));
+                        volEl.addEventListener('input', (e) => { w.setVolume(parseInt(e.target.value, 10)); });
+                        const muteBtn = document.getElementById(`music-mute-${id}`);
+                        let muted = false;
+                        if (muteBtn) {
+                            muteBtn.addEventListener('click', () => {
+                                muted = !muted;
+                                w.setVolume(muted ? 0 : parseInt(volEl.value, 10));
+                                muteBtn.innerText = muted ? 'Unmute' : 'Mute';
+                            });
+                        }
+                        const playBtn = document.getElementById(`music-play-${id}`);
+
+                        playBtn.addEventListener('click', () => {
+                            w.isPaused((paused) => {
+                                if (paused) { w.play(); playBtn.innerText = 'Pause'; }
+                                else { w.pause(); playBtn.innerText = 'Play'; }
+                            });
+                        });
+                        document.getElementById(`music-prev-${id}`).addEventListener('click', () => {
+                            index = (index - 1 + tracks.length) % tracks.length; loadTrackUrl(tracks[index], true);
+                        });
+                        document.getElementById(`music-next-${id}`).addEventListener('click', () => {
+                            index = (index + 1) % tracks.length; loadTrackUrl(tracks[index], true);
+                        });
+                        w.bind(SC.Widget.Events.PLAY_PROGRESS, (e) => {
+                            const pct = (e.relative_position || 0) * 100;
+                            document.getElementById(`music-progress-${id}`).style.width = pct + '%';
+                        });
+                        w.bind(SC.Widget.Events.FINISH, () => { index = (index + 1) % tracks.length; loadTrackUrl(tracks[index], true); });
+                    });
+                }, 300);
+
+                updateDock(appType);
+            }
+
+        function launchCalculator() {
+            if (restoreWindow('calc')) return;
+            const id = 'calc-' + Math.random().toString(36).substr(2, 9);
+            const appType = 'calc';
+            const div = document.createElement('div');
+            div.className = `glass-window app-${appType} window-open`;
+            div.id = id;
+            div.style.left = '200px';
+            div.style.top = '200px';
+            div.style.zIndex = ++zIndexCounter;
+            div.style.width = '300px';
+            div.style.height = '400px';
+
+            div.innerHTML = `
+                <div class="window-header" onmousedown="bringToFront('${id}'); startDrag(event, '${id}')">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-400" onclick="closeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500 cursor-pointer hover:bg-yellow-400" onclick="minimizeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="text-xs font-bold opacity-40 uppercase tracking-widest ml-4">Calculator</span>
+                </div>
+                <div class="p-4 flex flex-col gap-2 h-full">
+                    <div id="calc-display-${id}" class="w-full bg-black/30 p-4 rounded text-right text-xl font-mono mb-2 h-16 flex items-center justify-end">0</div>
+                    <div class="grid grid-cols-4 gap-2 flex-grow">
+                        ${['7','8','9','/','4','5','6','*','1','2','3','-','C','0','=','+'].map(btn => `
+                            <button onclick="handleCalcBtn('${id}', '${btn}')" class="bg-white/10 hover:bg-white/20 rounded p-2 transition text-lg">${btn}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.getElementById('windows-layer').appendChild(div);
+            updateDock(appType);
+        }
+
+        // --- Console App ---
+        function openConsole() {
+
+            if (restoreWindow('console')) return;
+            const id = 'console-' + Math.random().toString(36).substr(2, 9);
+            const appType = 'console';
+            const div = document.createElement('div');
+            div.className = `glass-window app-${appType} window-open`;
+            div.id = id;
+            div.style.left = '260px';
+            div.style.top = '180px';
+            div.style.zIndex = ++zIndexCounter;
+            div.style.width = '640px';
+            div.style.height = '420px';
+
+            div.innerHTML = `
+                <div class="window-header" onmousedown="bringToFront('${id}'); startDrag(event, '${id}')">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-400" onclick="closeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500 cursor-pointer hover:bg-yellow-400" onclick="minimizeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="text-xs font-bold opacity-40 uppercase tracking-widest ml-4">Console</span>
+                </div>
+                <div class="p-4 flex flex-col h-full relative">
+                    <div id="console-output-${id}" class="console-output" role="log" aria-live="polite"></div>
+                    <div class="mt-3 console-input-wrap">
+                        <div class="console-prompt">user@yoeshi ~ %</div>
+                        <input id="console-input-${id}" class="console-input" placeholder="Type a command (help)" autocomplete="off">
+                        <button class="px-3 py-1 bg-blue-500 text-white rounded" onclick="runConsoleCommand('${id}')">Run</button>
+                    </div>
+                    <div id="console-suggest-${id}" class="console-suggestions hidden" aria-hidden="true"></div>
+                </div>
+            `;
+
+            document.getElementById('windows-layer').appendChild(div);
+
+            const input = document.getElementById(`console-input-${id}`);
+            const output = document.getElementById(`console-output-${id}`);
+            const suggest = document.getElementById(`console-suggest-${id}`);
+            const commands = ['help','clear','echo','open','wallpaper','play','calc','time','sysinfo','music','search','history','copy','theme','inspect','fastfetch'];
+            let history = [];
+            let histIdx = -1;
+
+            function linkify(text) {
+                return text.replace(/(https?:\/\/[^\s]+)/g, (m)=>`<span class="console-link" onclick="window.open('${m}','_blank','noopener')">${m}</span>`);
+            }
+
+            function addOutput(text, cls, html=false) {
+                const el = document.createElement('div'); el.className = 'console-line' + (cls?(' '+cls):'');
+                if (html) { el.innerHTML = text; } else { el.innerHTML = linkify(String(text)); }
+                output.appendChild(el); output.scrollTop = output.scrollHeight;
+            }
+            function addProgress(text, pct) {
+                const wrapper = document.createElement('div'); wrapper.className = 'console-line progress-line';
+                const label = document.createElement('div'); label.textContent = text; label.style.fontSize = '12px'; label.style.color = '#94a3b8'; label.style.marginBottom = '4px';
+                const bar = document.createElement('div'); bar.style.height = '6px'; bar.style.width = pct + '%'; bar.style.background = '#38bdf8'; bar.style.borderRadius = '999px'; bar.style.transition = 'width 160ms ease';
+                wrapper.appendChild(label);
+                wrapper.appendChild(bar);
+                output.appendChild(wrapper);
+                output.scrollTop = output.scrollHeight;
+                return { wrapper, bar };
+            }
+
+            function runFastfetch() {
+                addOutput('Running fastfetch...');
+                const progress = addProgress('Loading system snapshot', 0);
+                const infoLines = [
+                    '    ____  _    _  __  __ ______ _____  _    _ _______ _____ ',
+                    '   |  _ \\| |  | |/ _|/ _|  ____|  __ \\| |  | |__   __/ ____|',
+                    '   | |_) | |  | | |_| |_| |__  | |__) | |  | |  | | | (___  ',
+                    '   |  _ <| |  | |  _|  _|  __| |  _  /| |  | |  | |  \\___ \\ ',
+                    '   | |_) | |__| | | | | | |____| | \\ \\| |__| |  | |  ____) |',
+                    '   |____/ \\____/|_| |_| |______|_|  \\_\\\\____/   |_| |_____/ ',
+                    ''
+                ];
+                const systemInfo = [
+                    `User Agent: ${navigator.userAgent}`,
+                    `Platform: ${navigator.platform}`,
+                    `Hardware threads: ${navigator.hardwareConcurrency || 'unknown'}`,
+                    `Memory approx: ${navigator.deviceMemory || 'unknown'} GB`,
+                    `Language: ${navigator.language}`,
+                    `Current URL: ${window.location.href}`,
+                    `Browser: ${navigator.appName}`
+                ];
+                let pct = 0;
+                const interval = setInterval(() => {
+                    pct += 20;
+                    progress.bar.style.width = pct + '%';
+                    if (pct >= 100) {
+                        clearInterval(interval);
+                        addOutput('fastfetch complete. Displaying system info:', 'info');
+                        infoLines.forEach(line => addOutput(line));
+                        systemInfo.forEach(line => addOutput(line));
+                        addOutput('Tip: try `theme dark` or `theme light` to change appearance.');
+                    }
+                }, 140);
+            }
+
+            function showSuggestions(prefix) {
+                if (!prefix) { suggest.classList.add('hidden'); return; }
+                const matches = commands.filter(c => c.startsWith(prefix)).slice(0,6);
+                if (matches.length === 0) { suggest.classList.add('hidden'); return; }
+                suggest.innerHTML = matches.map(m => `<div>${m}</div>`).join('');
+                Array.from(suggest.children).forEach(ch => ch.addEventListener('click', () => { input.value = ch.textContent + ' '; input.focus(); suggest.classList.add('hidden'); }));
+                suggest.classList.remove('hidden');
+            }
+
+            input.addEventListener('keydown', (e) => {
+                const isMod = e.metaKey || e.ctrlKey;
+                if (e.key === 'Enter') { runConsoleCommand(id); e.preventDefault(); }
+                else if (e.key === 'ArrowUp') { if (history.length && histIdx < history.length-1) { histIdx++; input.value = history[history.length-1-histIdx]; } e.preventDefault(); }
+                else if (e.key === 'ArrowDown') { if (histIdx > 0) { histIdx--; input.value = history[history.length-1-histIdx]; } else { histIdx = -1; input.value = ''; } e.preventDefault(); }
+                else if (e.key === 'Tab') { e.preventDefault(); const val = input.value.trim(); const m = commands.find(c=>c.startsWith(val)); if (m) input.value = m + ' '; }
+                else if (isMod && e.key.toLowerCase() === 'k') { // Cmd/Ctrl+K clear
+                    output.innerHTML = ''; e.preventDefault();
+                }
+            });
+
+            input.addEventListener('input', () => { showSuggestions(input.value.trim()); });
+
+            // focus input on open and support Cmd/Ctrl+L to focus
+            input.focus();
+            document.addEventListener('keydown', (e)=>{ if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='l') { input.focus(); e.preventDefault(); } });
+
+            // initial greeting
+            addOutput('Welcome to Yoeshi Console — type "help" for commands. (Cmd/Ctrl+K clears)', 'info');
+
+            window.runConsoleCommand = function(cid) {
+                const inp = document.getElementById(`console-input-${cid}`);
+                if (!inp) return;
+                const val = inp.value.trim();
+                if (!val) return;
+                history.push(val); histIdx = -1;
+                addOutput('> ' + val, 'cmd');
+                inp.value = '';
+                suggest.classList.add('hidden');
+                // parse
+                const [cmd, ...rest] = val.split(' ');
+                const args = rest.join(' ').trim();
+                switch(cmd.toLowerCase()) {
+                    case 'help': addOutput('Commands: ' + commands.join(', ')); break;
+                    case 'clear': output.innerHTML = ''; break;
+                    case 'history': if (history.length===0) addOutput('No history'); else history.slice(-20).forEach((h,i)=>addOutput((i+1)+'. '+h)); break;
+                    case 'copy': if (args) { navigator.clipboard.writeText(args).then(()=>addOutput('Copied to clipboard')).catch(()=>addOutput('Copy failed')); } else addOutput('Usage: copy <text>'); break;
+                    case 'echo': addOutput(args); break;
+                    case 'open': if (args) { window.open(args.startsWith('http')?args:'https://'+args, '_blank'); addOutput('Opened ' + args); } else addOutput('Usage: open <url>'); break;
+                    case 'wallpaper': if (args) { setWallpaper(args); addOutput('Wallpaper set.'); } else addOutput('Usage: wallpaper <image-url>'); break;
+                    case 'time': addOutput(new Date().toString()); break;
+                    case 'sysinfo': addOutput('Browser: ' + navigator.userAgent); addOutput('Platform: ' + navigator.platform); break;
+                    case 'calc': try { const res = Function('return ('+args+')')(); addOutput(String(res)); } catch(e) { addOutput('Calc error: '+e.message); } break;
+                    case 'play': if (args) { addOutput('Attempting to play: ' + args); openMusicApp(); setTimeout(()=>{
+                        const apps = document.querySelectorAll('.app-music'); const last = apps[apps.length-1]; if (last) { const mid = last.id; const searchInput = document.getElementById(`music-search-${mid}`); if (searchInput) { searchInput.value = args; try { musicSearch(mid); addOutput('Playing in Music app'); } catch(e){ addOutput('Play error: '+e.message); } } }
+                    }, 500);} else addOutput('Usage: play <soundcloud-url>'); break;
+                    case 'music': addOutput('Open the Music app with "play <url>" or use the Music dock icon.'); break;
+                    case 'search': if (args) { addOutput('Searching SoundCloud for: ' + args); openMusicApp(); setTimeout(()=>{ const apps = document.querySelectorAll('.app-music'); const last = apps[apps.length-1]; if (last) { const mid = last.id; const searchInput = document.getElementById(`music-search-${mid}`); if (searchInput) { searchInput.value = args; musicSearch(mid); addOutput('Search sent to Music app'); } } }, 600); } else addOutput('Usage: search <keywords>'); break;
+                    case 'fastfetch': runFastfetch(); break;
+                    case 'theme': if (args==='dark') { document.documentElement.style.setProperty('--glass-opacity','0.9'); addOutput('Theme: dark'); } else if (args==='light') { document.documentElement.style.setProperty('--glass-opacity','0.4'); addOutput('Theme: light'); } else addOutput('Usage: theme <dark|light>'); break;
+                    case 'inspect': try { addOutput(JSON.stringify(window[args])); } catch(e) { addOutput('Inspect error'); } break;
+                    default: addOutput('Unknown command: ' + cmd + ' (type help)');
+                }
+            };
+        }
+
+        window.handleCalcBtn = (winId, val) => {
+            const displayEl = document.getElementById(`calc-display-${winId}`);
+            let current = displayEl.innerText === '0' || displayEl.innerText === 'Error' ? '' : displayEl.innerText;
+            if (val === 'C') displayEl.innerText = '0';
+            else if (val === '=') {
+                try { displayEl.innerText = eval(current); } 
+                catch { displayEl.innerText = 'Error'; }
+            } else { displayEl.innerText = current + val; }
+        };
+
+        function openSettings() {
+            const id = 'settings-win';
+            const appType = 'settings';
+            if (document.getElementById(id)) {
+                restoreWindow(appType);
+                return;
+            }
+            const div = document.createElement('div');
+
+            div.className = `glass-window app-${appType} window-open`;
+            div.id = id;
+            div.style.left = '300px';
+            div.style.top = '150px';
+            div.style.zIndex = ++zIndexCounter;
+            div.style.width = '450px';
+            div.style.height = '520px';
+            
+            div.innerHTML = `
+                <div class="window-header" onmousedown="bringToFront('${id}'); startDrag(event, '${id}')">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-400" onclick="closeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500 cursor-pointer hover:bg-yellow-400" onclick="minimizeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="text-xs font-bold opacity-40 uppercase tracking-widest">Settings</span>
+                </div>
+                <div class="flex flex-col h-full">
+                    <div class="flex gap-2 p-3 border-b border-white/10">
+                        <button onclick="switchSettingsTab('${id}', 'display', event)" class="settings-tab-btn active px-4 py-2 rounded text-sm hover:bg-white/10" data-tab="display">Display</button>
+                        <button onclick="switchSettingsTab('${id}', 'about', event)" class="settings-tab-btn px-4 py-2 rounded text-sm hover:bg-white/10" data-tab="about">About</button>
+                    </div>
+                    <div class="flex-1 overflow-auto p-6">
+                        <div id="settings-tab-display" class="settings-tab-content">
+                            <h3 class="font-bold mb-4">Desktop Wallpaper</h3>
+                            <div class="grid grid-cols-3 gap-2 mb-8">
+                                ${wallpapers.map(url => `<div onclick="setWallpaper('${url}')" class="h-16 rounded cursor-pointer bg-cover border border-white/10 hover:border-accent" style="background-image:url('${url}')"></div>`).join('')}
+                            </div>
+                            <h3 class="font-bold mb-4">System Opacity</h3>
+                            <input type="range" min="0.3" max="0.9" step="0.1" value="0.7" onchange="updateOpacity(this.value)" class="w-full">
+
+                            <h3 class="font-bold mt-8 mb-2">Touch Window Move</h3>
+                            <p class="text-sm opacity-70 mb-3">Move windows by touching the header (best on mobile).</p>
+                            <label class="flex items-center gap-3 text-sm opacity-90">
+                                <input id="touch-move-toggle" type="checkbox" checked onchange="setTouchMoveEnabled(this.checked)" />
+                                Enable touch drag
+                            </label>
+
+                            <h3 class="font-bold mt-8 mb-2">Extra Controls</h3>
+                            <div class="space-y-2 text-sm opacity-90">
+                                <label class="flex items-center gap-3">
+                                    <input id="touch-smooth-toggle" type="checkbox" checked onchange="setTouchSmoothEnabled(this.checked)" />
+                                    Smooth touch dragging
+                                </label>
+                                <label class="flex items-center gap-3">
+                                    <input id="touch-edge-snap-toggle" type="checkbox" checked onchange="setTouchEdgeSnapEnabled(this.checked)" />
+                                    Edge snap
+                                </label>
+                            </div>
+
+
+                        </div>
+                        <div id="settings-tab-about" class="settings-tab-content hidden">
+                            <div class="space-y-4">
+                                <div>
+                                    <h3 class="font-bold text-lg mb-2">Yoeshi OS</h3>
+                                    <p class="text-sm opacity-80">By Dihan</p>
+                                </div>
+                                <div class="border-t border-white/10 pt-4">
+                                    <p class="text-sm opacity-70 leading-relaxed mb-4">
+                                        Yoeshi OS is a web-based project that serves as a fantastic addition to my portfolio and imitates the user interface of an operating system.
+                                    </p>
+                                </div>
+                                <div class="border-t border-white/10 pt-4 space-y-3">
+                                    <div>
+                                        <p class="text-xs opacity-60 uppercase tracking-widest">Version</p>
+                                        <p class="text-sm font-mono">Lowe :3 . 1</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs opacity-60 uppercase tracking-widest">Build</p>
+                                        <p class="text-sm font-mono">Yoeshi-2026-SE</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs opacity-60 uppercase tracking-widest">Kernel</p>
+                                        <p class="text-sm font-mono">Yoeshi Kernel v3.2</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs opacity-60 uppercase tracking-widest">License</p>
+                                        <p class="text-sm font-mono">Apache 2.0 - All Rights Reserved</p>
+                                    </div>
+                                </div>
+                                <div class="border-t border-white/10 pt-4">
+                                    <p class="text-xs opacity-60">Yoeshi OS © 2026. Designed for the discerning digital experience.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('windows-layer').appendChild(div);
+            updateDock(appType);
+
+            const scrollArea = div.querySelector('.flex-1.overflow-auto');
+            if (scrollArea) {
+                scrollArea.addEventListener('scroll', () => updateSettingsScrollTheme(scrollArea), { passive: true });
+                updateSettingsScrollTheme(scrollArea);
+            }
+        }
+
+        function switchSettingsTab(windowId, tabName, event) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('#' + windowId + ' .settings-tab-content');
+            tabs.forEach(tab => tab.classList.add('hidden'));
+            
+            // Remove active state from all buttons
+            const buttons = document.querySelectorAll('#' + windowId + ' .settings-tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active', 'bg-white/20'));
+            
+            // Show selected tab
+            const selectedTab = document.getElementById('settings-tab-' + tabName);
+            if (selectedTab) {
+                selectedTab.classList.remove('hidden');
+                const scrollArea = document.querySelector('#' + windowId + ' .flex-1.overflow-auto');
+                if (scrollArea) updateSettingsScrollTheme(scrollArea);
+            }
+            
+            // Add active state to clicked button
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active', 'bg-white/20');
+            } else if (event && event.target) {
+                event.target.classList.add('active', 'bg-white/20');
+            }
+        }
+
+        function updateSettingsScrollTheme(el) {
+            if (!el) return;
+            const maxScroll = Math.max(el.scrollHeight - el.clientHeight, 1);
+            const ratio = Math.min(1, Math.max(0, el.scrollTop / maxScroll));
+            const hue = 210 + ratio * 80;
+            const alpha = 0.55 + ratio * 0.25;
+            document.documentElement.style.setProperty('--accent', `hsl(${hue}, 86%, 68%)`);
+            document.documentElement.style.setProperty('--scrollbar-thumb', `hsla(${hue}, 86%, 70%, ${alpha})`);
+        }
+
+        function setWallpaper(url) {
+            const body = document.body;
+            // create or reuse the fader element
+            let fader = document.getElementById('bg-fader');
+            if (!fader) {
+                fader = document.createElement('div');
+                fader.id = 'bg-fader';
+                document.body.appendChild(fader);
+            }
+            // set the new wallpaper on the fader and fade it in
+            fader.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('${url}')`;
+            // force reflow
+            void fader.offsetWidth;
+            fader.style.opacity = '1';
+
+            // after fade-in, swap the body's background and fade the fader out
+            setTimeout(() => {
+                body.style.backgroundImage = fader.style.backgroundImage;
+                fader.style.opacity = '0';
+                // remove the fader after fade-out completes
+                setTimeout(() => { if (fader && fader.parentNode) fader.parentNode.removeChild(fader); }, 650);
+            }, 620);
+        }
+        function updateOpacity(val) { document.documentElement.style.setProperty('--glass-opacity', val); }
+        function bringToFront(id) { document.getElementById(id).style.zIndex = ++zIndexCounter; }
+
+        // Settings: enable/disable touch window dragging.
+        function setTouchMoveEnabled(enabled) {
+            window.__yoeshiTouchMoveEnabled = !!enabled;
+        }
+
+        function touchMoveEnabled() {
+            if (typeof window.__yoeshiTouchMoveEnabled === 'undefined') return true;
+            return !!window.__yoeshiTouchMoveEnabled;
+        }
+
+        function setTouchSmoothEnabled(enabled) {
+            window.__yoeshiTouchSmoothEnabled = !!enabled;
+        }
+
+        function touchSmoothEnabled() {
+            if (typeof window.__yoeshiTouchSmoothEnabled === 'undefined') return true;
+            return !!window.__yoeshiTouchSmoothEnabled;
+        }
+
+        function setTouchEdgeSnapEnabled(enabled) {
+            window.__yoeshiTouchEdgeSnapEnabled = !!enabled;
+        }
+
+        function touchEdgeSnapEnabled() {
+            if (typeof window.__yoeshiTouchEdgeSnapEnabled === 'undefined') return true;
+            return !!window.__yoeshiTouchEdgeSnapEnabled;
+        }
+        
+
+        
+        function shutdown() { 
+            document.getElementById('shutdown-screen').classList.remove('hidden');
+            setTimeout(() => {
+                window.location.href = 'https://dihanramanayaka.github.io/hello/';
+            }, 2000);
+        }
+
+        // --- Notepad App ---
+        function openNotepadApp() {
+            if (restoreWindow('notepad')) return;
+            const id = 'notepad-' + Math.random().toString(36).substr(2, 9);
+            const appType = 'notepad';
+
+            const div = document.createElement('div');
+            div.className = `glass-window app-${appType} window-open`;
+            div.id = id;
+            div.style.left = '180px';
+            div.style.top = '160px';
+            div.style.zIndex = ++zIndexCounter;
+            div.style.width = '720px';
+            div.style.height = '520px';
+
+            const storageKey = 'yoeshi_notepad_' + id;
+
+            div.innerHTML = `
+                <div class="window-header" onmousedown="bringToFront('${id}'); startDrag(event, '${id}')">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-400" onclick="closeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500 cursor-pointer hover:bg-yellow-400" onclick="minimizeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="ph-fill ph-note text-base opacity-70"></i>
+                        <span class="text-xs font-bold opacity-40 uppercase tracking-widest ml-2">Notepad</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="px-3 py-1 bg-white/10 hover:bg-white/20 rounded text-xs" onclick="notepadSave('${id}')">Save</button>
+                        <button class="px-3 py-1 bg-white/10 hover:bg-white/20 rounded text-xs" onclick="notepadLoad('${id}')">Load</button>
+                    </div>
+                </div>
+
+                <div class="p-4 h-full flex flex-col gap-3">
+                    <textarea id="notepad-ta-${id}" class="flex-1 w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm text-white/90 outline-none resize-none" placeholder="Write something..."></textarea>
+                    <div class="text-xs opacity-60 font-mono flex items-center justify-between">
+                        <span>Local save</span>
+                        <span>⌘/Ctrl+S</span>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('windows-layer').appendChild(div);
+            updateDock(appType);
+
+            // expose helpers for this instance
+            window.notepadSave = (nid) => {
+                const ta = document.getElementById(`notepad-ta-${nid}`);
+                if (!ta) return;
+                localStorage.setItem(storageKey, ta.value);
+            };
+            window.notepadLoad = (nid) => {
+                const ta = document.getElementById(`notepad-ta-${nid}`);
+                if (!ta) return;
+                const v = localStorage.getItem(storageKey);
+                if (v !== null) ta.value = v;
+            };
+
+            const ta = document.getElementById(`notepad-ta-${id}`);
+            if (ta) {
+                const v = localStorage.getItem(storageKey);
+                if (v !== null) ta.value = v;
+                ta.focus();
+                ta.addEventListener('keydown', (e) => {
+                    const isSave = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's';
+                    if (isSave) {
+                        e.preventDefault();
+                        window.notepadSave(id);
+                    }
+                });
+            }
+        }
+
+        function openGame() {
+
+            if (restoreWindow('game')) return;
+            const id = 'game-' + Math.random().toString(36).substr(2, 9);
+            const appType = 'game';
+            const div = document.createElement('div');
+            div.className = `glass-window app-${appType} window-open`;
+            div.id = id;
+            div.style.left = '240px';
+            div.style.top = '160px';
+            div.style.zIndex = ++zIndexCounter;
+            div.style.width = '780px';
+            div.style.height = '520px';
+
+            div.innerHTML = `
+                <div class="window-header" onmousedown="bringToFront('${id}'); startDrag(event, '${id}')">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-400" onclick="closeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500 cursor-pointer hover:bg-yellow-400" onclick="minimizeWindow('${id}', '${appType}')"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="text-xs font-bold opacity-40 uppercase tracking-widest ml-4">Pong</span>
+                </div>
+                <iframe src="https://dihanramanayaka.github.io/hello/docs/pong.html" class="w-full flex-grow border-none bg-white/5"></iframe>
+            `;
+
+            document.getElementById('windows-layer').appendChild(div);
+            updateDock(appType);
+        }
+
+        function startDrag(e, id) {
+            const elmnt = document.getElementById(id);
+            if (!elmnt) return;
+
+            // On touch devices, allow/deny touch dragging from Settings.
+            if (e && (e.touches || e.pointerType === 'touch')) {
+                if (!touchMoveEnabled()) return;
+            }
+
+
+            // Use pointer coordinates so it works for both mouse and touch.
+            const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+            const clientY = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY;
+            let pos3 = clientX, pos4 = clientY;
+            let pos1 = 0, pos2 = 0;
+
+            bringToFront(id);
+
+            // Prevent iframe/tap gestures from firing while dragging.
+            try { e.preventDefault(); } catch {}
+
+            document.onpointermove = (ev) => {
+                // ignore multi-touch while dragging
+                if (ev && ev.pointerType === 'touch' && ev.isPrimary === false) return;
+
+                // Optional smoothing (simple exponential moving average)
+                let x = ev.clientX;
+                let y = ev.clientY;
+                if (ev && ev.pointerType === 'touch' && touchSmoothEnabled()) {
+                    if (typeof window.__yoeshiTouchSmoothX === 'number') {
+                        x = window.__yoeshiTouchSmoothX * 0.75 + ev.clientX * 0.25;
+                        y = window.__yoeshiTouchSmoothY * 0.75 + ev.clientY * 0.25;
+                    }
+                    window.__yoeshiTouchSmoothX = x;
+                    window.__yoeshiTouchSmoothY = y;
+                }
+
+                pos1 = pos3 - x;
+                pos2 = pos4 - y;
+                pos3 = x;
+                pos4 = y;
+
+                let nextTop = elmnt.offsetTop - pos2;
+                let nextLeft = elmnt.offsetLeft - pos1;
+
+                // Optional edge snap (snap to nearest 10px)
+                if (ev && ev.pointerType === 'touch' && touchEdgeSnapEnabled()) {
+                    const snap = 10;
+                    nextTop = Math.round(nextTop / snap) * snap;
+                    nextLeft = Math.round(nextLeft / snap) * snap;
+                }
+
+                elmnt.style.top = nextTop + "px";
+                elmnt.style.left = nextLeft + "px";
+            };
+            document.onpointerup = () => {
+                document.onpointerup = null;
+                document.onpointermove = null;
+            };
+        }
+
+
+        function startResize(e, el) {
+            // Keep resizing available even when touch dragging is disabled.
+            e.preventDefault();
+            e.stopPropagation();
+
+            const startWidth = el.offsetWidth;
+            const startHeight = el.offsetHeight;
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const minW = parseInt(getComputedStyle(el).minWidth, 10) || 250;
+            const minH = parseInt(getComputedStyle(el).minHeight, 10) || 200;
+
+            function onMove(evt) {
+                const dx = evt.clientX - startX;
+                const dy = evt.clientY - startY;
+                el.style.width = Math.max(minW, startWidth + dx) + 'px';
+                el.style.height = Math.max(minH, startHeight + dy) + 'px';
+            }
+
+            function onUp() {
+                document.removeEventListener('pointermove', onMove);
+                document.removeEventListener('pointerup', onUp);
+            }
+
+            document.addEventListener('pointermove', onMove);
+            document.addEventListener('pointerup', onUp);
+        }
+
+        function enableWindowResizing(win) {
+            if (!win || win.dataset.resizeEnabled === 'true') return;
+            const handle = document.createElement('div');
+            handle.className = 'window-resize-handle';
+            handle.addEventListener('pointerdown', (e) => startResize(e, win));
+            win.appendChild(handle);
+            win.dataset.resizeEnabled = 'true';
+        }
+
+        function observeWindowsForResize() {
+            const layer = document.getElementById('windows-layer');
+            if (!layer) return;
+            new MutationObserver((records) => {
+                records.forEach((record) => {
+                    record.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1 && node.classList.contains('glass-window')) {
+                            enableWindowResizing(node);
+                        }
+                    });
+                });
+            }).observe(layer, { childList: true });
+            document.querySelectorAll('.glass-window').forEach(enableWindowResizing);
+        }
+
+        observeWindowsForResize();
+
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        }, 1000);
+
+        // Context menu behavior
+        (function(){
+            const menu = document.getElementById('context-menu');
+            document.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                const x = Math.min(e.clientX, window.innerWidth - 220);
+                const y = Math.min(e.clientY, window.innerHeight - 200);
+                menu.style.left = x + 'px'; menu.style.top = y + 'px';
+                menu.classList.add('visible'); menu.setAttribute('aria-hidden','false');
+                // store last target for inspect
+                menu.dataset.targetTag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
+            });
+            document.addEventListener('click', (e)=>{ if (!e.target.closest('#context-menu')) { menu.classList.remove('visible'); menu.setAttribute('aria-hidden','true'); } });
+            document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') { menu.classList.remove('visible'); menu.setAttribute('aria-hidden','true'); } });
+            menu.addEventListener('click', (e)=>{
+                const action = e.target.closest('.item') && e.target.closest('.item').dataset.action;
+                if (!action) return;
+                menu.classList.remove('visible'); menu.setAttribute('aria-hidden','true');
+                switch(action) {
+                    case 'refresh': location.reload(); break;
+                    case 'console': openConsole(); break;
+                    case 'music': openMusicApp(); break;
+                    case 'browser': openBrowser(); break;
+                    case 'theme': {
+                        const cur = getComputedStyle(document.documentElement).getPropertyValue('--glass-opacity') || '0.7';
+
+                        const next = parseFloat(cur) > 0.6 ? '0.45' : '0.9'; document.documentElement.style.setProperty('--glass-opacity', next); break;
+                    }
+                    case 'inspect': {
+                        const t = menu.dataset.targetTag || 'document'; alert('Inspected element: ' + t); break;
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

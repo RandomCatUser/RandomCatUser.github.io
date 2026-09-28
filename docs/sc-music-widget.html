@@ -1,0 +1,785 @@
+<!-- ========================================== -->
+<!-- SOUNDCLOUD DYNAMIC ISLAND WIDGET BLOCK     -->
+<!-- Copy and paste this complete block into your portfolio -->
+<!-- ========================================== -->
+
+<!-- FontAwesome Icons for the controls -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  :root {
+    /* Theme Design Tokens */
+    --sc-bg: #000000;
+    --sc-border: rgba(255, 255, 255, 0.12);
+    --sc-accent-glow: rgba(0, 255, 204, 0.15);
+    --sc-accent: #00ffcc;
+    --sc-accent-grad: linear-gradient(90deg, #00ffcc, #ff5500);
+    --sc-muted: #9ca3af;
+    
+    /* Dynamic Island Dimension Specs */
+    --sc-w-collapsed: 120px;
+    --sc-h-collapsed: 40px;
+    
+    --sc-w-compact: 185px;
+    --sc-h-compact: 40px;
+    
+    --sc-w-expanded: 370px;
+    --sc-h-expanded: 175px;
+  }
+
+  /* Floating Widget Base Container */
+  .sc-dynamic-island {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background-color: var(--sc-bg);
+    border: 1px solid var(--sc-border);
+    color: #ffffff;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    z-index: 99999;
+    cursor: pointer;
+    user-select: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    
+    /* True iOS Spring Physics-based shape transitions */
+    transition: 
+      width 480ms cubic-bezier(0.175, 0.885, 0.32, 1.12),
+      height 480ms cubic-bezier(0.175, 0.885, 0.32, 1.12),
+      border-radius 450ms cubic-bezier(0.175, 0.885, 0.32, 1.1),
+      box-shadow 400ms ease;
+  }
+
+  /* State 1: Collapsed & Static (No music playing) */
+  .sc-dynamic-island.collapsed {
+    width: var(--sc-w-collapsed);
+    height: var(--sc-h-collapsed);
+    border-radius: 22px;
+  }
+
+  /* State 2: Compact & Playing (Widget closed but track active) */
+  .sc-dynamic-island.compact {
+    width: var(--sc-w-compact);
+    height: var(--sc-h-compact);
+    border-radius: 22px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px var(--sc-accent-glow);
+  }
+
+  /* State 3: Fully Expanded (Hovered / Opened) */
+  .sc-dynamic-island.expanded {
+    width: var(--sc-w-expanded);
+    height: var(--sc-h-expanded);
+    border-radius: 28px;
+    cursor: default;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 30px var(--sc-accent-glow);
+  }
+
+  /* Inner Layout Frame */
+  .sc-view-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  /* --- Compact View UI Layout --- */
+  .sc-compact-layout {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    opacity: 1;
+    pointer-events: none;
+    transition: opacity 250ms ease, transform 250ms ease;
+  }
+
+  .sc-dynamic-island.expanded .sc-compact-layout {
+    opacity: 0;
+    transform: scale(0.9);
+    pointer-events: none;
+  }
+
+  /* Compact Circular Artwork Thumb */
+  .sc-compact-art {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #111, #222);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--sc-accent);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s ease;
+  }
+
+  .sc-compact-art.spinning {
+    animation: sc-vinyl-spin 10s linear infinite;
+  }
+
+  /* Tiny Compact Active Equalizer Rods */
+  .sc-compact-eq {
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+    height: 14px;
+  }
+
+  .sc-compact-eq span {
+    width: 2px;
+    background-color: var(--sc-accent);
+    height: 3px;
+    border-radius: 1px;
+    transition: height 0.15s ease;
+  }
+
+  .sc-compact-eq.active span {
+    animation: sc-eq-bounce 1s infinite ease-in-out;
+  }
+
+  .sc-compact-eq.active span:nth-child(1) { animation-delay: 0.1s; }
+  .sc-compact-eq.active span:nth-child(2) { animation-delay: 0.3s; }
+  .sc-compact-eq.active span:nth-child(3) { animation-delay: 0.2s; }
+
+  /* --- Expanded View UI Layout --- */
+  .sc-expanded-layout {
+    position: absolute;
+    inset: 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    transform: scale(0.92);
+    pointer-events: none;
+    transition: opacity 300ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .sc-dynamic-island.expanded .sc-expanded-layout {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  /* Metadata Track Header Row */
+  .sc-meta-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .sc-expanded-art {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #111, #222);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--sc-accent);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .sc-track-details {
+    flex-grow: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .sc-title-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .sc-track-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 175px;
+  }
+
+  .sc-track-artist {
+    font-size: 11px;
+    color: var(--sc-muted);
+    margin: 2px 0 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Fluid Wave Equalizer Canvas */
+  .sc-wave-canvas {
+    width: 60px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+
+  /* Audio Track Progress / Seek Scrubber Group */
+  .sc-timeline-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 8px 0;
+  }
+
+  .sc-timeline-bar-bg {
+    width: 100%;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .sc-timeline-bar-bg:hover {
+    height: 6px;
+    border-radius: 3px;
+  }
+
+  .sc-timeline-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--sc-accent-grad);
+    border-radius: inherit;
+    pointer-events: none;
+    position: relative;
+  }
+
+  .sc-timeline-handle {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    transition: opacity 150ms ease;
+  }
+
+  .sc-timeline-bar-bg:hover .sc-timeline-handle {
+    opacity: 1;
+  }
+
+  .sc-time-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: monospace;
+    font-size: 9px;
+    color: #6b7280;
+  }
+
+  /* Foot Controls Row */
+  .sc-controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sc-branding {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 8px;
+    font-family: monospace;
+    color: #4b5563;
+    letter-spacing: 0.5px;
+  }
+
+  .sc-branding i {
+    color: #ff5500;
+    font-size: 11px;
+  }
+
+  .sc-playback-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .sc-btn {
+    background: none;
+    border: none;
+    color: var(--sc-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 150ms ease, transform 100ms ease;
+    padding: 4px;
+  }
+
+  .sc-btn:hover {
+    color: #ffffff;
+  }
+
+  .sc-btn:active {
+    transform: scale(0.9);
+  }
+
+  .sc-btn-play {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 12px;
+  }
+
+  .sc-btn-play:hover {
+    background-color: #e5e7eb;
+    color: #000000;
+    transform: scale(1.05);
+  }
+
+  .sc-btn-play:active {
+    transform: scale(0.95);
+  }
+
+  /* Island Screen Sticky Lock Pin Button */
+  .sc-btn-lock {
+    font-size: 10px;
+    color: #4b5563;
+  }
+
+  .sc-btn-lock.locked {
+    color: var(--sc-accent);
+  }
+
+  /* Completely Hidden Embedded Iframes (Invisible pipeline to keep widget light) */
+  .sc-iframe-pipeline {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* Core Keyframe Animations */
+  @keyframes sc-vinyl-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes sc-eq-bounce {
+    0%, 100% { height: 3px; }
+    50% { height: 12px; }
+  }
+</style>
+
+<!-- SoundCloud Embedded Playback Pipelines (Invisible inside DOM) -->
+<div class="sc-iframe-pipeline">
+  <!-- Chevy - Morning Coffee (w/ Nalba) -->
+  <iframe id="sc-track-pipeline-1" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/906720733&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"></iframe>
+  
+  <!-- Chevy - Circles -->
+  <iframe id="sc-track-pipeline-2" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/chevyha/circles&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"></iframe>
+
+  <!-- Pastel Skies and Paper Planes -->
+  <iframe id="sc-track-pipeline-3" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1644433230&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"></iframe>
+
+  <!-- I Love You 3000 Cover -->
+  <iframe id="sc-track-pipeline-4" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1736326116&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"></iframe>
+
+  <!-- I Love You 3000 Cover Variant -->
+  <iframe id="sc-track-pipeline-5" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1736326116&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"></iframe>
+</div>
+
+<!-- FLOATING DYNAMIC ISLAND ELEMENT -->
+<div id="sc-dynamic-island" class="sc-dynamic-island collapsed">
+  <div class="sc-view-wrapper">
+    
+    <!-- 1 & 2. Compact Layout View (Visible in Small states) -->
+    <div class="sc-compact-layout">
+      <div id="sc-compact-art" class="sc-compact-art">♪</div>
+      <div id="sc-compact-eq" class="sc-compact-eq">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- 3. Expanded Layout View (Visible in Large hover states) -->
+    <div class="sc-expanded-layout">
+      
+      <!-- Metadata Row & Visualizer Canvas -->
+      <div class="sc-meta-header">
+        <div id="sc-expanded-art" class="sc-expanded-art">♪</div>
+        <div class="sc-track-details">
+          <div class="sc-title-group">
+            <h4 id="sc-expanded-title" class="sc-track-title">Loading track...</h4>
+            <canvas id="sc-wave-canvas" class="sc-wave-canvas" width="120" height="36"></canvas>
+          </div>
+          <p id="sc-expanded-artist" class="sc-track-artist">Connecting API...</p>
+        </div>
+      </div>
+
+      <!-- Scrubber Timeline -->
+      <div class="sc-timeline-group">
+        <div id="sc-timeline-bar" class="sc-timeline-bar-bg">
+          <div id="sc-timeline-fill" class="sc-timeline-fill"></div>
+          <div id="sc-timeline-handle" class="sc-timeline-handle"></div>
+        </div>
+        <div class="sc-time-labels">
+          <span id="sc-time-curr">0:00</span>
+          <span id="sc-time-rem">-0:00</span>
+        </div>
+      </div>
+
+      <!-- Control Center Elements -->
+      <div class="sc-controls-row">
+        <div class="sc-branding">
+          <i class="fa-brands fa-soundcloud"></i>
+          <span>PORTFOLIO</span>
+        </div>
+        
+        <div class="sc-playback-group">
+          <button id="sc-btn-prev" class="sc-btn" title="Previous Track"><i class="fa-solid fa-backward-step"></i></button>
+          <button id="sc-btn-play" class="sc-btn sc-btn-play" title="Play/Pause"><i id="sc-play-icon" class="fa-solid fa-play" style="margin-left: 2px;"></i></button>
+          <button id="sc-btn-next" class="sc-btn" title="Next Track"><i class="fa-solid fa-forward-step"></i></button>
+        </div>
+
+        <button id="sc-btn-lock" class="sc-btn sc-btn-lock" title="Keep Panel Expanded"><i class="fa-solid fa-thumbtack"></i></button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- SoundCloud Official Widget Integration API wrapper script -->
+<script src="https://w.soundcloud.com/player/api.js"></script>
+
+<script>
+  (function() {
+    const playerIds = [
+      'sc-track-pipeline-1', 
+      'sc-track-pipeline-2', 
+      'sc-track-pipeline-3', 
+      'sc-track-pipeline-4', 
+      'sc-track-pipeline-5'
+    ];
+    let scPlayers = [];
+    let currentIdx = 0;
+    let playingState = false;
+    let islandExpanded = false;
+    let stickyLock = false;
+    let metaPayload = null;
+
+    // Grab Core Layout Nodes
+    const island = document.getElementById('sc-dynamic-island');
+    const compactArt = document.getElementById('sc-compact-art');
+    const compactEq = document.getElementById('sc-compact-eq');
+    const expArt = document.getElementById('sc-expanded-art');
+    const expTitle = document.getElementById('sc-expanded-title');
+    const expArtist = document.getElementById('sc-expanded-artist');
+    const waveCanvas = document.getElementById('sc-wave-canvas');
+    const canvasCtx = waveCanvas.getContext('2d');
+
+    const timelineBar = document.getElementById('sc-timeline-bar');
+    const timelineFill = document.getElementById('sc-timeline-fill');
+    const timelineHandle = document.getElementById('sc-timeline-handle');
+    const labelCurr = document.getElementById('sc-time-curr');
+    const labelRem = document.getElementById('sc-time-rem');
+
+    const btnPrev = document.getElementById('sc-btn-prev');
+    const btnPlay = document.getElementById('sc-btn-play');
+    const btnPlayIcon = document.getElementById('sc-play-icon');
+    const btnNext = document.getElementById('sc-btn-next');
+    const btnLock = document.getElementById('sc-btn-lock');
+
+    // Initialize Player API
+    function bootSoundCloudWidgets() {
+      if (typeof SC === 'undefined' || !SC.Widget) {
+        setTimeout(bootSoundCloudWidgets, 100);
+        return;
+      }
+
+      // Map widget controls over HTML frames
+      scPlayers = playerIds.map(id => SC.Widget(document.getElementById(id)));
+
+      // Listeners setup
+      scPlayers.forEach((player, idx) => {
+        player.bind(SC.Widget.Events.READY, () => {
+          if (idx === currentIdx) {
+            pullTrackMeta(idx);
+          }
+        });
+
+        player.bind(SC.Widget.Events.PLAY, () => {
+          if (idx === currentIdx) {
+            syncPlaybackUI(true);
+          }
+        });
+
+        player.bind(SC.Widget.Events.PAUSE, () => {
+          if (idx === currentIdx) {
+            syncPlaybackUI(false);
+          }
+        });
+
+        player.bind(SC.Widget.Events.FINISH, () => {
+          if (idx === currentIdx) {
+            transitionToTrack(currentIdx + 1);
+          }
+        });
+
+        player.bind(SC.Widget.Events.PLAY_PROGRESS, (data) => {
+          if (idx === currentIdx) {
+            syncScrubberTimeline(data.currentPosition, data.relativePosition);
+          }
+        });
+      });
+
+      registerInteractionEvents();
+    }
+
+    // Interaction Handlers
+    function registerInteractionEvents() {
+      // Hover Actions (Desktop)
+      island.addEventListener('mouseenter', () => {
+        expandIslandState();
+      });
+
+      island.addEventListener('mouseleave', () => {
+        if (!stickyLock) {
+          collapseIslandState();
+        }
+      });
+
+      // Panel Sticky/Lock Feature
+      btnLock.addEventListener('click', (e) => {
+        e.stopPropagation();
+        stickyLock = !stickyLock;
+        btnLock.classList.toggle('locked', stickyLock);
+        if (!stickyLock) {
+          collapseIslandState();
+        }
+      });
+
+      // Media Player Controls binding
+      btnPlay.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleAudioPlayback();
+      });
+
+      btnPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        transitionToTrack(currentIdx - 1);
+      });
+
+      btnNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        transitionToTrack(currentIdx + 1);
+      });
+
+      // Manual seek timeline positioning
+      timelineBar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!metaPayload) return;
+
+        const bounds = timelineBar.getBoundingClientRect();
+        const touchX = e.clientX - bounds.left;
+        const progressPercent = Math.max(0, Math.min(1, touchX / bounds.width));
+
+        scPlayers[currentIdx].getDuration((totalDuration) => {
+          if (totalDuration) {
+            scPlayers[currentIdx].seekTo(totalDuration * progressPercent);
+          }
+        });
+      });
+
+      // Touch Interface Tap-to-Expand Switch (Mobile Devices)
+      island.addEventListener('click', (e) => {
+        const isInteractiveNode = e.target.closest('button') || e.target.closest('#sc-timeline-bar');
+        if (!isInteractiveNode) {
+          if (islandExpanded) {
+            stickyLock = false;
+            btnLock.classList.remove('locked');
+            collapseIslandState();
+          } else {
+            stickyLock = true;
+            btnLock.classList.add('locked');
+            expandIslandState();
+          }
+        }
+      });
+    }
+
+    // Action updates state inside the DOM elements
+    function syncPlaybackUI(isPlaying) {
+      playingState = isPlaying;
+
+      if (isPlaying) {
+        btnPlayIcon.className = "fa-solid fa-pause";
+        compactArt.classList.add('spinning');
+        compactEq.classList.add('active');
+        
+        if (!islandExpanded) {
+          island.className = "sc-dynamic-island compact";
+        }
+      } else {
+        btnPlayIcon.className = "fa-solid fa-play";
+        btnPlayIcon.style.marginLeft = "2px";
+        compactArt.classList.remove('spinning');
+        compactEq.classList.remove('active');
+
+        if (!islandExpanded) {
+          island.className = "sc-dynamic-island collapsed";
+        }
+      }
+    }
+
+    function toggleAudioPlayback() {
+      if (!scPlayers[currentIdx]) return;
+      scPlayers[currentIdx].isPaused((isPaused) => {
+        if (isPaused) {
+          scPlayers[currentIdx].play();
+        } else {
+          scPlayers[currentIdx].pause();
+        }
+      });
+    }
+
+    function transitionToTrack(targetIdx) {
+      if (targetIdx < 0) targetIdx = scPlayers.length - 1;
+      if (targetIdx >= scPlayers.length) targetIdx = 0;
+
+      // Pause currently running sound wave pipeline
+      scPlayers[currentIdx].pause();
+      currentIdx = targetIdx;
+
+      pullTrackMeta(currentIdx, () => {
+        scPlayers[currentIdx].play();
+      });
+    }
+
+    function pullTrackMeta(idx, callback) {
+      const activePlayer = scPlayers[idx];
+      if (!activePlayer) return;
+
+      activePlayer.getCurrentSound((sound) => {
+        if (sound) {
+          metaPayload = sound;
+
+          expTitle.textContent = sound.title || 'Unknown Title';
+          expArtist.textContent = (sound.user && sound.user.username) ? sound.user.username : 'Unknown Artist';
+
+          const thumbUrl = sound.artwork_url || (sound.user && sound.user.avatar_url) || null;
+          if (thumbUrl) {
+            const highResArtworkUrl = thumbUrl.replace('-large', '-t500x500');
+            compactArt.style.backgroundImage = `url('${highResArtworkUrl}')`;
+            compactArt.textContent = '';
+            expArt.style.backgroundImage = `url('${highResArtworkUrl}')`;
+            expArt.textContent = '';
+          } else {
+            compactArt.style.backgroundImage = '';
+            compactArt.textContent = '♪';
+            expArt.style.backgroundImage = '';
+            expArt.textContent = '♪';
+          }
+        }
+
+        if (callback) callback();
+      });
+    }
+
+    // Micro helper functions to format sound timings
+    function processMsToLabel(ms) {
+      if (isNaN(ms) || ms < 0) return "0:00";
+      const totalSecs = Math.floor(ms / 1000);
+      const minutes = Math.floor(totalSecs / 60);
+      const seconds = totalSecs % 60;
+      return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    function syncScrubberTimeline(currPosition, relPosition) {
+      const percentValue = (relPosition * 100).toFixed(2);
+      timelineFill.style.width = `${percentValue}%`;
+      timelineHandle.style.left = `${percentValue}%`;
+
+      labelCurr.textContent = processMsToLabel(currPosition);
+
+      scPlayers[currentIdx].getDuration((trackDur) => {
+        if (trackDur) {
+          const remMs = trackDur - currPosition;
+          labelRem.textContent = `-${processMsToLabel(remMs)}`;
+        }
+      });
+    }
+
+    // Dynamic Island State animations switcher
+    function expandIslandState() {
+      islandExpanded = true;
+      island.className = "sc-dynamic-island expanded";
+    }
+
+    function collapseIslandState() {
+      islandExpanded = false;
+      if (playingState) {
+        island.className = "sc-dynamic-island compact";
+      } else {
+        island.className = "sc-dynamic-island collapsed";
+      }
+    }
+
+    // Active Waveform visualizer generator
+    function drawRealTimeAudioWaves() {
+      if (!canvasCtx) return;
+      canvasCtx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
+
+      const columnBars = 14;
+      const barWidth = 4;
+      const barGap = 3;
+      const horizontalOffset = (waveCanvas.width - (columnBars * (barWidth + barGap))) / 2;
+
+      canvasCtx.fillStyle = '#00ffcc'; // Sync layout visualizer fill
+
+      for (let i = 0; i < columnBars; i++) {
+        let blockHeight = 4;
+        if (playingState) {
+          const runRate = Date.now() * 0.006;
+          blockHeight = Math.abs(Math.sin(runRate + i * 0.4) * Math.cos(runRate * 0.3 + i * 0.15)) * (waveCanvas.height - 6) + 4;
+        } else {
+          blockHeight = 4 + Math.sin(Date.now() * 0.0015 + i * 0.8) * 1.5;
+        }
+
+        const positionX = horizontalOffset + i * (barWidth + barGap);
+        const positionY = (waveCanvas.height - blockHeight) / 2;
+
+        canvasCtx.beginPath();
+        canvasCtx.roundRect(positionX, positionY, barWidth, blockHeight, 1.5);
+        canvasCtx.fill();
+      }
+
+      requestAnimationFrame(drawRealTimeAudioWaves);
+    }
+
+    window.onload = function() {
+      bootSoundCloudWidgets();
+      drawRealTimeAudioWaves();
+    };
+
+  })();
+</script>
