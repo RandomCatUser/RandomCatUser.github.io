@@ -14,27 +14,10 @@
             document.documentElement.classList.toggle('dark', t === 'dark');
         })();
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Nunito', 'sans-serif'],
-                        hand: ['Caveat', 'cursive'],
-                        type: ['Newsreader', 'serif'],
-                    },
-                    colors: {
-                        'maple-red': '#A4243B',
-                        'paper-cream': '#FBF8F1',
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../css/tailwind-site.css" />
+
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 md:p-8 bg-stone-100 dark:bg-neutral-950 theme-transition text-stone-800 dark:text-stone-200 relative overflow-x-hidden">
 

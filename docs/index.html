@@ -15,11 +15,6 @@
         <meta name="theme-color" content="#0a0e14" media="(prefers-color-scheme: dark)" />
         <link rel="canonical" href="https://randomcatuser.github.io/" />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-        <link
-            rel="shortcut icon"
-            href="./assets/logo.webp"
-            type="image/x-icon"
-        />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
         <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
         <link rel="preload" as="image" href="https://raw.githubusercontent.com/RandomCatUser/RandomCatUser/main/workflows/MyProfile.webp" fetchpriority="high" />
@@ -79,10 +74,6 @@
         <link rel="stylesheet" href="./css/tailwind-build.css" />
         <link rel="stylesheet" href="css/index.css" />
 
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        />
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
@@ -1632,7 +1623,7 @@
                 </a>
                 <a href="https://randomcatuser.github.io/RandomThoughts-/posts/yoeshi.html" class="tw-flex tw-h-[400px] tw-w-[350px] tw-flex-col tw-gap-2 tw-overflow-clip tw-rounded-lg tw-bg-[#edecec79] tw-p-4 tw-shadow-xl max-lg:tw-w-[300px]">
                     <div class="tw-h-[200px] tw-w-full tw-overflow-hidden tw-rounded-md">
-                        <img src="https://github.com/RandomCatUser/RandomThoughts-/blob/main/docs/posts/assets/yoeshi.png?raw=true&auto=format&fit=crop" loading="lazy" decoding="async" alt="Reimagining the Web as an Operating System" class="tw-h-full tw-w-full tw-object-cover" />
+                        <img src="https://raw.githubusercontent.com/RandomCatUser/RandomThoughts-/main/docs/posts/assets/yoeshi.png" loading="lazy" decoding="async" alt="Reimagining the Web as an Operating System" class="tw-h-full tw-w-full tw-object-cover" />
                     </div>
                     <h3 class="tw-text-2xl tw-font-semibold max-md:tw-text-xl">Reimagining the Web as an Operating System</h3>
                     <p class="tw-mt-2 tw-text-gray-600">Creating a better web experience little by little</p>
@@ -1668,7 +1659,6 @@
 
         <!-- LOCAL MUSIC DYNAMIC ISLAND WIDGET BLOCK -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
 
         <style>
           :root {
@@ -2043,7 +2033,7 @@
 
               const title = track?.title || getFilenameWithoutExtension(trackPath) || 'Unknown Track';
               const artist = track?.artist || 'Local Artist';
-              const artwork = track?.artwork || './assets/music/art1.jpg';
+              const artwork = track?.artwork || './assets/images/favicon.png';
 
               expTitle.textContent = title;
               expArtist.textContent = artist;
@@ -2199,11 +2189,12 @@
                 canvasCtx.roundRect(positionX, positionY, barWidth, blockHeight, 1.5);
                 canvasCtx.fill();
               }
-              requestAnimationFrame(drawRealTimeAudioWaves);
+              if (playingState) requestAnimationFrame(drawRealTimeAudioWaves);
             }
 
             window.addEventListener('load', () => {
               initPlayerEvents();
+              audioPlayer.addEventListener('play', () => { requestAnimationFrame(drawRealTimeAudioWaves); });
               drawRealTimeAudioWaves();
               btnRepeat.classList.add('active');
             });
