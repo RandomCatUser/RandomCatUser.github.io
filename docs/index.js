@@ -1,5 +1,3 @@
-// initialization
-
 const RESPONSIVE_WIDTH = 1024
 
 let headerWhiteBg = false
@@ -66,72 +64,76 @@ function responsive() {
 window.addEventListener("resize", responsive)
 
 
-/**
- * Animations
- */
+if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger)
 
-gsap.registerPlugin(ScrollTrigger)
-
-gsap.to(".reveal-hero-text", {
-    opacity: 0,
-    y: "100%",
-})
-
-gsap.to(".reveal-hero-img", {
-    opacity: 0,
-    y: "100%",
-})
-
-
-gsap.to(".reveal-up", {
-    opacity: 0,
-    y: "100%",
-})
-
-
-window.addEventListener("load", () => {
-    // animate from initial position
-    gsap.to(".reveal-hero-text", {
-        opacity: 1,
-        y: "0%",
-        duration: 0.8,
-        // ease: "power3.out",
-        stagger: 0.5, // Delay between each word's reveal,
-        // delay: 3
+    gsap.set(".reveal-hero-text", {
+        opacity: 0,
+        y: "100%",
     })
 
-    gsap.to(".reveal-hero-img", {
-        opacity: 1,
-        y: "0%",
+    gsap.set(".reveal-hero-img", {
+        opacity: 0,
+        y: "100%",
     })
 
-    
-})
-
-
-// ------------- reveal section animations ---------------
-
-const sections = gsap.utils.toArray("section")
-
-sections.forEach((sec) => {
-
-    const revealUptimeline = gsap.timeline({paused: true, 
-                                            scrollTrigger: {
-                                                            trigger: sec,
-                                                            start: "10% 80%", // top of trigger hits the top of viewport
-                                                            end: "20% 90%",
-                                                            // markers: true,
-                                                            // scrub: 1,
-                                                        }})
-
-    revealUptimeline.to(sec.querySelectorAll(".reveal-up"), {
-        opacity: 1,
-        duration: 0.8,
-        y: "0%",
-        stagger: 0.2,
+    gsap.set(".reveal-up", {
+        opacity: 0,
+        y: "100%",
     })
 
 
-})
+    const runHeroReveal = function () {
+        gsap.to(".reveal-hero-text", {
+            opacity: 1,
+            y: "0%",
+            duration: 0.7,
+            stagger: 0.15,
+        })
+
+        gsap.to(".reveal-hero-img", {
+            opacity: 1,
+            y: "0%",
+            duration: 0.7,
+        })
+    }
+
+    if (document.readyState === "loading") {
+        window.addEventListener("DOMContentLoaded", runHeroReveal)
+    } else {
+        runHeroReveal()
+    }
+
+
+    const sections = gsap.utils.toArray("section")
+
+    sections.forEach((sec) => {
+
+        const revealUptimeline = gsap.timeline({paused: true, 
+                                                scrollTrigger: {
+                                                                trigger: sec,
+                                                                start: "top 85%",
+                                                                once: true,
+                                                            }})
+
+        revealUptimeline.to(sec.querySelectorAll(".reveal-up"), {
+            opacity: 1,
+            duration: 0.7,
+            y: "0%",
+            stagger: 0.12,
+            clearProps: "transform",
+        })
+
+
+    })
+    window.addEventListener("load", function () {
+        ScrollTrigger.refresh()
+    })
+} else {
+    document.querySelectorAll(".reveal-hero-text, .reveal-hero-img, .reveal-up").forEach((el) => {
+        el.style.opacity = "1"
+        el.style.transform = "none"
+    })
+}
 
 
