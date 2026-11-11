@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credits & Legal - My Universe</title>
+    <link rel="icon" type="image/png" href="../assets/images/earth.png" sizes="320x320"/>
+    <link rel="stylesheet" href="../../css/tailwind-site.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Early theme script to prevent FOUC -->
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem('theme');
+            if (savedTheme !== 'dark' && savedTheme !== 'light') {
+                savedTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+        })();
+    </script>
+</head>
+<body class="text-gray-900 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="nav-wrapper home-wrapper">
+        <a href="https://randomcatuser.github.io/" title="Back to Universe" class="filter">
+            <svg viewBox="0 0 576 512" height="1em">
+                <path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 1 22 8L564.8 231.5c8 7 12 15 11 24z"/>
+            </svg>
+        </a>
+    </div>
+
+    <div class="nav-wrapper settings-wrapper">
+        <button title="Settings" class="filter" id="settings-btn" type="button">
+            <svg viewBox="0 0 512 512" height="1em"><path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"></path></svg>
+        </button>
+
+        <div class="settings-dropdown" id="settings-dropdown">
+            <div class="dropdown-row">
+                <span class="settings-label">Dark Mode</span>
+                <label class="switch">
+                    <input id="theme-toggle" type="checkbox" />
+                    <div class="slider round">
+                        <div class="sun-moon">
+                            <svg id="moon-dot-1" class="moon-dot" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                            <svg id="moon-dot-2" class="moon-dot" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                            <svg id="moon-dot-3" class="moon-dot" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                            <svg id="light-ray-1" class="light-ray" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                            <svg id="light-ray-2" class="light-ray" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                            <svg id="light-ray-3" class="light-ray" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                            <svg id="cloud-1" class="cloud-dark" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                            <svg id="cloud-2" class="cloud-dark" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                            <svg id="cloud-3" class="cloud-dark" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                            <svg id="cloud-4" class="cloud-light" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                            <svg id="cloud-5" class="cloud-light" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                            <svg id="cloud-6" class="cloud-light" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+                        </div>
+                        <div class="stars">
+                            <svg id="star-1" class="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+                            <svg id="star-2" class="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+                            <svg id="star-3" class="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+                            <svg id="star-4" class="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-6xl w-full relative z-10 mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8 sm:mb-16" data-aos="fade-down" data-aos-duration="800">
+            <div class="inline-block mb-4">
+                <span class="bg-orange-100 text-orange-600 text-xs font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-orange-200">Quick Run</span>
+            </div>
+            <h1 class="text-3xl sm:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 tracking-tight" style="font-family: 'Space Grotesk', sans-serif;">
+                Credits & Legal
+            </h1>
+            <p class="text-sm sm:text-base text-gray-600 max-w-xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2">
+                Building this universe wouldn't have been possible without the amazing open-source tools and assets. Navigate through the document to learn more.
+            </p>
+        </header>
+
+        <div class="docs-container">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar" data-aos="fade-right" data-aos-duration="800">
+                <div class="sidebar-category">Legal</div>
+                <a href="#apache-license" class="sidebar-link active">Apache 2.0 License</a>
+                <a href="#terms-of-service" class="sidebar-link">Terms of Service</a>
+                <a href="#disclaimer" class="sidebar-link">Disclaimer & Liability</a>
+                <a href="#privacy" class="sidebar-link">Data & Privacy</a>
+
+                <div class="sidebar-category">Development</div>
+                <a href="#tools-used" class="sidebar-link">Tools & Technologies</a>
+                <a href="#how-to-clone" class="sidebar-link">How to Clone</a>
+
+                <div class="sidebar-category">Community & Assets</div>
+                <a href="#assets-ui" class="sidebar-link">Assets & UI Attributions</a>
+                <a href="#music-credits" class="sidebar-link">Music Credits & Copyrights</a>
+                <a href="#guestbook-data" class="sidebar-link">Guestbook & Public Data</a>
+                <a href="#special-thanks" class="sidebar-link">Special Thanks</a>
+
+                <div class="sidebar-category">Support</div>
+                <a href="#help-support" class="sidebar-link">Help & Support</a>
+                <a href="#contact" class="sidebar-link">Contact & Inquiries</a>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="docs-content" data-aos="fade-up" data-aos-duration="800">
+
+                <!-- Mobile Dropdown -->
+                <select class="mobile-nav-select" id="mobile-nav">
+                    <option value="#apache-license">Apache 2.0 License</option>
+                    <option value="#terms-of-service">Terms of Service</option>
+                    <option value="#disclaimer">Disclaimer & Liability</option>
+                    <option value="#privacy">Data & Privacy</option>
+                    <option value="#tools-used">Tools & Technologies</option>
+                    <option value="#how-to-clone">How to Clone</option>
+                    <option value="#assets-ui">Assets & UI Attributions</option>
+                    <option value="#music-credits">Music Credits & Copyrights</option>
+                    <option value="#guestbook-data">Guestbook & Public Data</option>
+                    <option value="#special-thanks">Special Thanks</option>
+                    <option value="#help-support">Help & Support</option>
+                    <option value="#contact">Contact & Inquiries</option>
+                </select>
+
+                <!-- Section 1: Apache License -->
+                <section id="apache-license" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-orange-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 01-2.031.352 5.989 5.989 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971z" /></svg>
+                        </div>
+                        Apache 2.0 License
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">This project is released under the <strong>Apache License, Version 2.0</strong> (January 2004). It allows users to use the software for any purpose, distribute, modify, and distribute modified versions of the software under the terms of the license.</p>
+                        <h4 class="docs-subheading">Key Permissions:</h4>
+                        <ul class="list-disc pl-5 mb-4 space-y-1">
+                            <li><strong>Commercial Use:</strong> You can use this software in commercial products.</li>
+                            <li><strong>Modification:</strong> You can modify the software to suit your needs.</li>
+                            <li><strong>Patent Grant:</strong> Provides an express grant of patent rights from contributors to users.</li>
+                        </ul>
+                        <h4 class="docs-subheading">Key Conditions:</h4>
+                        <ul class="list-disc pl-5 mb-4 space-y-1">
+                            <li><strong>Include License:</strong> You must include a copy of the license.</li>
+                            <li><strong>Retain Copyright Notices:</strong> You must retain all copyright, patent, and attribution notices.</li>
+                            <li><strong>State Changes:</strong> You must state significant changes made to the software.</li>
+                        </ul>
+                        <p>You can read the full Apache 2.0 License text here: <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer" class="text-orange-600 hover:underline font-medium">Apache License 2.0</a></p>
+                    </div>
+                </section>
+
+                <section id="terms-of-service" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-red-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" /></svg>
+                        </div>
+                        Terms of Service
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">By accessing and using this website, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the site.</p>
+                        <h4 class="docs-subheading">1. Use of the Site:</h4>
+                        <p class="mb-4">This website is a personal portfolio project provided for informational and entertainment purposes. You agree to use it lawfully and not to attempt to disrupt, hack, or overload the servers hosting this site.</p>
+                        <h4 class="docs-subheading">2. Intellectual Property:</h4>
+                        <p class="mb-4">The source code is licensed under Apache 2.0 (see above). However, the profile images, quotes, and personal data of the individuals featured belong to them. You may not reuse their images or likenesses without their explicit permission.</p>
+                        <h4 class="docs-subheading">3. Third-Party Links:</h4>
+                        <p class="mb-4">This site contains links to external websites (e.g., personal portfolios, games). We have no control over the content and nature of these external sites and are not responsible for them.</p>
+                        <h4 class="docs-subheading">4. Changes to Terms:</h4>
+                        <p>We reserve the right to update or modify these terms at any time without prior notice. Continued use of the site after changes constitutes acceptance of the new terms.</p>
+                    </div>
+                </section>
+
+                <section id="disclaimer" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-amber-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+                        </div>
+                        Disclaimer & Liability
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">This website is provided "as is" and "as available" without any warranties of any kind, either express or implied.</p>
+                        <h4 class="docs-subheading">No Warranties:</h4>
+                        <p class="mb-4">The creator of this site does not warrant that the website will be uninterrupted, error-free, or free of harmful components. You use this site entirely at your own risk.</p>
+                        <h4 class="docs-subheading">Limitation of Liability:</h4>
+                        <p class="mb-4">Under no circumstances shall the creator or contributors be held liable for any direct, indirect, incidental, consequential, or special damages arising out of or in any way connected with the use of this website.</p>
+                        <h4 class="docs-subheading">Accuracy of Content:</h4>
+                        <p>The quotes, descriptions, and personal details of the individuals featured on this site are provided for entertainment purposes. While we strive for accuracy, we make no representations regarding the completeness or truthfulness of any profile data.</p>
+                    </div>
+                </section>
+
+                <section id="privacy" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-green-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg>
+                        </div>
+                        Data & Privacy Information
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">This website is designed with privacy in mind. We do not use tracking cookies, third-party analytics, or collect personal data without your explicit consent.</p>
+                        <h4 class="docs-subheading">Local Storage Usage:</h4>
+                        <p class="mb-4">We use your browser's built-in <code>localStorage</code> feature solely to remember your Light/Dark mode theme preference. This data is stored entirely on your device and is never transmitted to any server.</p>
+
+                        <h4 class="docs-subheading">User-Submitted Data (Guestbook & Contact):</h4>
+                        <p class="mb-4">We have recently introduced interactive features that allow you to share data voluntarily. If you choose to use the <strong>Guestbook</strong> or <strong>Contact Form</strong>, the following applies:</p>
+                        <ul class="list-disc pl-5 mb-4 space-y-1">
+                            <li><strong>Guestbook:</strong> Your name/alias and message will be collected and stored in our database to be displayed publicly on the site for other visitors to see.</li>
+                            <li><strong>Contact Form:</strong> Your name, email, and message will be collected and sent directly to the site administrator. This information is kept private and is used solely to respond to your inquiry.</li>
+                        </ul>
+
+                        <h4 class="docs-subheading">Managing Your Data:</h4>
+                        <p>If you wish to have your guestbook entry or contact submission removed, please use the contact form or reach out via GitHub, and I will promptly delete the data from our servers.</p>
+                    </div>
+                </section>
+
+                <!-- Section: Tools & Technologies (JSON-driven) -->
+                <section id="tools-used" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-yellow-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" /></svg>
+                        </div>
+                        Tools & Technologies Used
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">This project was built from scratch using modern, lightweight, and highly efficient tools.</p>
+                        <ul class="list-disc pl-5 mb-4 space-y-2" id="tools-list"><!-- Rendered by JS --></ul>
+                    </div>
+                </section>
+
+                <section id="how-to-clone" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-purple-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>
+                        </div>
+                        How to Clone This Repository
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">Cloning the repository allows you to get a full local copy of the "My Universe" project.</p>
+                        <h4 class="docs-subheading">Steps to Clone:</h4>
+                        <ol class="list-decimal pl-5 mb-4 space-y-3">
+                            <li>
+                                <strong>Install Git:</strong> If you don't have Git installed, download it from <a href="https://git-scm.com/downloads" target="_blank" rel="noopener noreferrer" class="text-orange-600 hover:underline font-medium">git-scm.com/downloads</a>.
+                            </li>
+                            <li>
+                                <strong>Open your Terminal/Command Prompt:</strong> Navigate to the directory where you want to save the project.
+                                <pre><code>cd path/to/your/desired/directory</code></pre>
+                            </li>
+                            <li>
+                                <strong>Clone the Repository:</strong> Use the git clone command followed by the repository URL.
+                                <pre><code>git clone https://github.com/RandomCatUser/RandomCatUser.github.io.git</code></pre>
+                            </li>
+                            <li>
+                                <strong>Navigate into the Project:</strong>
+                                <pre><code>cd RandomCatUser.github.io</code></pre>
+                            </li>
+                            <li>You now have a local copy of the repository! Open <code>index.html</code> in your browser to view it.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <!-- Section: Assets & UI Attributions (JSON-driven) -->
+                <section id="assets-ui" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-blue-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+                        </div>
+                        Assets & UI Attributions
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">This project utilizes several amazing third-party libraries and resources. We extend our gratitude to the creators and maintainers of these valuable tools.</p>
+                        <ul class="list-disc pl-5 mb-4 space-y-3" id="attributions-list"><!-- Rendered by JS --></ul>
+                        <p class="text-xs text-gray-500">All other original content within this repository is &copy; RandomCatUser, and is licensed under the Apache 2.0 License.</p>
+                    </div>
+                </section>
+
+                <!-- Section: Music Credits & Copyrights (JSON-driven) -->
+                <section id="music-credits" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-violet-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" /></svg>
+                        </div>
+                        Music Credits & Copyrights
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">The background music featured on this website is created by talented independent artists who generously share their work for free use. All tracks are used under their respective free-use licenses for non-commercial, personal portfolio purposes. <strong>Click the album artwork next to each track to listen to the original source.</strong></p>
+
+                        <h4 class="docs-subheading">Featured Tracks:</h4>
+                        <div class="space-y-3 mb-4" id="music-tracks-container"><!-- Rendered by JS --></div>
+
+                        <div class="copyright-notice-box">
+                            <p class="text-sm" style="color: #475569;"><strong style="color: #1e293b;">⚠️ Copyright Notice:</strong> The music tracks featured on this website are the intellectual property of their respective creators and artists listed above. They are used here solely for non-commercial, personal portfolio purposes under free-use provisions. No copyright infringement is intended. All music is credited to its original creators, and we claim no ownership over any of the tracks. If you are a rights holder and believe any content is used inappropriately, or if you would like your track removed, please <a href="#contact" class="text-orange-600 hover:underline font-medium">contact me</a> and I will address it promptly.</p>
+                        </div>
+
+                        <p class="text-xs text-gray-500 mt-4">Support these amazing artists by checking out their other works and following them on their respective platforms!</p>
+                    </div>
+                </section>
+
+                <!-- Section: Guestbook & Public Data -->
+                <section id="guestbook-data" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-teal-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" /></svg>
+                        </div>
+                        Guestbook & Public Data Sharing
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">To make this universe more interactive, a <strong>Guestbook</strong> feature has been added! This allows visitors to leave a friendly message, feedback, or just say hi.</p>
+
+                        <h4 class="docs-subheading">What Data is Shared?</h4>
+                        <p class="mb-4">When you submit an entry to the guestbook, the name (or alias) you provide and your message are collected and stored securely in our database. This information is then rendered publicly on the guestbook page for anyone visiting the site to see.</p>
+
+                        <h4 class="docs-subheading">Moderation & Privacy:</h4>
+                        <p class="mb-4">To ensure a safe and welcoming environment, guestbook entries are subject to moderation. We reserve the right to remove any content that is spam, offensive, or violates our Terms of Service. <strong>Please avoid sharing sensitive personal information</strong> (like passwords, addresses, or phone numbers) in the guestbook, as the data is publicly visible.</p>
+
+                        <p class="text-xs text-gray-500">By submitting a guestbook entry, you acknowledge that your provided name and message will be publicly displayed.</p>
+                    </div>
+                </section>
+
+                <!-- Section: Special Thanks (JSON-driven) -->
+                <section id="special-thanks" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-pink-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                        </div>
+                        Special Thanks
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">A massive thank you to everyone who contributed to this project, provided feedback, or let me feature them in my digital universe.</p>
+                        <ul class="list-disc pl-5 mb-4 space-y-2" id="special-thanks-list"><!-- Rendered by JS --></ul>
+                    </div>
+                </section>
+
+                <section id="help-support" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-cyan-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
+                        </div>
+                        Help & Support
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">While this is a personal project, I highly welcome feedback, bug reports, and contributions from the community!</p>
+                        <h4 class="docs-subheading">Reporting Bugs:</h4>
+                        <p class="mb-4">If you encounter any broken links, layout issues, or JavaScript errors, please open an issue on the <a href="https://github.com/RandomCatUser/RandomCatUser.github.io/issues" target="_blank" rel="noopener noreferrer" class="text-orange-600 hover:underline font-medium">GitHub Issues page</a>. Include a screenshot and steps to reproduce the bug.</p>
+                        <h4 class="docs-subheading">Feature Requests:</h4>
+                        <p class="mb-4">Have an idea for a cool new feature (like more animations or profile interactions)? Feel free to open an issue with the "enhancement" tag.</p>
+                        <h4 class="docs-subheading">Contributing:</h4>
+                        <p>Want to contribute code? Fork the repository, make your changes on a new branch, and submit a Pull Request. All contributions are reviewed and appreciated!</p>
+                    </div>
+                </section>
+
+                <section id="contact" class="docs-section">
+                    <h2 class="docs-heading">
+                        <div class="docs-icon-box bg-indigo-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
+                        </div>
+                        Contact & Inquiries
+                    </h2>
+                    <div class="docs-text">
+                        <p class="mb-4">If you have any questions, suggestions, or concerns regarding this project, or if you are one of the individuals featured and would like your profile updated or removed, please don't hesitate to reach out using the new <strong>Contact Form</strong> or the methods below.</p>
+                        <h4 class="docs-subheading">How to Reach Me:</h4>
+                        <ul class="list-disc pl-5 mb-4 space-y-2">
+                            <li><strong>Contact Form:</strong> Fill out the secure form on the homepage or contact page. Your name, email, and message will be sent directly to my inbox. This data is kept private and is never shared publicly.</li>
+                            <li><strong>GitHub Issues:</strong> For code-related questions or bug reports, please open an issue <a href="https://github.com/RandomCatUser/RandomCatUser.github.io/issues" target="_blank" rel="noopener noreferrer" class="text-orange-600 hover:underline font-medium">here</a>.</li>
+                            <li><strong>Social Media:</strong> You can also find me on Discord or other platforms via the links on my main homepage.</li>
+                        </ul>
+                        <p class="text-xs text-gray-500">I aim to respond to all legitimate inquiries within 72-120 hours.</p>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+        <footer class="mt-6 sm:mt-12 text-center border-t border-gray-200 pt-6 sm:pt-8" data-aos="fade-up" data-aos-delay="100">
+            <a href="https://randomcatuser.github.io/index.html" class="text-orange-600 hover:text-orange-800 font-medium text-base sm:text-lg transition-colors duration-200 inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                Back to My Universe
+            </a>
+            <p class="text-xs text-gray-500 mt-4">Built with ❤️ and lots of ☕ by RandomCatUser. <br>Licensed under Apache 2.0.</p>
+        </footer>
+    </div>
+
+    <!-- AOS JS CDN -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script src="script.js"></script>
+
+    <!-- JSON-DRIVEN DATA & RENDERERS                               -->
+    <script src="data.js"></script>
+</body>
+</html>
