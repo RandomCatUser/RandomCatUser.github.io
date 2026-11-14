@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var WEBHOOK_URL = 'https://discord.com/api/webhooks/1569635706039697479/PIru8wmDVoFLtp4srqe4iRlR14lEYlAvTTBk7-xvbRViP341L1k6b-1JpN5uW9iiU0OJ';
+    var WEBHOOK_URL = 'https://discord.com/api/webhooks/1571022146627706900/3x-MVHjuSlQrZ4Fbqdvd22BOIBF4DBdYmx6UmO9zLdjmsfPUiOpDESh_notqZPW9mCJI';
     var triggers = document.querySelectorAll('[data-contact-open]');
 
     if (!triggers.length || document.getElementById('contact-lightbox')) return;
