@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var WEBHOOK_URL = 'https://discord.com/api/webhooks/1571022146627706900/3x-MVHjuSlQrZ4Fbqdvd22BOIBF4DBdYmx6UmO9zLdjmsfPUiOpDESh_notqZPW9mCJI';
+    var CONTACT_API_URL = 'https://portfolio-contact.dihanramanayaka.workers.dev';
     var triggers = document.querySelectorAll('[data-contact-open]');
 
     if (!triggers.length || document.getElementById('contact-lightbox')) return;
@@ -235,18 +235,9 @@
         }
 
         var payload = {
-            username: 'Flower ˚˖𓍢ִ໋❀',
-            allowed_mentions: { parse: [] },
-            embeds: [{
-                title: 'New message from the portfolio',
-                color: 547284,
-                fields: [
-                    { name: 'Name', value: name.slice(0, 250), inline: true },
-                    { name: 'Email', value: email.slice(0, 250), inline: true },
-                    { name: 'Message', value: message.slice(0, 1000) }
-                ],
-                timestamp: new Date().toISOString()
-            }]
+            name: name,
+            email: email,
+            message: message
         };
 
         submitting = true;
@@ -261,7 +252,13 @@
         resultText.textContent = 'Your message has been delivered.';
         setStatus('Sending your message...', '');
 
-        fetch(WEBHOOK_URL, {
+        if (!CONTACT_API_URL) {
+            if (token === requestToken) showResult('error');
+            resultText.textContent = 'The contact form is not configured yet. Please try again later.';
+            return;
+        }
+
+        fetch(CONTACT_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)

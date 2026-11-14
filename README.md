@@ -23,6 +23,16 @@ Feel free to reach out to me or check out my other projects:
 -   **GitHub:** [RandomCatUser](https://github.com/RandomCatUser)
 -   **Blog:** [RandomThoughts](https://randomcatuser.github.io/RandomThoughts-/)
 
+### 🔒 Contact form deployment
+
+The site is hosted on GitHub Pages, so the Discord webhook must not be placed in its public JavaScript. The contact form sends to the Cloudflare Worker in `worker/contact.js` instead.
+
+1. Revoke any webhook URL that has been shared or committed, then create a replacement.
+2. Deploy the Worker with Wrangler: run `npx wrangler login` and `npx wrangler deploy`, then run `npx wrangler secret put DISCORD_WEBHOOK_URL` and enter the replacement webhook when prompted.
+3. Set `CONTACT_API_URL` in `docs/assets/js/contact.js` to the Worker URL printed by Wrangler.
+
+The Worker only accepts requests from this site, validates messages, limits each IP to five submissions per minute, and keeps the Discord URL in a Cloudflare secret. The form remains unavailable until `CONTACT_API_URL` is configured.
+
 ### 📝 License
 
 This project is licensed under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
