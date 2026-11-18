@@ -1,7 +1,11 @@
 (function () {
     'use strict';
 
-    var CONTACT_API_URL = 'https://portfolio-contact.dihanramanayaka.workers.dev';
+    var CONTACT_REPO = 'RandomCatUser/RandomCatUser.github.io';
+    var CONTACT_WORKFLOW = 'contact-discord.yml';
+    // Fine-grained token with only "Actions: Read and write" on CONTACT_REPO.
+    // This value is public; see the README before adding it.
+    var CONTACT_DISPATCH_TOKEN = '';
     var triggers = document.querySelectorAll('[data-contact-open]');
 
     if (!triggers.length || document.getElementById('contact-lightbox')) return;
@@ -252,18 +256,26 @@
         resultText.textContent = 'Your message has been delivered.';
         setStatus('Sending your message...', '');
 
-        if (!CONTACT_API_URL) {
+        if (!CONTACT_REPO || !CONTACT_WORKFLOW || !CONTACT_DISPATCH_TOKEN) {
             if (token === requestToken) showResult('error');
             resultText.textContent = 'The contact form is not configured yet. Please try again later.';
             return;
         }
 
-        fetch(CONTACT_API_URL, {
+        fetch('https://api.github.com/repos/' + CONTACT_REPO + '/actions/workflows/' + CONTACT_WORKFLOW + '/dispatches', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            headers: {
+                'Accept': 'application/vnd.github+json',
+                'Authorization': 'Bearer ' + CONTACT_DISPATCH_TOKEN,
+                'Content-Type': 'application/json',
+                'X-GitHub-Api-Version': '2022-11-28'
+            },
+            body: JSON.stringify({
+                ref: 'main',
+                inputs: payload
+            })
         }).then(function (response) {
-            if (!response.ok) throw new Error('HTTP ' + response.status);
+            if (response.status !== 204) throw new Error('HTTP ' + response.status);
             form.reset();
             if (token === requestToken) showResult('done');
         }).catch(function () {

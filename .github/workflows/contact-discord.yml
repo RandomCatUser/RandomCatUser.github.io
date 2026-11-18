@@ -1,0 +1,87 @@
+name: Contact form
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: Sender name
+        required: true
+        type: string
+      email:
+        description: Sender email
+        required: true
+        type: string
+      message:
+        description: Message
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: contact-form
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Validate submission
+        env:
+          CONTACT_NAME: ${{ inputs.name }}
+          CONTACT_EMAIL: ${{ inputs.email }}
+          CONTACT_MESSAGE: ${{ inputs.message }}
+        run: |
+          node - <<'JS'
+          const fs = require('node:fs');
+
+          const name = (process.env.CONTACT_NAME || '').trim();
+          const email = (process.env.CONTACT_EMAIL || '').trim();
+          const message = (process.env.CONTACT_MESSAGE || '').trim();
+
+          const errors = [];
+          if (!name || name.length > 100) errors.push('invalid name');
+          if (!email || email.length > 150 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('invalid email');
+          if (!message || message.length > 1000) errors.push('invalid message');
+
+          if (errors.length) {
+            console.error(`::error::Rejected contact form submission (${errors.join(', ')})`);
+            process.exit(1);
+          }
+
+          const payload = {
+            username: 'Portfolio contact',
+            allowed_mentions: { parse: [] },
+            embeds: [{
+              title: 'New message from the portfolio',
+              color: 547284,
+              fields: [
+                { name: 'Name', value: name, inline: true },
+                { name: 'Email', value: email, inline: true },
+                { name: 'Message', value: message }
+              ],
+              timestamp: new Date().toISOString()
+            }]
+          };
+
+          fs.writeFileSync('payload.json', JSON.stringify(payload));
+          JS
+
+      - name: Post to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "::error::The DISCORD_WEBHOOK_URL repository secret is not set"
+            exit 1
+          fi
+          curl --silent --show-error --fail-with-body --max-time 20 \
+            --request POST \
+            --header 'Content-Type: application/json' \
+            --data-binary @payload.json \
+            "$DISCORD_WEBHOOK_URL"
+
+      - name: Remove payload
+        if: always()
+        run: rm -f payload.json
