@@ -51,7 +51,7 @@ jobs:
           }
 
           const payload = {
-            username: 'Portfolio contact',
+            username: 'Flower ˚˖𓍢ִ໋❀',
             allowed_mentions: { parse: [] },
             embeds: [{
               title: 'New message from the portfolio',
