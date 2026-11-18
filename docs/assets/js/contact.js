@@ -3,8 +3,8 @@
 
     var CONTACT_REPO = 'RandomCatUser/RandomCatUser.github.io';
     var CONTACT_WORKFLOW = 'contact-discord.yml';
-    // Fine-grained token with only "Actions: Read and write" on CONTACT_REPO.
-    // This value is public; see the README before adding it.
+    // Injected by .github/workflows/pages.yml from the CONTACT_DISPATCH_TOKEN
+    // repository secret when the site is deployed. Never commit a real token.
     var CONTACT_DISPATCH_TOKEN = '';
     var triggers = document.querySelectorAll('[data-contact-open]');
 

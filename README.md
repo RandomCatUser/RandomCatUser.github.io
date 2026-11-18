@@ -29,11 +29,11 @@ The site is hosted on GitHub Pages, so the Discord webhook must never be placed 
 
 1. In GitHub, open **Settings → Secrets and variables → Actions** and add a repository secret named `DISCORD_WEBHOOK_URL` containing your webhook URL. Never commit the URL or paste it into chat.
 2. Create a fine-grained personal access token under **Settings → Developer settings → Personal access tokens → Fine-grained tokens**. Limit it to this repository and give it only **Actions: Read and write**.
-3. In `docs/assets/js/contact.js`, set `CONTACT_DISPATCH_TOKEN` to that token. If the repository or workflow filename changes, update `CONTACT_REPO` and `CONTACT_WORKFLOW` as well.
-4. Push to `main`. The form dispatches the workflow, which validates the fields and posts an embed to Discord.
+3. Add the token as a second repository secret named `CONTACT_DISPATCH_TOKEN`. It is injected into `docs/assets/js/contact.js` by `.github/workflows/pages.yml` at deploy time, so it never enters git — GitHub push protection blocks personal access tokens committed to a public repository.
+4. Make sure **Settings → Pages → Build and deployment → Source** is **GitHub Actions**, then push to `main`. The **Deploy site** workflow publishes the site with the token injected, and the form dispatches **Contact form**.
 
 > [!WARNING]
-> `CONTACT_DISPATCH_TOKEN` is readable by anyone who opens the site. It can only trigger workflows in this repository, so the worst case is Action spam and Discord spam, but it cannot change code. GitHub may flag or revoke a token committed to a public repository, and tokens expire: if the form stops working, create a new token and update the file. Rotating it periodically is recommended.
+> The injected `CONTACT_DISPATCH_TOKEN` is readable by anyone who opens the live site. It can only trigger workflows in this repository, so the worst case is Action spam and Discord spam, but it cannot change code. If it is abused, revoke the token, create a new one, and update the `CONTACT_DISPATCH_TOKEN` secret (then re-run **Deploy site**).
 
 The browser only queues the workflow; it never sees the webhook. A successful submission means GitHub accepted the dispatch, so if a message does not arrive, check the latest runs of **Contact form** in the repository's **Actions** tab.
 
