@@ -35,6 +35,9 @@
     };
 
     var FILLED = { github: true };
+    var SITE_ICON = 'https://randomcatuser.github.io/docs/assets/uploads/favicon.png';
+    var GITHUB_ICON = 'https://github.githubassets.com/favicons/favicon.svg';
+    var BLOG_ICON = 'https://www.google.com/s2/favicons?domain=randomcatuser.github.io&sz=128';
 
     function svg(name, className) {
         var path = PATHS[name] || PATHS.page;
@@ -65,10 +68,10 @@
         '    <button class="ss-clear" type="button" aria-label="Clear search" tabindex="-1">' + svg('close') + '</button>',
         '  </div>',
         '  <div class="ss-actions">',
-        '    <button class="ss-action" type="button" data-ss-action="random" style="--ss-i:0" title="Surprise me" aria-label="Surprise me">' + svg('sparkle') + '</button>',
-        '    <button class="ss-action" type="button" data-ss-action="work" style="--ss-i:1" title="Selected work" aria-label="Selected work">' + svg('folder') + '</button>',
-        '    <button class="ss-action" type="button" data-ss-action="articles" style="--ss-i:2" title="Writing" aria-label="Writing">' + svg('layers') + '</button>',
-        '    <button class="ss-action" type="button" data-ss-action="contact" style="--ss-i:3" title="Get in touch" aria-label="Get in touch">' + svg('clipboard') + '</button>',
+        '    <span class="ss-action-item" style="--ss-i:0"><button class="ss-action" type="button" data-ss-action="random" title="Surprise me" aria-label="Surprise me">' + svg('sparkle') + '</button><span class="ss-action-label">Surprise</span></span>',
+        '    <span class="ss-action-item" style="--ss-i:1"><button class="ss-action" type="button" data-ss-action="work" title="Selected work" aria-label="Selected work">' + svg('folder') + '</button><span class="ss-action-label">Work</span></span>',
+        '    <span class="ss-action-item" style="--ss-i:2"><button class="ss-action" type="button" data-ss-action="articles" title="Writing" aria-label="Writing">' + svg('layers') + '</button><span class="ss-action-label">Writing</span></span>',
+        '    <span class="ss-action-item" style="--ss-i:3"><button class="ss-action" type="button" data-ss-action="contact" title="Get in touch" aria-label="Get in touch">' + svg('clipboard') + '</button><span class="ss-action-label">Contact</span></span>',
         '  </div>',
         '</div>',
         '<div class="ss-panel" id="ss-panel">',
@@ -226,6 +229,14 @@
     /* Rendering                                                          */
     /* ------------------------------------------------------------------ */
 
+    function iconUrlFor(item) {
+        if (item.iconUrl) return item.iconUrl;
+        var url = item.url || '';
+        if (/^https:\/\/github\.com\//.test(url)) return GITHUB_ICON;
+        if (/randomcatuser\.github\.io/.test(url)) return BLOG_ICON;
+        return SITE_ICON;
+    }
+
     function buildResult(item, index, tokens) {
         var link = document.createElement('a');
         link.className = 'ss-result';
@@ -242,7 +253,28 @@
 
         var icon = document.createElement('span');
         icon.className = 'ss-result__icon';
-        icon.innerHTML = svg(item.icon || 'page');
+
+        var tile = document.createElement('span');
+        tile.className = 'ss-result__tile';
+        tile.innerHTML = svg(item.icon || 'page');
+        icon.appendChild(tile);
+
+        var iconUrl = iconUrlFor(item);
+        if (iconUrl) {
+            var favicon = document.createElement('img');
+            favicon.className = 'ss-result__favicon';
+            favicon.src = iconUrl;
+            favicon.alt = '';
+            favicon.decoding = 'async';
+            favicon.addEventListener('load', function () {
+                favicon.classList.add('is-loaded');
+            });
+            favicon.addEventListener('error', function () {
+                if (favicon.parentNode) favicon.parentNode.removeChild(favicon);
+            });
+            icon.appendChild(favicon);
+        }
+
         link.appendChild(icon);
 
         var body = document.createElement('span');
