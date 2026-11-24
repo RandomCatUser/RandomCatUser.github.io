@@ -6,6 +6,12 @@
 
     var TRACKS = [
         {
+            src: 'assets/music/Should We Be Cute Together.mp3',
+            title: 'Should We Be Cute Together',
+            artist: 'Dihan Ramanayaka',
+            artwork: 'assets/album-arts/Should We Be Cute Together.jpg'
+        },
+        {
             src: 'assets/music/Towards The Sunshine.mp3',
             title: 'Towards the Sunshine',
             artist: 'Dihan Ramanayaka',
